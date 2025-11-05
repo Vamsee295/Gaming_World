@@ -1,7 +1,9 @@
 import type { AppProps } from 'next/app'
 import '../styles/globals.css';
+import '../styles/signin.css';
 import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
+import { CartProvider } from "@/context/CartContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -25,9 +27,11 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <div className="min-h-screen">
-      <Component {...pageProps} />
-      <Toaster />
-    </div>
+    <CartProvider>
+      <div className="min-h-screen">
+        <Component {...pageProps} />
+        <Toaster />
+      </div>
+    </CartProvider>
   )
 }

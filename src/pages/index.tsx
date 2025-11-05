@@ -6,6 +6,18 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock } from "lucide-react";
+import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+import SignIn from "@/components/SignIn";
+import Image from "next/image";
+import img1 from "@/components/Images/Store Images/image 1.webp";
+import img2 from "@/components/Images/Store Images/image 2.webp";
+import img3 from "@/components/Images/Store Images/image 3.webp";
+import img4 from "@/components/Images/Store Images/image 4.webp";
+import img5 from "@/components/Images/Store Images/image 5.webp";
+import img6 from "@/components/Images/Store Images/image 6.webp";
+import img7 from "@/components/Images/Store Images/image 7.webp";
+import img8 from "@/components/Images/Store Images/image 8.webp";
 
 interface Game {
   id: number;
@@ -21,70 +33,70 @@ interface Game {
 const games: Game[] = [
   {
     id: 1,
-    title: "Cyberpunk Odyssey",
+    title: "Cyberpunk 2077",
     price: "$59.99",
     discount: 20,
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80",
+    image: img1,
     rating: 4.8,
     genre: "RPG",
     featured: true
   },
   {
     id: 2,
-    title: "Stellar Warfare",
+    title: "Marvel's Spiderman",
     price: "$49.99",
     discount: 15,
-    image: "https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=800&q=80",
+    image: img2,
     rating: 4.6,
     genre: "Strategy"
   },
   {
     id: 3,
-    title: "Neon Racer",
+    title: "Grand Theft Auto 6",
     price: "$39.99",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80",
+    image: img3,
     rating: 4.7,
     genre: "Racing"
   },
   {
     id: 4,
-    title: "Dark Souls Legacy",
+    title: "Need For Speed",
     price: "$59.99",
     discount: 30,
-    image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&q=80",
+    image: img4,
     rating: 4.9,
     genre: "Action"
   },
   {
     id: 5,
-    title: "Apex Legends Pro",
+    title: "The Last Of Us",
     price: "$0.00",
-    image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80",
+    image: img5,
     rating: 4.5,
     genre: "FPS"
   },
   {
     id: 6,
-    title: "Fantasy Realm",
+    title: "Detroit : Become Human",
     price: "$44.99",
     discount: 25,
-    image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&q=80",
+    image: img6,
     rating: 4.8,
     genre: "MMORPG"
   },
   {
     id: 7,
-    title: "Horror Mansion",
+    title: "A Way Out",
     price: "$29.99",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
+    image: img7,
     rating: 4.4,
     genre: "Horror"
   },
   {
     id: 8,
-    title: "Battle Royale X",
+    title: "Black Myth Wukong",
     price: "$0.00",
-    image: "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=800&q=80",
+    image: img8,
     rating: 4.6,
     genre: "Battle Royale"
   }
@@ -99,7 +111,9 @@ const categories = [
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
   const featuredGame = games.find(g => g.featured);
+  const { totalItems, addItem } = useCart();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -163,10 +177,17 @@ export default function Home() {
                     className="pl-10 w-64 bg-secondary border-border"
                   />
                 </div>
-                <Button variant="ghost" size="icon">
-                  <ShoppingCart className="h-5 w-5" />
-                </Button>
-                <Button>Sign In</Button>
+                <Link href="/cart" className="relative">
+                  <Button variant="ghost" size="icon">
+                    <ShoppingCart className="h-5 w-5" />
+                  </Button>
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-xs px-1.5 py-0.5">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
+                <Button onClick={() => setIsSignInOpen(true)}>Sign In</Button>
               </div>
             </div>
           </div>
@@ -181,10 +202,12 @@ export default function Home() {
             className="relative h-[600px] overflow-hidden"
           >
             <div className="absolute inset-0">
-              <img 
-                src={featuredGame.image} 
+              <Image
+                src={featuredGame.image as any}
                 alt={featuredGame.title}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             </div>
@@ -300,11 +323,12 @@ export default function Home() {
                   className="group cursor-pointer"
                 >
                   <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                    <div className="aspect-[16/9] overflow-hidden">
-                      <img 
-                        src={game.image} 
+                    <div className="aspect-[16/9] overflow-hidden relative">
+                      <Image
+                        src={game.image as any}
                         alt={game.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
                     {game.discount && (
@@ -336,7 +360,19 @@ export default function Home() {
                             {game.price === "$0.00" ? "Free" : game.price}
                           </span>
                         )}
-                        <Button size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const basePrice = parseFloat(game.price.slice(1));
+                            const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                            addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
+                          }}
+                          aria-label="Add to cart"
+                          title="Add to cart"
+                        >
                           <ShoppingCart className="h-4 w-4" />
                         </Button>
                       </div>
@@ -412,6 +448,7 @@ export default function Home() {
           </div>
         </footer>
       </div>
+      <SignIn isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
     </>
   );
 }
