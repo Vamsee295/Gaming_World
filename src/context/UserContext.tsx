@@ -13,6 +13,7 @@ interface UserContextValue {
   signIn: (data: { name: string; email: string }) => void;
   signOut: () => void;
   updateAvatar: (file: File) => Promise<void>;
+  removeAvatar: () => void;
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -62,12 +63,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(prev => (prev ? { ...prev, avatarUrl: dataUrl } : prev));
   }, []);
 
+  const removeAvatar = useCallback(() => {
+    setUser(prev => (prev ? { ...prev, avatarUrl: undefined } : prev));
+  }, []);
+
   const value = useMemo<UserContextValue>(
-    () => ({ user, isAuthenticated: Boolean(user), signIn, signOut, updateAvatar }),
-    [user, signIn, signOut, updateAvatar]
+    () => ({ user, isAuthenticated: Boolean(user), signIn, signOut, updateAvatar, removeAvatar }),
+    [user, signIn, signOut, updateAvatar, removeAvatar]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
+
 
 

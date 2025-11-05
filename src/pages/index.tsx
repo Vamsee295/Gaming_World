@@ -13,6 +13,8 @@ import Image from "next/image";
 import { useUser } from "@/context/UserContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 import img1 from "@/components/Images/Store Images/image 1.webp";
 import img2 from "@/components/Images/Store Images/image 2.webp";
 import img3 from "@/components/Images/Store Images/image 3.webp";
@@ -121,6 +123,8 @@ export default function Home() {
   const { totalItems: wishlistCount, addItem: addWishlistItem } = useWishlist();
   const fileInputId = "avatar-file-input";
   const pendingFriends = 1; // demo count
+  const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
+  const [isSignOutOpen, setIsSignOutOpen] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -146,7 +150,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Steam Gaming - Your Ultimate PC Gaming Platform</title>
+        <title>GameVerse - Your Ultimate PC Gaming Platform</title>
         <meta name="description" content="Discover and play the best PC games" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -168,7 +172,7 @@ export default function Home() {
                   className="flex items-center gap-2"
                 >
                   <Gamepad2 className="h-8 w-8 text-primary" />
-                  <span className="text-2xl font-bold text-foreground">STEAM</span>
+                  <span className="text-2xl font-bold text-foreground">GameVerse</span>
                 </motion.div>
                 <div className="hidden md:flex items-center gap-6">
                   <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Store</a>
@@ -239,25 +243,25 @@ export default function Home() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">{user?.name}</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={()=>document.getElementById(fileInputId)?.click()}>Change Photo</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>My Achievements</DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/achievements">My Achievements</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Coupons</DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/rewards">Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/balance">Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/coupons">Coupons</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Redeem Code</DropdownMenuItem>
-                        <DropdownMenuItem>Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/account">Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/redeem">Redeem Code</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/redeem-fortnite">Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/settings">Settings</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
-                        <DropdownMenuItem>Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/terms">Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/privacy">Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>signOut()}>Sign Out</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </>
@@ -533,6 +537,19 @@ export default function Home() {
         </footer>
       </div>
       <SignIn isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
+      <ChangePhotoDialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen} />
+      <Dialog open={isSignOutOpen} onOpenChange={setIsSignOutOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sign Out</DialogTitle>
+          </DialogHeader>
+          <p className="text-muted-foreground">Are you sure you want to sign out?</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={()=>setIsSignOutOpen(false)}>Cancel</Button>
+            <Button onClick={()=>{ setIsSignOutOpen(false); signOut(); }}>Sign Out</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
