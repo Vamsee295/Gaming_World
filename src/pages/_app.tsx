@@ -4,6 +4,8 @@ import '../styles/signin.css';
 import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
 import { CartProvider } from "@/context/CartContext";
+import { UserProvider } from "@/context/UserContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -27,11 +29,15 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <CartProvider>
-      <div className="min-h-screen">
-        <Component {...pageProps} />
-        <Toaster />
-      </div>
-    </CartProvider>
+    <UserProvider>
+      <WishlistProvider>
+        <CartProvider>
+          <div className="min-h-screen">
+            <Component {...pageProps} />
+            <Toaster />
+          </div>
+        </CartProvider>
+      </WishlistProvider>
+    </UserProvider>
   )
 }

@@ -5,11 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock } from "lucide-react";
+import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock, Users, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import SignIn from "@/components/SignIn";
 import Image from "next/image";
+import { useUser } from "@/context/UserContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import img1 from "@/components/Images/Store Images/image 1.webp";
 import img2 from "@/components/Images/Store Images/image 2.webp";
 import img3 from "@/components/Images/Store Images/image 3.webp";
@@ -114,6 +117,10 @@ export default function Home() {
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const featuredGame = games.find(g => g.featured);
   const { totalItems, addItem } = useCart();
+  const { user, isAuthenticated, signOut, updateAvatar } = useUser();
+  const { totalItems: wishlistCount, addItem: addWishlistItem } = useWishlist();
+  const fileInputId = "avatar-file-input";
+  const pendingFriends = 1; // demo count
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -177,6 +184,12 @@ export default function Home() {
                     className="pl-10 w-64 bg-secondary border-border"
                   />
                 </div>
+                <Link href="/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
+                  Wishlist
+                  {wishlistCount > 0 && (
+                    <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5 py-0.5">{wishlistCount}</span>
+                  )}
+                </Link>
                 <Link href="/cart" className="relative">
                   <Button variant="ghost" size="icon">
                     <ShoppingCart className="h-5 w-5" />
@@ -187,7 +200,68 @@ export default function Home() {
                     </span>
                   )}
                 </Link>
-                <Button onClick={() => setIsSignInOpen(true)}>Sign In</Button>
+                {!isAuthenticated ? (
+                  <Button onClick={() => setIsSignInOpen(true)}>Sign In</Button>
+                ) : (
+                  <>
+                    <input id={fileInputId} type="file" accept="image/*" className="hidden" onChange={async (e)=>{
+                      const f = e.target.files?.[0];
+                      if (f) await updateAvatar(f);
+                    }} />
+                    {/* Friends icon - placed left of profile */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="rounded-full focus:outline-none">
+                        <div className="relative h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-foreground">
+                          <Users className="h-5 w-5" />
+                          {pendingFriends > 0 && (
+                            <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingFriends}</span>
+                          )}
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-64">
+                        <DropdownMenuLabel className="text-foreground">Friends</DropdownMenuLabel>
+                        <DropdownMenuItem>Add Friend</DropdownMenuItem>
+                        <DropdownMenuItem>Friend Requests ({pendingFriends})</DropdownMenuItem>
+                        <DropdownMenuItem>Friends List</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="rounded-full focus:outline-none">
+                        <div className="relative h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-foreground">
+                          {user?.avatarUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={user.avatarUrl} alt={user.name} className="h-10 w-10 rounded-full object-cover" />
+                          ) : (
+                            <span className="font-semibold">{user?.name?.charAt(0).toUpperCase()}</span>
+                          )}
+                          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500" />
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-64">
+                        <DropdownMenuLabel className="text-foreground">{user?.name}</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={()=>document.getElementById(fileInputId)?.click()}>Change Photo</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>My Achievements</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Coupons</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Redeem Code</DropdownMenuItem>
+                        <DropdownMenuItem>Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuItem>Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={()=>signOut()}>Sign Out</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -360,21 +434,31 @@ export default function Home() {
                             {game.price === "$0.00" ? "Free" : game.price}
                           </span>
                         )}
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const basePrice = parseFloat(game.price.slice(1));
-                            const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
-                            addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
-                          }}
-                          aria-label="Add to cart"
-                          title="Add to cart"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const basePrice = parseFloat(game.price.slice(1));
+                              const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                              addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
+                            }}
+                          >
+                            Add to Cart
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const basePrice = parseFloat(game.price.slice(1));
+                              const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                              addWishlistItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image as any });
+                            }}
+                          >
+                            Wishlist
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>

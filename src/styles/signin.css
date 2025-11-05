@@ -210,13 +210,15 @@
   height: 100%;
   overflow: hidden;
   transition: all 0.6s ease-in-out;
-  border-radius: 150px 0 0 100px;
+  /* Make the toggle container square (no curved gap between panels) */
+  border-radius: 0;
   z-index: 1000;
 }
 
 .signin-container.active .signin-toggle-container {
   transform: translateX(-100%);
-  border-radius: 0 150px 100px 0;
+  /* keep square corners when active as well */
+  border-radius: 0;
 }
 
 .signin-toggle {

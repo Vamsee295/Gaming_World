@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Trash2, ShoppingCart, Coins, Info } from "lucide-react";
+import { useWishlist } from "@/context/WishlistContext";
 
 export default function CartPage() {
   const { items, removeItem, clear, totalItems, totalPrice } = useCart();
+  const { addItem: addWishlistItem } = useWishlist();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -62,7 +64,15 @@ export default function CartPage() {
                   </div>
                   <div className="mt-3 flex items-center justify-end gap-4">
                     <button onClick={() => removeItem(item.id)} className="text-primary hover:underline">Remove</button>
-                    <button className="text-primary/80 hover:underline">Move to wishlist</button>
+                    <button
+                      className="text-primary/80 hover:underline"
+                      onClick={() => {
+                        addWishlistItem({ id: item.id, title: item.title, price: item.price, image: item.image });
+                        removeItem(item.id);
+                      }}
+                    >
+                      Move to wishlist
+                    </button>
                   </div>
                 </div>
               </div>

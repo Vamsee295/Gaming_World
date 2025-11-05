@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useUser } from '@/context/UserContext';
 
 interface SignInProps {
   isOpen: boolean;
@@ -8,6 +9,9 @@ interface SignInProps {
 const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
   const [isActive, setIsActive] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const { signIn } = useUser();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   if (!isOpen) return null;
 
@@ -35,13 +39,14 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
   const handleSignUpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle sign up logic here
-    console.log('Sign Up submitted');
+    signIn({ name: name || 'Player', email: email || 'player@example.com' });
+    onClose();
   };
 
   const handleSignInSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle sign in logic here
-    console.log('Sign In submitted');
+    signIn({ name: name || 'Player', email: email || 'player@example.com' });
+    onClose();
   };
 
   const handleForgotPasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,8 +71,8 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
               <a href="#" className="icon" onClick={(e) => e.preventDefault()}><i className="fa-brands fa-linkedin-in"></i></a>
             </div>
             <span>or use your email for registeration</span>
-            <input type="text" placeholder="Name" required />
-            <input type="email" placeholder="Email" required />
+            <input type="text" placeholder="Name" required value={name} onChange={(e)=>setName(e.target.value)} />
+            <input type="email" placeholder="Email" required value={email} onChange={(e)=>setEmail(e.target.value)} />
             <input type="password" placeholder="Password" required />
             <button type="submit">Sign Up</button>
           </form>
@@ -83,7 +88,7 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
               <a href="#" className="icon" onClick={(e) => e.preventDefault()}><i className="fa-brands fa-linkedin-in"></i></a>
             </div>
             <span>or use your email password</span>
-            <input type="email" placeholder="Email" required />
+            <input type="email" placeholder="Email" required value={email} onChange={(e)=>setEmail(e.target.value)} />
             <input type="password" placeholder="Password" required />
             <a href="#" id="forgot-password-link" onClick={handleForgotPasswordClick}>
               Forget Your Password?
