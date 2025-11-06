@@ -176,7 +176,7 @@ export default function Home() {
                 </motion.div>
                 <div className="hidden md:flex items-center gap-6">
                   <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Store</a>
-                  <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Library</a>
+                  <Link href="/library" className="text-muted-foreground hover:text-foreground transition-colors">Library</Link>
                   <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Community</a>
                 </div>
               </div>
