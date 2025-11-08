@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { CartProvider } from "@/context/CartContext";
 import { UserProvider } from "@/context/UserContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+import { RewardsProvider } from "@/context/RewardsContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -32,10 +33,12 @@ export default function App({ Component, pageProps }: AppProps) {
     <UserProvider>
       <WishlistProvider>
         <CartProvider>
-          <div className="min-h-screen">
-            <Component {...pageProps} />
-            <Toaster />
-          </div>
+          <RewardsProvider>
+            <div className="min-h-screen">
+              <Component {...pageProps} />
+              <Toaster />
+            </div>
+          </RewardsProvider>
         </CartProvider>
       </WishlistProvider>
     </UserProvider>
