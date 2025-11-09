@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { useUser } from "@/context/UserContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 import img1 from "@/components/Images/Store Images/image 1.webp";
 import img2 from "@/components/Images/Store Images/image 2.webp";
@@ -125,6 +126,48 @@ export default function Home() {
   const pendingFriends = 1; // demo count
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
+  const [clearSessionData, setClearSessionData] = useState(false);
+  const [signOutStatus, setSignOutStatus] = useState("");
+
+  const handleSignOut = () => {
+    // Clear session data if toggle is checked
+    if (clearSessionData) {
+      // Clear localStorage, cookies, etc.
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (error) {
+        console.error("Error clearing storage:", error);
+      }
+    }
+
+    // Show success message
+    setSignOutStatus("Successfully signed out. Redirecting to login...");
+
+    // Sign out after a short delay
+    setTimeout(() => {
+      signOut();
+      setIsSignOutOpen(false);
+      setClearSessionData(false);
+      setSignOutStatus("");
+    }, 2000);
+  };
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isSignOutOpen) {
+        setIsSignOutOpen(false);
+        setClearSessionData(false);
+        setSignOutStatus("");
+      }
+    };
+
+    if (isSignOutOpen) {
+      document.addEventListener("keydown", handleEsc);
+      return () => document.removeEventListener("keydown", handleEsc);
+    }
+  }, [isSignOutOpen]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -538,16 +581,78 @@ export default function Home() {
       </div>
       <SignIn isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
       <ChangePhotoDialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen} />
-      <Dialog open={isSignOutOpen} onOpenChange={setIsSignOutOpen}>
-        <DialogContent>
+      <Dialog
+        open={isSignOutOpen}
+        onOpenChange={(open) => {
+          setIsSignOutOpen(open);
+          if (!open) {
+            setClearSessionData(false);
+            setSignOutStatus("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Sign Out</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-destructive">Sign Out</DialogTitle>
           </DialogHeader>
-          <p className="text-muted-foreground">Are you sure you want to sign out?</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={()=>setIsSignOutOpen(false)}>Cancel</Button>
-            <Button onClick={()=>{ setIsSignOutOpen(false); signOut(); }}>Sign Out</Button>
-          </DialogFooter>
+          
+          <div className="space-y-6">
+            {/* Signed-in User Info */}
+            {user && (
+              <div className="text-center bg-secondary p-3 rounded-lg border border-border">
+                <p className="text-sm text-muted-foreground font-medium mb-1">Signed in as:</p>
+                <p className="text-lg font-semibold truncate">{user.email}</p>
+              </div>
+            )}
+
+            {/* Confirmation Text */}
+            <div className="text-center">
+              <p className="text-xl font-semibold">Are you sure you want to sign out?</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                You will need to log back in to access your saved progress and stream subscriptions.
+              </p>
+            </div>
+
+            {/* Clear Session Data Toggle */}
+            <div className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-border">
+              <label htmlFor="clear-session" className="text-sm font-medium cursor-pointer">
+                Clear local session data
+              </label>
+              <Switch
+                id="clear-session"
+                checked={clearSessionData}
+                onCheckedChange={setClearSessionData}
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <DialogFooter className="flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsSignOutOpen(false);
+                  setClearSessionData(false);
+                }}
+                className="w-full sm:w-auto"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleSignOut}
+                className="w-full sm:w-auto"
+              >
+                Sign Out
+              </Button>
+            </DialogFooter>
+
+            {/* Status Message */}
+            {signOutStatus && (
+              <div className="text-center text-green-500 font-semibold mt-4">
+                {signOutStatus}
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </>
