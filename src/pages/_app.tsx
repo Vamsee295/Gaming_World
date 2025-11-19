@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import { UserProvider } from "@/context/UserContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { RewardsProvider } from "@/context/RewardsContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -30,17 +31,19 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <UserProvider>
-      <WishlistProvider>
-        <CartProvider>
-          <RewardsProvider>
-            <div className="min-h-screen">
-              <Component {...pageProps} />
-              <Toaster />
-            </div>
-          </RewardsProvider>
-        </CartProvider>
-      </WishlistProvider>
-    </UserProvider>
+    <ThemeProvider>
+      <UserProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <RewardsProvider>
+              <div className="min-h-screen">
+                <Component {...pageProps} />
+                <Toaster />
+              </div>
+            </RewardsProvider>
+          </CartProvider>
+        </WishlistProvider>
+      </UserProvider>
+    </ThemeProvider>
   )
 }

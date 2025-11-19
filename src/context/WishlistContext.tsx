@@ -4,12 +4,14 @@ export interface WishlistItem {
   id: number;
   title: string;
   price: number;
+  originalPrice?: number;
   image: string;
+  addedAt: string;
 }
 
 interface WishlistContextValue {
   items: WishlistItem[];
-  addItem: (item: WishlistItem) => void;
+  addItem: (item: Omit<WishlistItem, "addedAt" | "originalPrice">) => void;
   removeItem: (id: number) => void;
   clear: () => void;
   totalItems: number;
@@ -26,8 +28,15 @@ export const useWishlist = (): WishlistContextValue => {
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<WishlistItem[]>([]);
 
-  const addItem = useCallback((item: WishlistItem) => {
-    setItems(prev => (prev.some(i => i.id === item.id) ? prev : [...prev, item]));
+  const addItem = useCallback((item: Omit<WishlistItem, "addedAt" | "originalPrice">) => {
+    setItems(prev => {
+      if (prev.some(i => i.id === item.id)) return prev;
+      return [...prev, { 
+        ...item, 
+        originalPrice: item.price,
+        addedAt: new Date().toISOString() 
+      }];
+    });
   }, []);
 
   const removeItem = useCallback((id: number) => setItems(prev => prev.filter(i => i.id !== id)), []);

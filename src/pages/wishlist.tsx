@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, TrendingDown, AlertCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function WishlistPage() {
   const { items, removeItem, clear, totalItems } = useWishlist();
@@ -43,7 +44,18 @@ export default function WishlistPage() {
                     <h3 className="text-foreground font-semibold">{item.title}</h3>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-semibold text-foreground">₹{item.price.toFixed(2)}</div>
+                    {item.originalPrice && item.originalPrice > item.price ? (
+                      <div className="space-y-1">
+                        <div className="text-lg font-semibold text-green-500">₹{item.price.toFixed(2)}</div>
+                        <div className="text-sm line-through text-muted-foreground">₹{item.originalPrice.toFixed(2)}</div>
+                        <Badge className="bg-green-600 text-white text-xs">
+                          <TrendingDown className="h-3 w-3 mr-1" />
+                          {((1 - item.price / item.originalPrice) * 100).toFixed(0)}% OFF
+                        </Badge>
+                      </div>
+                    ) : (
+                      <div className="text-lg font-semibold text-foreground">₹{item.price.toFixed(2)}</div>
+                    )}
                   </div>
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-4">

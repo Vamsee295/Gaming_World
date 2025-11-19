@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock, Users, ExternalLink } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock, Users, ExternalLink, ArrowUp, X, Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import SignIn from "@/components/SignIn";
@@ -18,19 +22,22 @@ import { Switch } from "@/components/ui/switch";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 import img1 from "@/components/Images/Store Images/image 1.webp";
 import img2 from "@/components/Images/Store Images/image 2.webp";
+import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
 import img3 from "@/components/Images/Store Images/image 3.webp";
 import img4 from "@/components/Images/Store Images/image 4.webp";
+import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
 import img5 from "@/components/Images/Store Images/image 5.webp";
 import img6 from "@/components/Images/Store Images/image 6.webp";
 import img7 from "@/components/Images/Store Images/image 7.webp";
 import img8 from "@/components/Images/Store Images/image 8.webp";
+import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
 
 interface Game {
   id: number;
   title: string;
   price: string;
   discount?: number;
-  image: string;
+  image: any;
   rating: number;
   genre: string;
   featured?: boolean;
@@ -42,7 +49,7 @@ const games: Game[] = [
     title: "Cyberpunk 2077",
     price: "$59.99",
     discount: 20,
-    image: img1,
+    image: homeImg,
     rating: 4.8,
     genre: "RPG",
     featured: true
@@ -52,7 +59,7 @@ const games: Game[] = [
     title: "Marvel's Spiderman",
     price: "$49.99",
     discount: 15,
-    image: img2,
+    image: spidermanHome,
     rating: 4.6,
     genre: "Strategy"
   },
@@ -69,7 +76,7 @@ const games: Game[] = [
     title: "Need For Speed",
     price: "$59.99",
     discount: 30,
-    image: img4,
+    image: nfsHome,
     rating: 4.9,
     genre: "Action"
   },
@@ -118,10 +125,21 @@ const categories = [
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
-  const featuredGame = games.find(g => g.featured);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [filteredGames, setFilteredGames] = useState(games);
+  const [priceFilter, setPriceFilter] = useState<string>("all");
+  const [ratingFilter, setRatingFilter] = useState<number>(0);
+  const [showFilters, setShowFilters] = useState(false);
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const gamesPerPage = 8;
+  const featuredGames = games.filter(g => g.featured || g.discount).slice(0, 3);
+  const featuredGame = featuredGames[currentCarouselIndex] || games[0];
   const { totalItems, addItem } = useCart();
   const { user, isAuthenticated, signOut, updateAvatar } = useUser();
   const { totalItems: wishlistCount, addItem: addWishlistItem } = useWishlist();
+  const { theme, toggleTheme } = useTheme();
   const fileInputId = "avatar-file-input";
   const pendingFriends = 1; // demo count
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
@@ -168,6 +186,84 @@ export default function Home() {
       return () => document.removeEventListener("keydown", handleEsc);
     }
   }, [isSignOutOpen]);
+
+  // Back to top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Search and filter functionality
+  useEffect(() => {
+    let filtered = [...games];
+    
+    // Search filter
+    if (searchQuery.trim() !== "") {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(game => 
+        game.title.toLowerCase().includes(query) ||
+        game.genre.toLowerCase().includes(query)
+      );
+    }
+    
+    // Category filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(game => game.genre === selectedCategory);
+    }
+    
+    // Price filter
+    if (priceFilter !== "all") {
+      filtered = filtered.filter(game => {
+        const price = parseFloat(game.price.slice(1));
+        switch (priceFilter) {
+          case "free":
+            return price === 0;
+          case "under10":
+            return price > 0 && price < 10;
+          case "10-30":
+            return price >= 10 && price <= 30;
+          case "30-50":
+            return price > 30 && price <= 50;
+          case "over50":
+            return price > 50;
+          default:
+            return true;
+        }
+      });
+    }
+    
+    // Rating filter
+    if (ratingFilter > 0) {
+      filtered = filtered.filter(game => game.rating >= ratingFilter);
+    }
+    
+    setFilteredGames(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [searchQuery, selectedCategory, priceFilter, ratingFilter]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredGames.length / gamesPerPage);
+  const paginatedGames = filteredGames.slice(
+    (currentPage - 1) * gamesPerPage,
+    currentPage * gamesPerPage
+  );
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Auto-rotate carousel
+  useEffect(() => {
+    if (featuredGames.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentCarouselIndex((prev) => (prev + 1) % featuredGames.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [featuredGames.length]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -228,8 +324,18 @@ export default function Home() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
                     placeholder="Search games..." 
-                    className="pl-10 w-64 bg-secondary border-border"
+                    className="pl-10 pr-8 w-64 bg-secondary border-border"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
                 <Link href="/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
                   Wishlist
@@ -237,6 +343,14 @@ export default function Home() {
                     <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5 py-0.5">{wishlistCount}</span>
                   )}
                 </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleTheme}
+                  aria-label="Toggle theme"
+                >
+                  {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </Button>
                 <Link href="/cart" className="relative">
                   <Button variant="ghost" size="icon">
                     <ShoppingCart className="h-5 w-5" />
@@ -314,8 +428,8 @@ export default function Home() {
           </div>
         </motion.nav>
 
-        {/* Hero Section */}
-        {featuredGame && (
+        {/* Hero Carousel Section */}
+        {featuredGames.length > 0 && (
           <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -327,16 +441,55 @@ export default function Home() {
                 src={featuredGame.image as any}
                 alt={featuredGame.title}
                 fill
-                className="object-cover"
+                className="object-cover transition-opacity duration-500"
                 priority
+                key={currentCarouselIndex}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             </div>
+            
+            {/* Carousel Navigation */}
+            {featuredGames.length > 1 && (
+              <>
+                <button
+                  onClick={() => setCurrentCarouselIndex((prev) => (prev - 1 + featuredGames.length) % featuredGames.length)}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-background/80 hover:bg-background border border-border flex items-center justify-center transition-all"
+                  aria-label="Previous game"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={() => setCurrentCarouselIndex((prev) => (prev + 1) % featuredGames.length)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-background/80 hover:bg-background border border-border flex items-center justify-center transition-all"
+                  aria-label="Next game"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+                
+                {/* Carousel Indicators */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                  {featuredGames.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentCarouselIndex(index)}
+                      className={`h-2 rounded-full transition-all ${
+                        index === currentCarouselIndex 
+                          ? 'w-8 bg-primary' 
+                          : 'w-2 bg-muted-foreground/50 hover:bg-muted-foreground'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+
             <div className="relative container mx-auto px-4 h-full flex items-end pb-20">
               <motion.div 
+                key={currentCarouselIndex}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
+                transition={{ duration: 0.5 }}
                 className="max-w-2xl"
               >
                 <Badge className="mb-4 bg-primary text-primary-foreground">Featured Game</Badge>
@@ -355,11 +508,22 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex items-center gap-4">
-                  <Button size="lg" className="gap-2">
-                    <Play className="h-5 w-5" />
-                    Play Now
-                  </Button>
-                  <Button size="lg" variant="outline" className="gap-2">
+                  <Link href={`/game/${featuredGame.id}`}>
+                    <Button size="lg" className="gap-2">
+                      <Play className="h-5 w-5" />
+                      Play Now
+                    </Button>
+                  </Link>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="gap-2"
+                    onClick={() => {
+                      const basePrice = parseFloat(featuredGame.price.slice(1));
+                      const effective = featuredGame.discount ? basePrice * (1 - featuredGame.discount / 100) : basePrice;
+                      addItem({ id: featuredGame.id, title: featuredGame.title, price: Number(effective.toFixed(2)), image: featuredGame.image });
+                    }}
+                  >
                     <ShoppingCart className="h-5 w-5" />
                     {featuredGame.discount ? (
                       <>
@@ -375,6 +539,7 @@ export default function Home() {
                 </div>
               </motion.div>
             </div>
+
           </motion.section>
         )}
 
@@ -387,23 +552,29 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl font-bold mb-8 text-foreground">Browse by Category</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {categories.map((category, index) => {
                 const Icon = category.icon;
                 return (
-                  <motion.button
+                  <motion.div
                     key={category.name}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.4 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-6 bg-secondary rounded-lg border border-border hover:border-primary transition-all"
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ y: -5 }}
                   >
-                    <Icon className="h-8 w-8 text-primary mb-3 mx-auto" />
-                    <span className="text-foreground font-semibold">{category.name}</span>
-                  </motion.button>
+                    <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
+                      <CardContent className="p-8 flex flex-col items-center text-center">
+                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                          <Icon className="h-10 w-10 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground">
+                          {category.name}
+                        </h3>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 );
               })}
             </div>
@@ -418,16 +589,85 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
               <h2 className="text-3xl font-bold text-foreground">Trending Games</h2>
-              <Tabs defaultValue="all" className="w-auto">
-                <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="new">New</TabsTrigger>
-                  <TabsTrigger value="sale">On Sale</TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="gap-2"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filters
+                </Button>
+                <Tabs defaultValue="all" className="w-auto">
+                  <TabsList>
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="new">New</TabsTrigger>
+                    <TabsTrigger value="sale">On Sale</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
             </div>
+
+            {/* Advanced Filters */}
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-6 p-6 border border-border rounded-lg bg-secondary space-y-4"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-foreground">Price Range</label>
+                    <Select value={priceFilter} onValueChange={setPriceFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All Prices" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Prices</SelectItem>
+                        <SelectItem value="free">Free</SelectItem>
+                        <SelectItem value="under10">Under $10</SelectItem>
+                        <SelectItem value="10-30">$10 - $30</SelectItem>
+                        <SelectItem value="30-50">$30 - $50</SelectItem>
+                        <SelectItem value="over50">Over $50</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-foreground">Minimum Rating</label>
+                    <div className="space-y-2">
+                      <Slider
+                        value={[ratingFilter]}
+                        onValueChange={(value) => setRatingFilter(value[0])}
+                        max={5}
+                        min={0}
+                        step={0.1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>0</span>
+                        <span className="font-medium">{ratingFilter.toFixed(1)}</span>
+                        <span>5.0</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-end">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setPriceFilter("all");
+                        setRatingFilter(0);
+                      }}
+                      className="w-full"
+                    >
+                      Clear Filters
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
 
             <motion.div 
               variants={containerVariants}
@@ -436,14 +676,20 @@ export default function Home() {
               viewport={{ once: true }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
             >
-              {games.map((game) => (
+              {paginatedGames.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-muted-foreground text-lg">No games found matching your filters</p>
+                </div>
+              ) : (
+                paginatedGames.map((game) => (
                 <motion.div
                   key={game.id}
                   variants={itemVariants}
                   whileHover={{ y: -8 }}
                   className="group cursor-pointer"
                 >
-                  <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                  <Link href={`/game/${game.id}`}>
+                    <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
                     <div className="aspect-[16/9] overflow-hidden relative">
                       <Image
                         src={game.image as any}
@@ -509,9 +755,43 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
+                  </Link>
                 </motion.div>
-              ))}
+              )))}
             </motion.div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-8">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="icon"
+                      onClick={() => setCurrentPage(page)}
+                      className="w-10"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
           </motion.div>
         </section>
 
@@ -578,6 +858,20 @@ export default function Home() {
             </div>
           </div>
         </footer>
+
+        {/* Back to Top Button */}
+        {showBackToTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-50 h-12 w-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
+            aria-label="Back to top"
+          >
+            <ArrowUp className="h-5 w-5" />
+          </motion.button>
+        )}
       </div>
       <SignIn isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
       <ChangePhotoDialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen} />

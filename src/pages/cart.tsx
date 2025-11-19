@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
-import { Trash2, ShoppingCart, Coins, Info } from "lucide-react";
+import { Trash2, ShoppingCart, Coins, Info, Plus, Minus } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
 
 export default function CartPage() {
-  const { items, removeItem, clear, totalItems, totalPrice } = useCart();
+  const { items, removeItem, updateQuantity, clear, totalItems, totalPrice } = useCart();
   const { addItem: addWishlistItem } = useWishlist();
 
   return (
@@ -51,8 +51,33 @@ export default function CartPage() {
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-semibold text-foreground">₹{(item.price * item.quantity).toFixed(2)}</div>
-                      <div className="text-xs text-muted-foreground">Qty: {item.quantity}</div>
+                      <div className="text-xs text-muted-foreground">₹{item.price.toFixed(2)} each</div>
                     </div>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Quantity:</span>
+                      <div className="flex items-center gap-1 border border-border rounded-md">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <button onClick={() => removeItem(item.id)} className="text-destructive hover:underline text-sm">Remove</button>
                   </div>
                   <div className="mt-2 inline-flex items-center gap-2 rounded bg-muted/40 px-3 py-2 text-sm text-foreground">
                     <Coins className="h-4 w-4 text-primary" />
@@ -63,7 +88,6 @@ export default function CartPage() {
                     <span>Self-Refundable</span>
                   </div>
                   <div className="mt-3 flex items-center justify-end gap-4">
-                    <button onClick={() => removeItem(item.id)} className="text-primary hover:underline">Remove</button>
                     <button
                       className="text-primary/80 hover:underline"
                       onClick={() => {

@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Search, ShoppingCart, Gamepad2, Users, ExternalLink, Star, Grid2x2, List, Download, Play } from "lucide-react";
+import { Search, ShoppingCart, Gamepad2, Users, ExternalLink, Star, Grid2x2, List, Download, Play, ArrowUpDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useUser } from "@/context/UserContext";
@@ -17,8 +18,11 @@ import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 // Store images (same as index.tsx)
 import img1 from "@/components/Images/Store Images/image 1.webp";
 import img2 from "@/components/Images/Store Images/image 2.webp";
+import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
+import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
 import img3 from "@/components/Images/Store Images/image 3.webp";
 import img4 from "@/components/Images/Store Images/image 4.webp";
+import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
 import img5 from "@/components/Images/Store Images/image 5.webp";
 import img6 from "@/components/Images/Store Images/image 6.webp";
 import img7 from "@/components/Images/Store Images/image 7.webp";
@@ -40,10 +44,10 @@ interface LibraryGame {
 }
 
 const baseGames: LibraryGame[] = [
-  { id: 1, title: "Cyberpunk 2077", desc: "A futuristic open-world RPG set in Night City.", image: img1, playtime: "14 hours", lastPlayed: "Today", size: "45.8 GB", tags: ["installed", "favorites", "rpg"], rating: 4.8, genre: "RPG" },
-  { id: 2, title: "Marvel's Spiderman", desc: "Swing through NYC and fight iconic villains.", image: img2, playtime: "32 hours", lastPlayed: "Yesterday", size: "30.2 GB", tags: ["installed", "action"], rating: 4.6, genre: "Action" },
+  { id: 1, title: "Cyberpunk 2077", desc: "A futuristic open-world RPG set in Night City.", image: homeImg, playtime: "14 hours", lastPlayed: "Today", size: "45.8 GB", tags: ["installed", "favorites", "rpg"], rating: 4.8, genre: "RPG" },
+  { id: 2, title: "Marvel's Spiderman", desc: "Swing through NYC and fight iconic villains.", image: spidermanHome, playtime: "32 hours", lastPlayed: "Yesterday", size: "30.2 GB", tags: ["installed", "action"], rating: 4.6, genre: "Action" },
   { id: 3, title: "Grand Theft Auto 6", desc: "Open-world crime saga.", image: img3, playtime: "5 hours", lastPlayed: "3 days ago", size: "70.0 GB", tags: ["action"], rating: 4.7, genre: "RPG" },
-  { id: 4, title: "Need For Speed", desc: "High-octane street racing.", image: img4, playtime: "18 hours", lastPlayed: "1 week ago", size: "50.0 GB", tags: ["cars"], rating: 4.9, genre: "Racing" },
+  { id: 4, title: "Need For Speed", desc: "High-octane street racing.", image: nfsHome, playtime: "18 hours", lastPlayed: "1 week ago", size: "50.0 GB", tags: ["cars"], rating: 4.9, genre: "Racing" },
   { id: 5, title: "The Last Of Us", desc: "Emotional story of survival.", image: img5, playtime: "0 hours", lastPlayed: "Never", size: "82.0 GB", tags: ["action"], rating: 4.5, genre: "Action" },
   { id: 6, title: "Detroit : Become Human", desc: "Choices matter in this android thriller.", image: img6, playtime: "12 hours", lastPlayed: "2 weeks ago", size: "44.0 GB", tags: ["installed", "rpg"], rating: 4.8, genre: "RPG" },
   { id: 7, title: "A Way Out", desc: "Cinematic co-op prison break.", image: img7, playtime: "7 hours", lastPlayed: "4 days ago", size: "29.0 GB", tags: ["favorites", "action"], rating: 4.4, genre: "Co-op" },
@@ -58,6 +62,7 @@ export default function LibraryPage() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Tag>("all");
   const [listView, setListView] = useState(false);
+  const [sortBy, setSortBy] = useState<"name" | "playtime" | "lastPlayed" | "rating">("name");
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [selected, setSelected] = useState<LibraryGame | null>(null);
@@ -66,10 +71,31 @@ export default function LibraryPage() {
   const fileInputId = "avatar-file-input-lib";
 
   const games = useMemo(() => {
-    const byFilter = filter === "all" ? baseGames : baseGames.filter(g => g.tags.includes(filter));
-    const byQuery = query.trim() ? byFilter.filter(g => g.title.toLowerCase().includes(query.toLowerCase())) : byFilter;
-    return byQuery;
-  }, [filter, query]);
+    let filtered = filter === "all" ? baseGames : baseGames.filter(g => g.tags.includes(filter));
+    filtered = query.trim() ? filtered.filter(g => g.title.toLowerCase().includes(query.toLowerCase())) : filtered;
+    
+    // Sort games
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case "name":
+          return a.title.localeCompare(b.title);
+        case "playtime":
+          const aHours = parseFloat(a.playtime) || 0;
+          const bHours = parseFloat(b.playtime) || 0;
+          return bHours - aHours;
+        case "lastPlayed":
+          const aDate = a.lastPlayed === "Never" ? new Date(0) : new Date();
+          const bDate = b.lastPlayed === "Never" ? new Date(0) : new Date();
+          return bDate.getTime() - aDate.getTime();
+        case "rating":
+          return b.rating - a.rating;
+        default:
+          return 0;
+      }
+    });
+    
+    return sorted;
+  }, [filter, query, sortBy]);
 
   const openDetails = (g: LibraryGame) => setSelected(g);
   const closeDetails = () => setSelected(null);
@@ -210,15 +236,29 @@ export default function LibraryPage() {
 
           {/* Content */}
           <main className="col-span-12 md:col-span-9 lg:col-span-9 xl:col-span-10">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
               <h1 className="text-xl font-bold text-foreground">{filter === "all" ? "All Games" : filter.charAt(0).toUpperCase()+filter.slice(1)}</h1>
-              <div className="inline-flex rounded-md border border-border bg-secondary p-1">
-                <button className={`px-2 py-1 rounded ${!listView?"bg-muted text-foreground":"text-muted-foreground"}`} onClick={()=>setListView(false)} title="Grid">
-                  <Grid2x2 className="h-4 w-4" />
-                </button>
-                <button className={`px-2 py-1 rounded ${listView?"bg-muted text-foreground":"text-muted-foreground"}`} onClick={()=>setListView(true)} title="List">
-                  <List className="h-4 w-4" />
-                </button>
+              <div className="flex items-center gap-3">
+                <Select value={sortBy} onValueChange={(v: any) => setSortBy(v)}>
+                  <SelectTrigger className="w-[180px]">
+                    <ArrowUpDown className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="name">Name</SelectItem>
+                    <SelectItem value="playtime">Playtime</SelectItem>
+                    <SelectItem value="lastPlayed">Last Played</SelectItem>
+                    <SelectItem value="rating">Rating</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="inline-flex rounded-md border border-border bg-secondary p-1">
+                  <button className={`px-2 py-1 rounded ${!listView?"bg-muted text-foreground":"text-muted-foreground"}`} onClick={()=>setListView(false)} title="Grid">
+                    <Grid2x2 className="h-4 w-4" />
+                  </button>
+                  <button className={`px-2 py-1 rounded ${listView?"bg-muted text-foreground":"text-muted-foreground"}`} onClick={()=>setListView(true)} title="List">
+                    <List className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
 
