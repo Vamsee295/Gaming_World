@@ -8,6 +8,8 @@ import { UserProvider } from "@/context/UserContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { RewardsProvider } from "@/context/RewardsContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { CommunityProvider } from "@/context/CommunityContext";
+import { FriendsProvider } from "@/context/FriendsContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -36,10 +38,14 @@ export default function App({ Component, pageProps }: AppProps) {
         <WishlistProvider>
           <CartProvider>
             <RewardsProvider>
-              <div className="min-h-screen">
-                <Component {...pageProps} />
-                <Toaster />
-              </div>
+              <CommunityProvider>
+                <FriendsProvider>
+                  <div className="min-h-screen">
+                    <Component {...pageProps} />
+                    <Toaster />
+                  </div>
+                </FriendsProvider>
+              </CommunityProvider>
             </RewardsProvider>
           </CartProvider>
         </WishlistProvider>

@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useUser } from "@/context/UserContext";
+import { useFriends } from "@/context/FriendsContext";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 
 // Store images (same as index.tsx)
@@ -66,7 +67,7 @@ export default function LibraryPage() {
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [selected, setSelected] = useState<LibraryGame | null>(null);
-  const pendingFriends = 1;
+  const { pendingRequestsCount } = useFriends();
 
   const fileInputId = "avatar-file-input-lib";
 
@@ -123,7 +124,31 @@ export default function LibraryPage() {
                 <div className="hidden md:flex items-center gap-6">
                   <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Store</Link>
                   <Link href="/library" className="text-foreground font-semibold">Library</Link>
-                  <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Community</a>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                      Community
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community">Community Home</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/forums">Forums & Discussions</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/groups">Groups & Communities</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/activity">Activity Feed</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/events">Events & Tournaments</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/friends">Find Friends</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -158,16 +183,27 @@ export default function LibraryPage() {
                       <DropdownMenuTrigger className="rounded-full focus:outline-none">
                         <div className="relative h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-foreground">
                           <Users className="h-5 w-5" />
-                          {pendingFriends > 0 && (
-                            <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingFriends}</span>
+                          {pendingRequestsCount > 0 && (
+                            <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingRequestsCount}</span>
                           )}
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">Friends</DropdownMenuLabel>
-                        <DropdownMenuItem>Add Friend</DropdownMenuItem>
-                        <DropdownMenuItem>Friend Requests ({pendingFriends})</DropdownMenuItem>
-                        <DropdownMenuItem>Friends List</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/friends">View Friends</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/friends?tab=add">Add Friend</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/friends?tab=requests">
+                            Friend Requests
+                            {pendingRequestsCount > 0 && (
+                              <Badge className="ml-2 bg-primary text-primary-foreground">{pendingRequestsCount}</Badge>
+                            )}
+                          </Link>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                     {/* Profile */}

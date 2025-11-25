@@ -16,6 +16,7 @@ import SignIn from "@/components/SignIn";
 import Image from "next/image";
 import { useUser } from "@/context/UserContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { useFriends } from "@/context/FriendsContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
@@ -141,7 +142,7 @@ export default function Home() {
   const { totalItems: wishlistCount, addItem: addWishlistItem } = useWishlist();
   const { theme, toggleTheme } = useTheme();
   const fileInputId = "avatar-file-input";
-  const pendingFriends = 1; // demo count
+  const { pendingRequestsCount } = useFriends();
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [clearSessionData, setClearSessionData] = useState(false);
@@ -316,7 +317,31 @@ export default function Home() {
                 <div className="hidden md:flex items-center gap-6">
                   <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Store</a>
                   <Link href="/library" className="text-muted-foreground hover:text-foreground transition-colors">Library</Link>
-                  <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Community</a>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                      Community
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community">Community Home</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/forums">Forums & Discussions</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/groups">Groups & Communities</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/activity">Activity Feed</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/events">Events & Tournaments</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/community/friends">Find Friends</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -374,16 +399,27 @@ export default function Home() {
                       <DropdownMenuTrigger className="rounded-full focus:outline-none">
                         <div className="relative h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-foreground">
                           <Users className="h-5 w-5" />
-                          {pendingFriends > 0 && (
-                            <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingFriends}</span>
+                          {pendingRequestsCount > 0 && (
+                            <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingRequestsCount}</span>
                           )}
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">Friends</DropdownMenuLabel>
-                        <DropdownMenuItem>Add Friend</DropdownMenuItem>
-                        <DropdownMenuItem>Friend Requests ({pendingFriends})</DropdownMenuItem>
-                        <DropdownMenuItem>Friends List</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/friends">View Friends</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/friends?tab=add">Add Friend</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/friends?tab=requests">
+                            Friend Requests
+                            {pendingRequestsCount > 0 && (
+                              <Badge className="ml-2 bg-primary text-primary-foreground">{pendingRequestsCount}</Badge>
+                            )}
+                          </Link>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <DropdownMenu>
