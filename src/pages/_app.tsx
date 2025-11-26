@@ -10,6 +10,7 @@ import { RewardsProvider } from "@/context/RewardsContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { CommunityProvider } from "@/context/CommunityContext";
 import { FriendsProvider } from "@/context/FriendsContext";
+import { NotificationsProvider } from "@/context/NotificationsContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -40,10 +41,12 @@ export default function App({ Component, pageProps }: AppProps) {
             <RewardsProvider>
               <CommunityProvider>
                 <FriendsProvider>
-                  <div className="min-h-screen">
-                    <Component {...pageProps} />
-                    <Toaster />
-                  </div>
+                  <NotificationsProvider>
+                    <div className="min-h-screen">
+                      <Component {...pageProps} />
+                      <Toaster />
+                    </div>
+                  </NotificationsProvider>
                 </FriendsProvider>
               </CommunityProvider>
             </RewardsProvider>

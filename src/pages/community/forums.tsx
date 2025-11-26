@@ -13,6 +13,7 @@ import { MessageSquare, Plus, ThumbsUp, Eye, Pin, Lock, Search, X } from "lucide
 import { useCommunity } from "@/context/CommunityContext";
 import { useUser } from "@/context/UserContext";
 import CommunityNav from "@/components/community/CommunityNav";
+import { useToast } from "@/components/ui/use-toast";
 // Date formatting helper
 const formatTimeAgo = (dateString: string) => {
   const date = new Date(dateString);
@@ -40,6 +41,7 @@ const tags = ["RPG", "Action", "Multiplayer", "Single Player", "Help", "Guide"];
 export default function ForumsPage() {
   const { posts, addPost, addReply, likePost, likeReply } = useCommunity();
   const { user } = useUser();
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -56,7 +58,14 @@ export default function ForumsPage() {
   });
 
   const handleCreatePost = () => {
-    if (!user || !newPost.title || !newPost.content) return;
+    if (!user || !newPost.title || !newPost.content) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
     addPost({
       title: newPost.title,
       content: newPost.content,
@@ -67,10 +76,21 @@ export default function ForumsPage() {
     });
     setNewPost({ title: "", content: "", category: "General", tags: [] });
     setIsCreateOpen(false);
+    toast({
+      title: "Post created",
+      description: "Your forum post has been published",
+    });
   };
 
   const handleAddReply = (postId: string) => {
-    if (!user || !newReply.trim()) return;
+    if (!user || !newReply.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a reply",
+        variant: "destructive",
+      });
+      return;
+    }
     addReply(postId, {
       postId,
       content: newReply,
@@ -79,6 +99,10 @@ export default function ForumsPage() {
     });
     setNewReply("");
     setSelectedPost(null);
+    toast({
+      title: "Reply posted",
+      description: "Your reply has been added",
+    });
   };
 
   const selectedPostData = posts.find(p => p.id === selectedPost);

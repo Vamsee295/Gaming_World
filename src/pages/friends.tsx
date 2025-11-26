@@ -17,6 +17,7 @@ import { useFriends } from "@/context/FriendsContext";
 import { useUser } from "@/context/UserContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
+import FriendsChat from "@/components/friends/FriendsChat";
 
 // Mock users for searching
 const mockUsers = [
@@ -51,6 +52,7 @@ export default function FriendsPage() {
   const [selectedFriend, setSelectedFriend] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "online" | "offline" | "playing">("all");
   const [activeTab, setActiveTab] = useState("friends");
+  const [chatFriendId, setChatFriendId] = useState<string | null>(null);
 
   // Handle URL query parameters for tab navigation
   useEffect(() => {
@@ -102,6 +104,10 @@ export default function FriendsPage() {
       title: "Friend request sent",
       description: `Friend request sent to ${userName}`,
     });
+  };
+
+  const handleOpenChat = (friendId: string) => {
+    setChatFriendId(friendId);
   };
 
   const handleAcceptRequest = (requestId: string) => {
@@ -339,11 +345,7 @@ export default function FriendsPage() {
                                 className="flex-1 gap-2"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // Open chat - placeholder
-                                  toast({
-                                    title: "Chat",
-                                    description: `Opening chat with ${friend.name}`,
-                                  });
+                                  setChatFriendId(friend.id);
                                 }}
                               >
                                 <MessageSquare className="h-4 w-4" />
@@ -747,6 +749,15 @@ export default function FriendsPage() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Friends Chat */}
+        {chatFriendId && (
+          <FriendsChat
+            friendId={chatFriendId}
+            isOpen={!!chatFriendId}
+            onClose={() => setChatFriendId(null)}
+          />
+        )}
       </div>
     </>
   );

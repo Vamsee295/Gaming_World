@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock, Users, ExternalLink, ArrowUp, X, Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
+import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock, Users, ExternalLink, ArrowUp, X, Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Sun, Moon, Bell } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -17,6 +17,9 @@ import Image from "next/image";
 import { useUser } from "@/context/UserContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useFriends } from "@/context/FriendsContext";
+import { useNotifications } from "@/context/NotificationsContext";
+import NotificationPanel from "@/components/notifications/NotificationPanel";
+import FriendsSidebar from "@/components/friends/FriendsSidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
@@ -147,6 +150,9 @@ export default function Home() {
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [clearSessionData, setClearSessionData] = useState(false);
   const [signOutStatus, setSignOutStatus] = useState("");
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  const [isFriendsSidebarOpen, setIsFriendsSidebarOpen] = useState(false);
+  const { unreadCount } = useNotifications();
 
   const handleSignOut = () => {
     // Clear session data if toggle is checked
@@ -386,6 +392,22 @@ export default function Home() {
                     </span>
                   )}
                 </Link>
+                {isAuthenticated && (
+                  <div className="relative">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsNotificationPanelOpen(!isNotificationPanelOpen)}
+                    >
+                      <Bell className="h-5 w-5" />
+                    </Button>
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-xs px-1.5 py-0.5">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </div>
+                )}
                 {!isAuthenticated ? (
                   <Button onClick={() => setIsSignInOpen(true)}>Sign In</Button>
                 ) : (
@@ -395,17 +417,28 @@ export default function Home() {
                       if (f) await updateAvatar(f);
                     }} />
                     {/* Friends icon - placed left of profile */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative"
+                      onClick={() => setIsFriendsSidebarOpen(!isFriendsSidebarOpen)}
+                    >
+                      <Users className="h-5 w-5" />
+                      {pendingRequestsCount > 0 && (
+                        <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingRequestsCount}</span>
+                      )}
+                    </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger className="rounded-full focus:outline-none">
                         <div className="relative h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-foreground">
                           <Users className="h-5 w-5" />
-                          {pendingRequestsCount > 0 && (
-                            <span className="absolute -top-1 -right-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5">{pendingRequestsCount}</span>
-                          )}
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">Friends</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => setIsFriendsSidebarOpen(true)}>
+                          Open Friends Panel
+                        </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="/friends">View Friends</Link>
                         </DropdownMenuItem>
@@ -984,7 +1017,23 @@ export default function Home() {
             )}
           </div>
         </DialogContent>
-      </Dialog>
+        </Dialog>
+
+        {/* Notification Panel */}
+        {isAuthenticated && (
+          <NotificationPanel
+            isOpen={isNotificationPanelOpen}
+            onClose={() => setIsNotificationPanelOpen(false)}
+          />
+        )}
+
+        {/* Friends Sidebar */}
+        {isAuthenticated && (
+          <FriendsSidebar
+            isOpen={isFriendsSidebarOpen}
+            onClose={() => setIsFriendsSidebarOpen(false)}
+          />
+        )}
     </>
   );
 }
