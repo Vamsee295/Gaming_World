@@ -23,6 +23,90 @@ const gameImages: Record<number, any> = {
   1: img1, 2: img2, 3: img3, 4: img4, 5: img5, 6: img6, 7: img7, 8: img8
 };
 
+type Review = {
+  id: string;
+  user: string;
+  rating: number; // 1-5, includes 4.5
+  title: string;
+  content: string;
+  date: string; // e.g., "Jan 2025"
+};
+
+function generateReviews(gameTitle: string): Review[] {
+  const monthYear = [
+    "Jan 2025","Feb 2025","Mar 2025","Apr 2025","May 2025","Jun 2025",
+    "Jul 2025","Aug 2025","Sep 2025","Oct 2025","Nov 2025","Dec 2025"
+  ];
+  const names = [
+    "Alex","Riley","Jordan","Taylor","Casey","Morgan","Avery","Cameron","Quinn","Skyler",
+    "Jamie","Sam","Devon","Rowan","Harper","Logan","Phoenix","Drew","Kai","Eden"
+  ];
+
+  let i = 0;
+  const takeName = () => names[i++ % names.length] + " " + (100 + i);
+  const takeDate = (idx: number) => monthYear[idx % monthYear.length];
+
+  const awesome: Review[] = Array.from({ length: 5 }).map((_, idx) => ({
+    id: `awesome-${idx}`,
+    user: takeName(),
+    rating: 5,
+    title: "Amazing! A must-play",
+    content: `Absolutely loved ${gameTitle}. Stunning visuals and tight gameplay. Worth every minute!`,
+    date: takeDate(idx)
+  }));
+
+  const neutral: Review[] = Array.from({ length: 5 }).map((_, idx) => ({
+    id: `neutral-${idx}`,
+    user: takeName(),
+    rating: 4,
+    title: "Solid experience",
+    content: `${gameTitle} delivers a good time. Minor issues, but overall enjoyable.`,
+    date: takeDate(idx + 5)
+  }));
+
+  const negative: Review[] = Array.from({ length: 2 }).map((_, idx) => ({
+    id: `negative-${idx}`,
+    user: takeName(),
+    rating: 3,
+    title: "Not for me",
+    content: `${gameTitle} looks great but the mechanics didn’t click for me.`,
+    date: takeDate(idx + 10)
+  }));
+
+  const goodGame: Review[] = Array.from({ length: 3 }).map((_, idx) => ({
+    id: `good-${idx}`,
+    user: takeName(),
+    rating: 4.5,
+    title: "Great game!",
+    content: `${gameTitle} is fantastic overall. A few rough edges, but highly recommended.`,
+    date: takeDate(idx + 12)
+  }));
+
+  return [...awesome, ...neutral, ...negative, ...goodGame];
+}
+
+function StarIcons({ rating }: { rating: number }) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  return (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: full }).map((_, i) => (
+        <Star key={`full-${i}`} className="h-4 w-4 fill-primary text-primary" />
+      ))}
+      {half === 1 && (
+        <span className="relative inline-block h-4 w-4">
+          <Star className="h-4 w-4 text-muted-foreground" />
+          <Star className="h-4 w-4 text-primary absolute inset-0" style={{ clipPath: 'inset(0 50% 0 0)' }} />
+        </span>
+      )}
+      {Array.from({ length: empty }).map((_, i) => (
+        <Star key={`empty-${i}`} className="h-4 w-4 text-muted-foreground" />
+      ))}
+      <span className="ml-1 text-xs text-muted-foreground">{rating.toFixed(1)}</span>
+    </div>
+  );
+}
 const gamesData: Record<number, any> = {
   1: {
     id: 1,
@@ -116,6 +200,158 @@ const gamesData: Record<number, any> = {
       }
     },
     screenshots: [img3, img4, img5]
+  },
+  4: {
+    id: 4,
+    title: "Need For Speed",
+    price: "$59.99",
+    discount: 30,
+    rating: 4.9,
+    genre: "Action",
+    description: "High-octane street racing with stunning visuals and customization.",
+    longDescription: "Jump into exhilarating street races, build your dream cars, and outrun the competition in intense nighttime races. Experience dynamic handling and a vibrant urban scene.",
+    releaseDate: "November 2019",
+    developer: "Ghost Games",
+    publisher: "Electronic Arts",
+    tags: ["Racing", "Action", "Multiplayer", "Cars"],
+    systemRequirements: {
+      minimum: {
+        os: "Windows 10",
+        processor: "Intel Core i5-3570 / AMD FX-6350",
+        memory: "8 GB RAM",
+        graphics: "NVIDIA GTX 760 / AMD Radeon R9 270",
+        storage: "40 GB"
+      },
+      recommended: {
+        os: "Windows 10",
+        processor: "Intel Core i7-4790 / AMD Ryzen 3 1300X",
+        memory: "16 GB RAM",
+        graphics: "NVIDIA GTX 1060 / AMD Radeon RX 480",
+        storage: "40 GB SSD"
+      }
+    },
+    screenshots: [img4, img5, img6]
+  },
+  5: {
+    id: 5,
+    title: "The Last Of Us",
+    price: "$0.00",
+    rating: 4.5,
+    genre: "FPS",
+    description: "An emotional, post-apocalyptic journey of survival and hope.",
+    longDescription: "Survive in a harsh world ravaged by a pandemic. Craft, fight, and forge bonds across a gripping story with unforgettable characters and breathtaking environments.",
+    releaseDate: "March 2023",
+    developer: "Naughty Dog",
+    publisher: "PlayStation Studios",
+    tags: ["Story Rich", "Survival", "Action", "Adventure"],
+    systemRequirements: {
+      minimum: {
+        os: "Windows 10",
+        processor: "Intel Core i5-8400 / AMD Ryzen 5 2600",
+        memory: "12 GB RAM",
+        graphics: "NVIDIA GTX 1060 / AMD Radeon RX 580",
+        storage: "100 GB"
+      },
+      recommended: {
+        os: "Windows 11",
+        processor: "Intel Core i7-8700K / AMD Ryzen 5 3600",
+        memory: "16 GB RAM",
+        graphics: "NVIDIA RTX 2060 / AMD Radeon RX 5700",
+        storage: "100 GB SSD"
+      }
+    },
+    screenshots: [img5, img6, img7]
+  },
+  6: {
+    id: 6,
+    title: "Detroit : Become Human",
+    price: "$44.99",
+    discount: 25,
+    rating: 4.8,
+    genre: "MMORPG",
+    description: "An interactive drama where your choices shape the story.",
+    longDescription: "Experience a branching narrative in a near-future Detroit. Guide androids through moral dilemmas and consequential decisions across multiple intertwined storylines.",
+    releaseDate: "May 2018",
+    developer: "Quantic Dream",
+    publisher: "Quantic Dream",
+    tags: ["Narrative", "Choices Matter", "Adventure", "Sci-Fi"],
+    systemRequirements: {
+      minimum: {
+        os: "Windows 10",
+        processor: "Intel Core i5-2400 / AMD FX-6300",
+        memory: "8 GB RAM",
+        graphics: "NVIDIA GTX 780 / AMD Radeon HD 7950",
+        storage: "55 GB"
+      },
+      recommended: {
+        os: "Windows 10",
+        processor: "Intel Core i7-2700K / AMD Ryzen 7 3700X",
+        memory: "16 GB RAM",
+        graphics: "NVIDIA GTX 1060 / AMD Radeon RX 580",
+        storage: "55 GB SSD"
+      }
+    },
+    screenshots: [img6, img7, img8]
+  },
+  7: {
+    id: 7,
+    title: "A Way Out",
+    price: "$29.99",
+    rating: 4.4,
+    genre: "Horror",
+    description: "A co-op adventure about trust, teamwork, and escape.",
+    longDescription: "Team up with a friend and work together to escape prison and survive on the run. Split-screen co-op narrative with unique collaborative gameplay.",
+    releaseDate: "March 2018",
+    developer: "Hazelight Studios",
+    publisher: "Electronic Arts",
+    tags: ["Co-op", "Adventure", "Story Rich", "Split-screen"],
+    systemRequirements: {
+      minimum: {
+        os: "Windows 10",
+        processor: "Intel Core i3-2100 / AMD FX-6300",
+        memory: "8 GB RAM",
+        graphics: "NVIDIA GTX 650 / AMD Radeon HD 7750",
+        storage: "25 GB"
+      },
+      recommended: {
+        os: "Windows 10",
+        processor: "Intel Core i5-3570K / AMD Ryzen 5 1600",
+        memory: "16 GB RAM",
+        graphics: "NVIDIA GTX 960 / AMD Radeon R9 280",
+        storage: "25 GB SSD"
+      }
+    },
+    screenshots: [img7, img8, img1]
+  },
+  8: {
+    id: 8,
+    title: "Black Myth Wukong",
+    price: "$0.00",
+    rating: 4.6,
+    genre: "Battle Royale",
+    description: "An epic action RPG inspired by Journey to the West.",
+    longDescription: "Take on mythic foes with fluid combat and striking visuals. Explore ancient landscapes and master powerful abilities of the Destined One.",
+    releaseDate: "2024",
+    developer: "Game Science",
+    publisher: "Game Science",
+    tags: ["Action", "RPG", "Mythology", "Adventure"],
+    systemRequirements: {
+      minimum: {
+        os: "Windows 10",
+        processor: "Intel Core i5-6600 / AMD Ryzen 5 1600",
+        memory: "8 GB RAM",
+        graphics: "NVIDIA GTX 1060 / AMD Radeon RX 580",
+        storage: "80 GB"
+      },
+      recommended: {
+        os: "Windows 11",
+        processor: "Intel Core i7-10700 / AMD Ryzen 7 3700X",
+        memory: "16 GB RAM",
+        graphics: "NVIDIA RTX 2060 / AMD Radeon RX 5700 XT",
+        storage: "80 GB SSD"
+      }
+    },
+    screenshots: [img8, img1, img2]
   }
 };
 
@@ -127,6 +363,7 @@ export default function GameDetailPage() {
   const { addItem } = useCart();
   const { addItem: addWishlistItem, items: wishlistItems } = useWishlist();
   const isInWishlist = gameId ? wishlistItems.some(item => item.id === gameId) : false;
+  const reviews: Review[] = game ? generateReviews(game.title) : [];
 
   if (!game) {
     return (
@@ -255,8 +492,14 @@ export default function GameDetailPage() {
                     <h3 className="text-xl font-semibold mb-3 text-foreground">Screenshots</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {game.screenshots?.map((screenshot: any, index: number) => (
-                        <div key={index} className="relative aspect-video overflow-hidden rounded-lg">
-                          <Image src={screenshot} alt={`${game.title} screenshot ${index + 1}`} fill className="object-cover" />
+                        <div key={index} className="relative aspect-video overflow-hidden rounded-lg bg-secondary">
+                          <Image 
+                            src={screenshot} 
+                            alt={`${game.title} screenshot ${index + 1}`} 
+                            fill 
+                            className="object-contain"
+                            sizes="(min-width: 1024px) 33vw, 100vw"
+                          />
                         </div>
                       ))}
                     </div>
@@ -322,8 +565,23 @@ export default function GameDetailPage() {
                 </TabsContent>
                 <TabsContent value="reviews">
                   <div className="space-y-4">
-                    <div className="text-center py-12 border border-border rounded-lg bg-secondary">
-                      <p className="text-muted-foreground">No reviews yet. Be the first to review!</p>
+                    <h3 className="text-xl font-semibold text-foreground">Customer Reviews</h3>
+                    <div className="space-y-3">
+                      {reviews.map((rev) => (
+                        <Card key={rev.id}>
+                          <CardContent className="p-4 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-foreground">{rev.user}</span>
+                                <StarIcons rating={rev.rating} />
+                              </div>
+                              <span className="text-xs text-muted-foreground">{rev.date}</span>
+                            </div>
+                            <p className="text-sm font-medium text-foreground">{rev.title}</p>
+                            <p className="text-sm text-muted-foreground">{rev.content}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   </div>
                 </TabsContent>

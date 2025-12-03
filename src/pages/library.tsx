@@ -300,7 +300,7 @@ export default function LibraryPage() {
 
             <div className={`grid ${listView?"grid-cols-1 gap-2":"grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}`}>
               {games.map(g => (
-                <div key={g.id} className={`rounded-lg border border-border bg-secondary overflow-hidden ${listView?"flex items-center h-24":""}`}>
+                <Link key={g.id} href={`/game/${g.id}`} className={`rounded-lg border border-border bg-secondary overflow-hidden ${listView?"flex items-center h-24":""}`}> 
                   <div className={`${listView?"relative h-16 w-16 m-4":"relative aspect-[16/9]"}`}>
                     <Image src={g.image as any} alt={g.title} fill className="object-cover" />
                   </div>
@@ -321,7 +321,7 @@ export default function LibraryPage() {
                       <div className="mt-2 flex items-center justify-between">
                         <Badge variant="secondary">{g.genre}</Badge>
                         <div className="flex items-center gap-2">
-                          <Button size="icon" variant={g.tags.includes("installed")?"default":"outline"} onClick={()=>openDetails(g)} title={g.tags.includes("installed")?"Play":"Install"}>
+                          <Button size="icon" variant={g.tags.includes("installed")?"default":"outline"} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); openDetails(g); }} title={g.tags.includes("installed")?"Play":"Install"}>
                             {g.tags.includes("installed") ? <Play className="h-4 w-4"/> : <Download className="h-4 w-4"/>}
                           </Button>
                         </div>
@@ -330,12 +330,12 @@ export default function LibraryPage() {
                   </div>
                   {listView && (
                     <div className="px-4">
-                      <Button size="sm" variant={g.tags.includes("installed")?"default":"outline"} onClick={()=>openDetails(g)}>
+                      <Button size="sm" variant={g.tags.includes("installed")?"default":"outline"} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); openDetails(g); }}>
                         {g.tags.includes("installed")? "Play" : "Install"}
                       </Button>
                     </div>
                   )}
-                </div>
+                </Link>
               ))}
             </div>
           </main>
@@ -392,5 +392,4 @@ export default function LibraryPage() {
     </>
   );
 }
-
 

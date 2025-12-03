@@ -633,16 +633,18 @@ export default function Home() {
                     transition={{ delay: index * 0.1, duration: 0.5 }}
                     whileHover={{ y: -5 }}
                   >
-                    <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
-                      <CardContent className="p-8 flex flex-col items-center text-center">
-                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-                          <Icon className="h-10 w-10 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-bold text-foreground">
-                          {category.name}
-                        </h3>
-                      </CardContent>
-                    </Card>
+                    <Link href="/Deals">
+                      <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        <CardContent className="p-8 flex flex-col items-center text-center">
+                          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                            <Icon className="h-10 w-10 text-primary" />
+                          </div>
+                          <h3 className="text-xl font-bold text-foreground">
+                            {category.name}
+                          </h3>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   </motion.div>
                 );
               })}
@@ -801,6 +803,7 @@ export default function Home() {
                             size="sm"
                             variant="outline"
                             onClick={(e) => {
+                              e.preventDefault();
                               e.stopPropagation();
                               const basePrice = parseFloat(game.price.slice(1));
                               const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
@@ -812,6 +815,7 @@ export default function Home() {
                           <Button
                             size="sm"
                             onClick={(e) => {
+                              e.preventDefault();
                               e.stopPropagation();
                               const basePrice = parseFloat(game.price.slice(1));
                               const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
@@ -877,10 +881,12 @@ export default function Home() {
             <p className="text-xl text-muted-foreground mb-8">
               Save up to 75% on selected titles. Offer ends soon!
             </p>
-            <Button size="lg" className="gap-2">
-              <TrendingUp className="h-5 w-5" />
-              View All Deals
-            </Button>
+            <Link href="/Deals">
+              <Button size="lg" className="gap-2">
+                <TrendingUp className="h-5 w-5" />
+                View All Deals
+              </Button>
+            </Link>
           </motion.div>
         </section>
 
