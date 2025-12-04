@@ -35,24 +35,24 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider>
-      <UserProvider>
-        <WishlistProvider>
-          <CartProvider>
-            <RewardsProvider>
+    <UserProvider>
+      <WishlistProvider>
+        <CartProvider>
+          <RewardsProvider>
               <CommunityProvider>
                 <FriendsProvider>
                   <NotificationsProvider>
-                    <div className="min-h-screen">
-                      <Component {...pageProps} />
-                      <Toaster />
-                    </div>
+            <div className="min-h-screen">
+              <Component {...pageProps} />
+              <Toaster />
+            </div>
                   </NotificationsProvider>
                 </FriendsProvider>
               </CommunityProvider>
-            </RewardsProvider>
-          </CartProvider>
-        </WishlistProvider>
-      </UserProvider>
+          </RewardsProvider>
+        </CartProvider>
+      </WishlistProvider>
+    </UserProvider>
     </ThemeProvider>
   )
 }
