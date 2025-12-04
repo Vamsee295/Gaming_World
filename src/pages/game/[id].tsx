@@ -34,12 +34,12 @@ type Review = {
 
 function generateReviews(gameTitle: string): Review[] {
   const monthYear = [
-    "Jan 2025","Feb 2025","Mar 2025","Apr 2025","May 2025","Jun 2025",
-    "Jul 2025","Aug 2025","Sep 2025","Oct 2025","Nov 2025","Dec 2025"
+    "Jan 2025", "Feb 2025", "Mar 2025", "Apr 2025", "May 2025", "Jun 2025",
+    "Jul 2025", "Aug 2025", "Sep 2025", "Oct 2025", "Nov 2025", "Dec 2025"
   ];
   const names = [
-    "Alex","Riley","Jordan","Taylor","Casey","Morgan","Avery","Cameron","Quinn","Skyler",
-    "Jamie","Sam","Devon","Rowan","Harper","Logan","Phoenix","Drew","Kai","Eden"
+    "Alex", "Riley", "Jordan", "Taylor", "Casey", "Morgan", "Avery", "Cameron", "Quinn", "Skyler",
+    "Jamie", "Sam", "Devon", "Rowan", "Harper", "Logan", "Phoenix", "Drew", "Kai", "Eden"
   ];
 
   let i = 0;
@@ -378,7 +378,7 @@ export default function GameDetailPage() {
     );
   }
 
-  const effectivePrice = game.discount 
+  const effectivePrice = game.discount
     ? parseFloat(game.price.slice(1)) * (1 - game.discount / 100)
     : parseFloat(game.price.slice(1));
 
@@ -493,10 +493,10 @@ export default function GameDetailPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {game.screenshots?.map((screenshot: any, index: number) => (
                         <div key={index} className="relative aspect-video overflow-hidden rounded-lg bg-secondary">
-                          <Image 
-                            src={screenshot} 
-                            alt={`${game.title} screenshot ${index + 1}`} 
-                            fill 
+                          <Image
+                            src={screenshot}
+                            alt={`${game.title} screenshot ${index + 1}`}
+                            fill
                             className="object-contain"
                             sizes="(min-width: 1024px) 33vw, 100vw"
                           />
