@@ -206,21 +206,21 @@ export default function Home() {
   // Search and filter functionality
   useEffect(() => {
     let filtered = [...games];
-    
+
     // Search filter
     if (searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(game => 
+      filtered = filtered.filter(game =>
         game.title.toLowerCase().includes(query) ||
         game.genre.toLowerCase().includes(query)
       );
     }
-    
+
     // Category filter
     if (selectedCategory !== "all") {
       filtered = filtered.filter(game => game.genre === selectedCategory);
     }
-    
+
     // Price filter
     if (priceFilter !== "all") {
       filtered = filtered.filter(game => {
@@ -241,12 +241,12 @@ export default function Home() {
         }
       });
     }
-    
+
     // Rating filter
     if (ratingFilter > 0) {
       filtered = filtered.filter(game => game.rating >= ratingFilter);
     }
-    
+
     setFilteredGames(filtered);
     setCurrentPage(1); // Reset to first page when filters change
   }, [searchQuery, selectedCategory, priceFilter, ratingFilter]);
@@ -304,7 +304,7 @@ export default function Home() {
 
       <div className="min-h-screen bg-background">
         {/* Navigation */}
-        <motion.nav 
+        <motion.nav
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.6 }}
@@ -313,7 +313,7 @@ export default function Home() {
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-8">
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="flex items-center gap-2"
                 >
@@ -353,8 +353,8 @@ export default function Home() {
               <div className="flex items-center gap-4">
                 <div className="relative hidden md:block">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Search games..." 
+                  <Input
+                    placeholder="Search games..."
                     className="pl-10 pr-8 w-64 bg-secondary border-border"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -412,7 +412,7 @@ export default function Home() {
                   <Button onClick={() => setIsSignInOpen(true)}>Sign In</Button>
                 ) : (
                   <>
-                    <input id={fileInputId} type="file" accept="image/*" className="hidden" onChange={async (e)=>{
+                    <input id={fileInputId} type="file" accept="image/*" className="hidden" onChange={async (e) => {
                       const f = e.target.files?.[0];
                       if (f) await updateAvatar(f);
                     }} />
@@ -469,7 +469,7 @@ export default function Home() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">{user?.name}</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={()=>setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild><Link href="/achievements">My Achievements</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -487,7 +487,7 @@ export default function Home() {
                         <DropdownMenuItem asChild><Link href="/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </>
@@ -499,7 +499,7 @@ export default function Home() {
 
         {/* Hero Carousel Section */}
         {featuredGames.length > 0 && (
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
@@ -516,7 +516,7 @@ export default function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             </div>
-            
+
             {/* Carousel Navigation */}
             {featuredGames.length > 1 && (
               <>
@@ -534,18 +534,17 @@ export default function Home() {
                 >
                   <ChevronRight className="h-6 w-6" />
                 </button>
-                
+
                 {/* Carousel Indicators */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
                   {featuredGames.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentCarouselIndex(index)}
-                      className={`h-2 rounded-full transition-all ${
-                        index === currentCarouselIndex 
-                          ? 'w-8 bg-primary' 
+                      className={`h-2 rounded-full transition-all ${index === currentCarouselIndex
+                          ? 'w-8 bg-primary'
                           : 'w-2 bg-muted-foreground/50 hover:bg-muted-foreground'
-                      }`}
+                        }`}
                       aria-label={`Go to slide ${index + 1}`}
                     />
                   ))}
@@ -554,7 +553,7 @@ export default function Home() {
             )}
 
             <div className="relative container mx-auto px-4 h-full flex items-end pb-20">
-              <motion.div 
+              <motion.div
                 key={currentCarouselIndex}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -583,9 +582,9 @@ export default function Home() {
                       Purchase
                     </Button>
                   </Link>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
+                  <Button
+                    size="lg"
+                    variant="outline"
                     className="gap-2"
                     onClick={() => {
                       const basePrice = parseFloat(featuredGame.price.slice(1));
@@ -633,18 +632,16 @@ export default function Home() {
                     transition={{ delay: index * 0.1, duration: 0.5 }}
                     whileHover={{ y: -5 }}
                   >
-                    <Link href="/Deals">
-                      <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
-                        <CardContent className="p-8 flex flex-col items-center text-center">
-                          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-                            <Icon className="h-10 w-10 text-primary" />
-                          </div>
-                          <h3 className="text-xl font-bold text-foreground">
-                            {category.name}
-                          </h3>
-                        </CardContent>
-                      </Card>
-                    </Link>
+                    <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
+                      <CardContent className="p-8 flex flex-col items-center text-center">
+                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                          <Icon className="h-10 w-10 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground">
+                          {category.name}
+                        </h3>
+                      </CardContent>
+                    </Card>
                   </motion.div>
                 );
               })}
@@ -740,7 +737,7 @@ export default function Home() {
               </motion.div>
             )}
 
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -753,82 +750,82 @@ export default function Home() {
                 </div>
               ) : (
                 paginatedGames.map((game) => (
-                <motion.div
-                  key={game.id}
-                  variants={itemVariants}
-                  whileHover={{ y: -8 }}
-                  className="group cursor-pointer"
-                >
-                  <Link href={`/game/${game.id}`}>
-                    <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                    <div className="aspect-[16/9] overflow-hidden relative">
-                      <Image
-                        src={game.image as any}
-                        alt={game.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-                    {game.discount && (
-                      <div className="absolute top-3 right-3">
-                        <Badge className="bg-green-600 text-white">-{game.discount}%</Badge>
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
-                        {game.title}
-                      </h3>
-                      <div className="flex items-center justify-between mb-3">
-                        <Badge variant="secondary">{game.genre}</Badge>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span className="text-sm text-foreground">{game.rating}</span>
+                  <motion.div
+                    key={game.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -8 }}
+                    className="group cursor-pointer"
+                  >
+                    <Link href={`/game/${game.id}`}>
+                      <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                        <div className="aspect-[16/9] overflow-hidden relative">
+                          <Image
+                            src={game.image as any}
+                            alt={game.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
                         </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        {game.discount ? (
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm line-through text-muted-foreground">{game.price}</span>
-                            <span className="text-lg font-bold text-green-500">
-                              ${(parseFloat(game.price.slice(1)) * (1 - game.discount / 100)).toFixed(2)}
-                            </span>
+                        {game.discount && (
+                          <div className="absolute top-3 right-3">
+                            <Badge className="bg-green-600 text-white">-{game.discount}%</Badge>
                           </div>
-                        ) : (
-                          <span className="text-lg font-bold text-foreground">
-                            {game.price === "$0.00" ? "Free" : game.price}
-                          </span>
                         )}
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const basePrice = parseFloat(game.price.slice(1));
-                              const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
-                              addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
-                            }}
-                          >
-                            Add to Cart
-                          </Button>
-                          <Button
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const basePrice = parseFloat(game.price.slice(1));
-                              const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
-                              addWishlistItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image as any });
-                            }}
-                          >
-                            Wishlist
-                          </Button>
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                            {game.title}
+                          </h3>
+                          <div className="flex items-center justify-between mb-3">
+                            <Badge variant="secondary">{game.genre}</Badge>
+                            <div className="flex items-center gap-1">
+                              <Star className="h-4 w-4 fill-primary text-primary" />
+                              <span className="text-sm text-foreground">{game.rating}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            {game.discount ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm line-through text-muted-foreground">{game.price}</span>
+                                <span className="text-lg font-bold text-green-500">
+                                  ${(parseFloat(game.price.slice(1)) * (1 - game.discount / 100)).toFixed(2)}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-bold text-foreground">
+                                {game.price === "$0.00" ? "Free" : game.price}
+                              </span>
+                            )}
+                            <div className="flex items-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  const basePrice = parseFloat(game.price.slice(1));
+                                  const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                                  addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
+                                }}
+                              >
+                                Add to Cart
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  const basePrice = parseFloat(game.price.slice(1));
+                                  const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                                  addWishlistItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image as any });
+                                }}
+                              >
+                                Wishlist
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  </Link>
-                </motion.div>
-              )))}
+                    </Link>
+                  </motion.div>
+                )))}
             </motion.div>
 
             {/* Pagination */}
@@ -879,12 +876,10 @@ export default function Home() {
             <p className="text-xl text-muted-foreground mb-8">
               Save up to 75% on selected titles. Offer ends soon!
             </p>
-            <Link href="/Deals">
-              <Button size="lg" className="gap-2">
-                <TrendingUp className="h-5 w-5" />
-                View All Deals
-              </Button>
-            </Link>
+            <Button size="lg" className="gap-2">
+              <TrendingUp className="h-5 w-5" />
+              View All Deals
+            </Button>
           </motion.div>
         </section>
 
@@ -962,7 +957,7 @@ export default function Home() {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-destructive">Sign Out</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-6">
             {/* Signed-in User Info */}
             {user && (
@@ -1021,23 +1016,23 @@ export default function Home() {
             )}
           </div>
         </DialogContent>
-        </Dialog>
+      </Dialog>
 
-        {/* Notification Panel */}
-        {isAuthenticated && (
-          <NotificationPanel
-            isOpen={isNotificationPanelOpen}
-            onClose={() => setIsNotificationPanelOpen(false)}
-          />
-        )}
+      {/* Notification Panel */}
+      {isAuthenticated && (
+        <NotificationPanel
+          isOpen={isNotificationPanelOpen}
+          onClose={() => setIsNotificationPanelOpen(false)}
+        />
+      )}
 
-        {/* Friends Sidebar */}
-        {isAuthenticated && (
-          <FriendsSidebar
-            isOpen={isFriendsSidebarOpen}
-            onClose={() => setIsFriendsSidebarOpen(false)}
-          />
-        )}
+      {/* Friends Sidebar */}
+      {isAuthenticated && (
+        <FriendsSidebar
+          isOpen={isFriendsSidebarOpen}
+          onClose={() => setIsFriendsSidebarOpen(false)}
+        />
+      )}
     </>
   );
 }
