@@ -580,7 +580,7 @@ export default function Home() {
                   <Link href={`/game/${featuredGame.id}`}>
                     <Button size="lg" className="gap-2">
                       <Play className="h-5 w-5" />
-                      Play Now
+                      Purchase
                     </Button>
                   </Link>
                   <Button 
