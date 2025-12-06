@@ -542,8 +542,8 @@ export default function Home() {
                       key={index}
                       onClick={() => setCurrentCarouselIndex(index)}
                       className={`h-2 rounded-full transition-all ${index === currentCarouselIndex
-                          ? 'w-8 bg-primary'
-                          : 'w-2 bg-muted-foreground/50 hover:bg-muted-foreground'
+                        ? 'w-8 bg-primary'
+                        : 'w-2 bg-muted-foreground/50 hover:bg-muted-foreground'
                         }`}
                       aria-label={`Go to slide ${index + 1}`}
                     />
@@ -576,7 +576,7 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex items-center gap-4">
-                  <Link href={`/game/${featuredGame.id}`}>
+                  <Link href={`/transaction?gameId=${featuredGame.id}`}>
                     <Button size="lg" className="gap-2">
                       <Play className="h-5 w-5" />
                       Purchase
@@ -800,6 +800,7 @@ export default function Home() {
                                 size="sm"
                                 variant="outline"
                                 onClick={(e) => {
+                                  e.preventDefault();
                                   e.stopPropagation();
                                   const basePrice = parseFloat(game.price.slice(1));
                                   const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
@@ -811,6 +812,7 @@ export default function Home() {
                               <Button
                                 size="sm"
                                 onClick={(e) => {
+                                  e.preventDefault();
                                   e.stopPropagation();
                                   const basePrice = parseFloat(game.price.slice(1));
                                   const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;

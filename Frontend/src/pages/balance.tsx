@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -73,6 +74,7 @@ const paymentOptions = [
 export default function BalancePage() {
   const { user } = useUser();
   const { toast } = useToast();
+  const router = useRouter();
 
   // Wallet State
   const [balance, setBalance] = useState<number>(INITIAL_BALANCE);
@@ -153,10 +155,10 @@ export default function BalancePage() {
     }
   }, [transactions]);
 
-  // Handle preset amount selection
+  // Handle preset amount selection - Navigate to transaction page
   const handleSelectAmount = (amount: number) => {
-    setSelectedAmount(amount);
-    setIsPaymentDialogOpen(true);
+    // Navigate to transaction page with wallet funding mode
+    router.push(`/transaction?mode=wallet&amount=${amount}`);
   };
 
   // Handle payment confirmation
@@ -384,9 +386,8 @@ export default function BalancePage() {
                       <TableCell className="font-medium text-foreground">{tx.description}</TableCell>
                       <TableCell className="text-muted-foreground">{tx.method}</TableCell>
                       <TableCell
-                        className={`font-bold ${
-                          tx.amount > 0 ? "text-emerald-400" : "text-destructive"
-                        }`}
+                        className={`font-bold ${tx.amount > 0 ? "text-emerald-400" : "text-destructive"
+                          }`}
                       >
                         {tx.amount > 0
                           ? `+ ₹${tx.amount.toFixed(2)}`
@@ -398,8 +399,8 @@ export default function BalancePage() {
                             tx.status === "Completed"
                               ? "default"
                               : tx.status === "Failed"
-                              ? "destructive"
-                              : "secondary"
+                                ? "destructive"
+                                : "secondary"
                           }
                         >
                           {tx.status}
@@ -489,11 +490,10 @@ export default function BalancePage() {
                   <button
                     key={option.key}
                     onClick={() => setPaymentMethod(option.key)}
-                    className={`w-full flex items-center justify-between p-4 rounded-lg transition duration-200 border-2 ${
-                      paymentMethod === option.key
-                        ? "border-primary bg-primary/10"
-                        : "border-border bg-secondary hover:bg-secondary/80"
-                    }`}
+                    className={`w-full flex items-center justify-between p-4 rounded-lg transition duration-200 border-2 ${paymentMethod === option.key
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-secondary hover:bg-secondary/80"
+                      }`}
                   >
                     <span className="flex items-center text-foreground font-medium">
                       <Icon className="w-5 h-5 mr-3 text-primary" />

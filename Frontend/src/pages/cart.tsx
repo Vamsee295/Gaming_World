@@ -127,7 +127,9 @@ export default function CartPage() {
               <span>Subtotal</span>
               <span>₹{totalPrice.toFixed(2)}</span>
             </div>
-            <Button className="mb-3 w-full">Check Out</Button>
+            <Link href="/transaction">
+              <Button className="mb-3 w-full">Check Out</Button>
+            </Link>
             <Button variant="outline" className="w-full" onClick={clear}>Clear cart</Button>
           </div>
         </div>

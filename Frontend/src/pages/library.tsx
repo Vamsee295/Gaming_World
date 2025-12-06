@@ -5,10 +5,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Search, ShoppingCart, Gamepad2, Users, ExternalLink, Star, Grid2x2, List, Download, Play, ArrowUpDown } from "lucide-react";
+import { Search, ShoppingCart, Gamepad2, Users, ExternalLink, Star, Grid2x2, List, Download, Play, ArrowUpDown, MessageSquarePlus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -68,13 +69,19 @@ export default function LibraryPage() {
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const [selected, setSelected] = useState<LibraryGame | null>(null);
   const { pendingRequestsCount } = useFriends();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterTag, setFilterTag] = useState("All");
+  const [reviewDialog, setReviewDialog] = useState(false);
+  const [reviewGame, setReviewGame] = useState<LibraryGame | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
 
   const fileInputId = "avatar-file-input-lib";
 
   const games = useMemo(() => {
     let filtered = filter === "all" ? baseGames : baseGames.filter(g => g.tags.includes(filter));
     filtered = query.trim() ? filtered.filter(g => g.title.toLowerCase().includes(query.toLowerCase())) : filtered;
-    
+
     // Sort games
     const sorted = [...filtered].sort((a, b) => {
       switch (sortBy) {
@@ -94,12 +101,36 @@ export default function LibraryPage() {
           return 0;
       }
     });
-    
+
     return sorted;
   }, [filter, query, sortBy]);
 
   const openDetails = (g: LibraryGame) => setSelected(g);
   const closeDetails = () => setSelected(null);
+
+  const openReviewDialog = (game: LibraryGame) => {
+    setReviewGame(game);
+    setReviewRating(5);
+    setReviewComment("");
+    setReviewDialog(true);
+  };
+
+  const handleSubmitReview = () => {
+    if (!reviewGame || !reviewComment.trim()) {
+      alert("Please enter a review comment");
+      return;
+    }
+
+    // In a real app, this would send to backend
+    alert(`Review submitted for ${reviewGame.title}!\nRating: ${reviewRating} stars\nComment: ${reviewComment}`);
+
+    // Reset and close
+    setReviewDialog(false);
+    setReviewGame(null);
+    setReviewRating(5);
+    setReviewComment("");
+  };
+
 
   return (
     <>
@@ -154,7 +185,7 @@ export default function LibraryPage() {
               <div className="flex items-center gap-4">
                 <div className="relative hidden md:block">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search library..." className="pl-10 w-64 bg-secondary border-border" />
+                  <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search library..." className="pl-10 w-64 bg-secondary border-border" />
                 </div>
                 <Link href="/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
                   Wishlist
@@ -174,7 +205,7 @@ export default function LibraryPage() {
                   <Link href="/"><Button>Sign In</Button></Link>
                 ) : (
                   <>
-                    <input id={fileInputId} type="file" accept="image/*" className="hidden" onChange={async (e)=>{
+                    <input id={fileInputId} type="file" accept="image/*" className="hidden" onChange={async (e) => {
                       const f = e.target.files?.[0];
                       if (f) await updateAvatar(f);
                     }} />
@@ -221,7 +252,7 @@ export default function LibraryPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">{user?.name}</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={()=>setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild><Link href="/achievements">My Achievements</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -239,7 +270,7 @@ export default function LibraryPage() {
                         <DropdownMenuItem asChild><Link href="/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={()=>setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </>
@@ -254,17 +285,17 @@ export default function LibraryPage() {
           {/* Sidebar */}
           <aside className="col-span-12 md:col-span-3 lg:col-span-3 xl:col-span-2">
             <div className="rounded-lg border border-border bg-secondary p-4 sticky top-24">
-              <Input placeholder="Search..." value={query} onChange={(e)=>setQuery(e.target.value)} className="mb-4" />
+              <Input placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} className="mb-4" />
               <div className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Filters</div>
               <div className="flex flex-col gap-1">
-                {(["all","installed","favorites"] as Tag[]).map(f => (
-                  <button key={f} onClick={()=>setFilter(f)} className={`text-left rounded px-2 py-1 ${filter===f?"bg-muted text-foreground":"text-muted-foreground hover:text-foreground"}`}>{f.charAt(0).toUpperCase()+f.slice(1)}</button>
+                {(["all", "installed", "favorites"] as Tag[]).map(f => (
+                  <button key={f} onClick={() => setFilter(f)} className={`text-left rounded px-2 py-1 ${filter === f ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}>{f.charAt(0).toUpperCase() + f.slice(1)}</button>
                 ))}
               </div>
               <div className="text-xs text-muted-foreground uppercase tracking-wide mt-4 mb-2">Categories</div>
               <div className="flex flex-col gap-1">
-                {(["action","cars","rpg"] as Tag[]).map(f => (
-                  <button key={f} onClick={()=>setFilter(f)} className={`text-left rounded px-2 py-1 ${filter===f?"bg-muted text-foreground":"text-muted-foreground hover:text-foreground"}`}>{f.toUpperCase()}</button>
+                {(["action", "cars", "rpg"] as Tag[]).map(f => (
+                  <button key={f} onClick={() => setFilter(f)} className={`text-left rounded px-2 py-1 ${filter === f ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}>{f.toUpperCase()}</button>
                 ))}
               </div>
             </div>
@@ -273,7 +304,7 @@ export default function LibraryPage() {
           {/* Content */}
           <main className="col-span-12 md:col-span-9 lg:col-span-9 xl:col-span-10">
             <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
-              <h1 className="text-xl font-bold text-foreground">{filter === "all" ? "All Games" : filter.charAt(0).toUpperCase()+filter.slice(1)}</h1>
+              <h1 className="text-xl font-bold text-foreground">{filter === "all" ? "All Games" : filter.charAt(0).toUpperCase() + filter.slice(1)}</h1>
               <div className="flex items-center gap-3">
                 <Select value={sortBy} onValueChange={(v: any) => setSortBy(v)}>
                   <SelectTrigger className="w-[180px]">
@@ -288,61 +319,94 @@ export default function LibraryPage() {
                   </SelectContent>
                 </Select>
                 <div className="inline-flex rounded-md border border-border bg-secondary p-1">
-                  <button className={`px-2 py-1 rounded ${!listView?"bg-muted text-foreground":"text-muted-foreground"}`} onClick={()=>setListView(false)} title="Grid">
+                  <button className={`px-2 py-1 rounded ${!listView ? "bg-muted text-foreground" : "text-muted-foreground"}`} onClick={() => setListView(false)} title="Grid">
                     <Grid2x2 className="h-4 w-4" />
                   </button>
-                  <button className={`px-2 py-1 rounded ${listView?"bg-muted text-foreground":"text-muted-foreground"}`} onClick={()=>setListView(true)} title="List">
+                  <button className={`px-2 py-1 rounded ${listView ? "bg-muted text-foreground" : "text-muted-foreground"}`} onClick={() => setListView(true)} title="List">
                     <List className="h-4 w-4" />
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className={`grid ${listView?"grid-cols-1 gap-2":"grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}`}>
+            <div className={`grid ${listView ? "grid-cols-1 gap-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}`}>
               {games.map(g => (
-                <div key={g.id} className={`rounded-lg border border-border bg-secondary overflow-hidden ${listView?"flex items-center h-24":""}`}>
-                  <div className={`${listView?"relative h-16 w-16 m-4":"relative aspect-[16/9]"}`}>
-                    <Image src={g.image as any} alt={g.title} fill className="object-cover" />
-                  </div>
-                  <div className={`${listView?"flex-1 pr-4":"p-4"}`}>
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0">
-                        <div className="text-foreground font-semibold truncate">{g.title}</div>
-                        <div className="text-xs text-muted-foreground">{g.tags.includes("installed")?"Installed":"Not Installed"}</div>
+                <Link key={g.id} href={`/game/${g.id}`}>
+                  <div className={`rounded-lg border border-border bg-secondary overflow-hidden cursor-pointer hover:border-primary transition-colors ${listView ? "flex items-center h-24" : ""}`}>
+                    <div className={`${listView ? "relative h-16 w-16 m-4" : "relative aspect-[16/9]"}`}>
+                      <Image src={g.image as any} alt={g.title} fill className="object-cover" />
+                    </div>
+                    <div className={`${listView ? "flex-1 pr-4" : "p-4"}`}>
+                      <div className="flex items-center justify-between">
+                        <div className="min-w-0">
+                          <div className="text-foreground font-semibold truncate">{g.title}</div>
+                          <div className="text-xs text-muted-foreground">{g.tags.includes("installed") ? "Installed" : "Not Installed"}</div>
+                        </div>
+                        {!listView && (
+                          <div className="flex items-center gap-1">
+                            <Star className="h-4 w-4 fill-primary text-primary" />
+                            <span className="text-sm text-foreground">{g.rating}</span>
+                          </div>
+                        )}
                       </div>
                       {!listView && (
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span className="text-sm text-foreground">{g.rating}</span>
+                        <div className="mt-2 flex items-center justify-between">
+                          <Badge variant="secondary">{g.genre}</Badge>
+                          <div className="flex items-center gap-2" onClick={(e) => e.preventDefault()}>
+                            {g.tags.includes("installed") ? (
+                              <Button size="icon" variant="default" onClick={(e) => { e.preventDefault(); openDetails(g); }} title="Play">
+                                <Play className="h-4 w-4" />
+                              </Button>
+                            ) : (
+                              <>
+                                <Link href={`/transaction?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
+                                  <Button size="icon" variant="default" title="Purchase">
+                                    <ShoppingCart className="h-4 w-4" />
+                                  </Button>
+                                </Link>
+                                <Link href={`/install?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
+                                  <Button size="icon" variant="outline" title="Install">
+                                    <Download className="h-4 w-4" />
+                                  </Button>
+                                </Link>
+                              </>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
-                    {!listView && (
-                      <div className="mt-2 flex items-center justify-between">
-                        <Badge variant="secondary">{g.genre}</Badge>
-                        <div className="flex items-center gap-2">
-                          <Button size="icon" variant={g.tags.includes("installed")?"default":"outline"} onClick={()=>openDetails(g)} title={g.tags.includes("installed")?"Play":"Install"}>
-                            {g.tags.includes("installed") ? <Play className="h-4 w-4"/> : <Download className="h-4 w-4"/>}
+                    {listView && (
+                      <div className="px-4 flex gap-2" onClick={(e) => e.preventDefault()}>
+                        {g.tags.includes("installed") ? (
+                          <Button size="sm" variant="default" onClick={(e) => { e.preventDefault(); openDetails(g); }}>
+                            Play
                           </Button>
-                        </div>
+                        ) : (
+                          <>
+                            <Link href={`/transaction?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
+                              <Button size="sm" variant="default">
+                                Purchase
+                              </Button>
+                            </Link>
+                            <Link href={`/install?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
+                              <Button size="sm" variant="outline">
+                                Install
+                              </Button>
+                            </Link>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
-                  {listView && (
-                    <div className="px-4">
-                      <Button size="sm" variant={g.tags.includes("installed")?"default":"outline"} onClick={()=>openDetails(g)}>
-                        {g.tags.includes("installed")? "Play" : "Install"}
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                </Link>
               ))}
             </div>
           </main>
-        </div>
+        </div >
 
         {/* Details Modal */}
-        <Dialog open={!!selected} onOpenChange={(o)=>!o && closeDetails()}>
+        < Dialog open={!!selected
+        } onOpenChange={(o) => !o && closeDetails()}>
           <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle className="text-foreground">{selected?.title}</DialogTitle>
@@ -365,17 +429,22 @@ export default function LibraryPage() {
             )}
             <DialogFooter>
               <Button variant="outline" onClick={closeDetails}>Close</Button>
+              <Button variant="outline" onClick={() => { closeDetails(); openReviewDialog(selected!); }}>
+                <MessageSquarePlus className="h-4 w-4 mr-2" /> Add Review
+              </Button>
               {selected?.tags.includes("installed") ? (
-                <Button><Play className="h-4 w-4 mr-2"/> Play</Button>
+                <Button><Play className="h-4 w-4 mr-2" /> Play</Button>
               ) : (
-                <Button variant="outline"><Download className="h-4 w-4 mr-2"/> Install</Button>
+                <Link href={`/transaction?gameId=${selected?.id}`}>
+                  <Button><ShoppingCart className="h-4 w-4 mr-2" /> Purchase</Button>
+                </Link>
               )}
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+        </Dialog >
 
         {/* Photo dialog + Sign out confirm */}
-        <ChangePhotoDialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen} />
+        < ChangePhotoDialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen} />
         <Dialog open={isSignOutOpen} onOpenChange={setIsSignOutOpen}>
           <DialogContent>
             <DialogHeader>
@@ -383,12 +452,59 @@ export default function LibraryPage() {
             </DialogHeader>
             <p className="text-muted-foreground">Are you sure you want to sign out?</p>
             <DialogFooter>
-              <Button variant="outline" onClick={()=>setIsSignOutOpen(false)}>Cancel</Button>
-              <Button onClick={()=>{ setIsSignOutOpen(false); signOut(); }}>Sign Out</Button>
+              <Button variant="outline" onClick={() => setIsSignOutOpen(false)}>Cancel</Button>
+              <Button onClick={() => { setIsSignOutOpen(false); signOut(); }}>Sign Out</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+
+        {/* Review Submission Dialog */}
+        <Dialog open={reviewDialog} onOpenChange={setReviewDialog}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-foreground">Write a Review for {reviewGame?.title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {/* Star Rating */}
+              <div>
+                <label className="text-sm font-medium text-foreground mb-2 block">Rating</label>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`h-8 w-8 cursor-pointer transition-colors ${star <= reviewRating ? 'fill-primary text-primary' : 'text-muted hover:text-primary/50'
+                        }`}
+                      onClick={() => setReviewRating(star)}
+                    />
+                  ))}
+                  <span className="ml-2 text-sm font-semibold text-foreground">{reviewRating} / 5</span>
+                </div>
+              </div>
+
+              {/* Comment */}
+              <div>
+                <label className="text-sm font-medium text-foreground mb-2 block">Your Review</label>
+                <Textarea
+                  placeholder="Share your experience with this game..."
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                  className="min-h-[120px] resize-none"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {reviewComment.length} / 500 characters
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setReviewDialog(false)}>Cancel</Button>
+              <Button onClick={handleSubmitReview} disabled={!reviewComment.trim()}>
+                <MessageSquarePlus className="h-4 w-4 mr-2" />
+                Submit Review
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div >
     </>
   );
 }
