@@ -624,25 +624,26 @@ export default function Home() {
               {categories.map((category, index) => {
                 const Icon = category.icon;
                 return (
-                  <motion.div
-                    key={category.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    whileHover={{ y: -5 }}
-                  >
-                    <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
-                      <CardContent className="p-8 flex flex-col items-center text-center">
-                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-                          <Icon className="h-10 w-10 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-bold text-foreground">
-                          {category.name}
-                        </h3>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
+                  <Link href="/Deals" key={category.name}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1, duration: 0.5 }}
+                      whileHover={{ y: -5 }}
+                    >
+                      <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        <CardContent className="p-8 flex flex-col items-center text-center">
+                          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                            <Icon className="h-10 w-10 text-primary" />
+                          </div>
+                          <h3 className="text-xl font-bold text-foreground">
+                            {category.name}
+                          </h3>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  </Link>
                 );
               })}
             </div>
@@ -878,10 +879,12 @@ export default function Home() {
             <p className="text-xl text-muted-foreground mb-8">
               Save up to 75% on selected titles. Offer ends soon!
             </p>
-            <Button size="lg" className="gap-2">
-              <TrendingUp className="h-5 w-5" />
-              View All Deals
-            </Button>
+            <Link href="/Deals">
+              <Button size="lg" className="gap-2">
+                <TrendingUp className="h-5 w-5" />
+                View All Deals
+              </Button>
+            </Link>
           </motion.div>
         </section>
 
