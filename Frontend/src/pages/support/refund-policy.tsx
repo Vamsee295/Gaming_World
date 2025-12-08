@@ -20,7 +20,7 @@ export default function RefundPolicyPage() {
     });
     // Redirect after 2 seconds
     setTimeout(() => {
-      router.push('/purchase-history');
+      router.push('/profile/purchase-history');
     }, 2000);
   };
 
@@ -35,7 +35,7 @@ export default function RefundPolicyPage() {
     });
     // Redirect after 2 seconds
     setTimeout(() => {
-      router.push('/contact');
+      router.push('/support/contact');
     }, 2000);
   };
 

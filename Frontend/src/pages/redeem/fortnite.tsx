@@ -337,7 +337,7 @@ export default function RedeemFortnitePage() {
             {/* Footer Links and Legal */}
             <div className="text-center pt-4 border-t border-border">
               <Link
-                href="/balance"
+                href="/profile/balance"
                 className="text-sm font-medium text-primary hover:text-primary/80 transition duration-200 inline-flex items-center"
               >
                 <History className="w-4 h-4 mr-1" />

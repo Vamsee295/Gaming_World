@@ -94,7 +94,7 @@ export default function PrivacyPage() {
                 </li>
               </ul>
               <div className="mt-6">
-                <Link href="/terms">
+                <Link href="/support/terms">
                   <Button>
                     <FileText className="w-4 h-4 mr-2" />
                     Review Terms of Service
@@ -337,7 +337,7 @@ export default function PrivacyPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground">
           <p>
             &copy; 2025 EpicStream Network. All rights reserved. |{" "}
-            <Link href="/terms" className="hover:text-foreground transition duration-300">
+            <Link href="/support/terms" className="hover:text-foreground transition duration-300">
               Terms of Service
             </Link>
           </p>

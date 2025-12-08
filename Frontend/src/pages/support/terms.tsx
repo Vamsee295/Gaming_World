@@ -195,7 +195,7 @@ export default function TermsPage() {
               </p>
               <div className="mt-4">
                 <Link
-                  href="/refund-policy"
+                  href="/support/refund-policy"
                   className="text-primary hover:text-primary/80 transition duration-150 underline"
                 >
                   View Full Store Refund Policy
@@ -245,7 +245,7 @@ export default function TermsPage() {
               </p>
               <div className="mt-4">
                 <Link
-                  href="/privacy"
+                  href="/settings/privacy"
                   className="text-primary hover:text-primary/80 transition duration-150 underline"
                 >
                   View Our Full Privacy Policy

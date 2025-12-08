@@ -214,7 +214,7 @@ export default function BalancePage() {
           Home
         </Link>
         <ChevronRight className="w-3 h-3 mx-2" />
-        <Link href="/account" className="hover:text-primary">
+        <Link href="/settings/account" className="hover:text-primary">
           Account
         </Link>
         <ChevronRight className="w-3 h-3 mx-2" />

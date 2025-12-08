@@ -178,12 +178,12 @@ export default function ContactUs() {
                                     <CardTitle className="text-sm">Quick Links</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-2">
-                                    <Link href="/help-center">
+                                    <Link href="/support/help-center">
                                         <Button variant="ghost" className="w-full justify-start" size="sm">
                                             → Visit Help Center
                                         </Button>
                                     </Link>
-                                    <Link href="/refund-policy">
+                                    <Link href="/support/refund-policy">
                                         <Button variant="ghost" className="w-full justify-start" size="sm">
                                             → Refund Policy
                                         </Button>

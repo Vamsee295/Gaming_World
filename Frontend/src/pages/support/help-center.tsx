@@ -233,13 +233,13 @@ export default function HelpCenter() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex flex-wrap gap-4">
-                                <Link href="/contact">
+                                <Link href="/support/contact">
                                     <Button className="gap-2">
                                         <MessageSquare className="h-4 w-4" />
                                         Contact Us
                                     </Button>
                                 </Link>
-                                <Link href="/refund-policy">
+                                <Link href="/support/refund-policy">
                                     <Button variant="outline" className="gap-2">
                                         <RefreshCw className="h-4 w-4" />
                                         Refund Policy

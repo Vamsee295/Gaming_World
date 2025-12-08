@@ -30,7 +30,7 @@ import img6 from "@/components/Images/Store Images/image 6.webp";
 import img7 from "@/components/Images/Store Images/image 7.webp";
 import img8 from "@/components/Images/Store Images/image 8.webp";
 
-type Tag = "installed" | "favorites" | "action" | "cars" | "rpg" | "all";
+type Tag = "installed" | "favorites" | "action" | "cars" | "rpg" | "all" | "recent-played" | "updates-available";
 
 interface LibraryGame {
   id: number;
@@ -111,6 +111,14 @@ export default function LibraryPage() {
 
     let filtered = filter === "all" ? gamesWithFavorites : gamesWithFavorites.filter(g => {
       if (filter === "favorites") return g.isFavorite;
+      if (filter === "recent-played") {
+        // Filter games that have been played (lastPlayed is not "Never")
+        return g.lastPlayed !== "Never";
+      }
+      if (filter === "updates-available") {
+        // Filter games that have updates available
+        return g.hasUpdate;
+      }
       return g.tags.includes(filter);
     });
     filtered = query.trim() ? filtered.filter(g => g.title.toLowerCase().includes(query.toLowerCase())) : filtered;
@@ -256,13 +264,13 @@ export default function LibraryPage() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search library..." className="pl-10 w-64 bg-secondary border-border" />
                 </div>
-                <Link href="/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
+                <Link href="/store/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
                   Wishlist
                   {wishlistCount > 0 && (
                     <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5 py-0.5">{wishlistCount}</span>
                   )}
                 </Link>
-                <Link href="/cart" className="relative">
+                <Link href="/store/cart" className="relative">
                   <Button variant="ghost" size="icon">
                     <ShoppingCart className="h-5 w-5" />
                   </Button>
@@ -291,7 +299,7 @@ export default function LibraryPage() {
                       <DropdownMenuContent align="end" className="w-64">
                         <DropdownMenuLabel className="text-foreground">Friends</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
-                          <Link href="/friends">View Friends</Link>
+                          <Link href="/profile/friends">View Friends</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="/friends?tab=add">Add Friend</Link>
@@ -323,21 +331,21 @@ export default function LibraryPage() {
                         <DropdownMenuLabel className="text-foreground">{user?.name}</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/achievements">My Achievements</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/achievements">My Achievements</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/rewards">Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/balance">Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/coupons">Coupons</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/rewards">Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/balance">Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/coupons">Coupons</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/account">Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/settings/account">Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/redeem">Redeem Code</Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/redeem-fortnite">Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/redeem/fortnite">Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/settings">Settings</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/terms">Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/privacy">Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/support/terms">Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/settings/privacy">Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/support/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/store/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
                       </DropdownMenuContent>
@@ -430,13 +438,18 @@ export default function LibraryPage() {
               {/* Quick Links */}
               <div className="pt-4 border-t border-border space-y-1">
                 <button
-                  onClick={() => setSortBy("recent")}
-                  className="text-left rounded px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 w-full flex items-center gap-2 transition-colors"
+                  onClick={() => setFilter("recent-played")}
+                  className={`text-left rounded px-2 py-1.5 text-sm w-full flex items-center gap-2 transition-colors ${filter === "recent-played" ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
                 >
                   <Clock className="h-4 w-4" />
                   Recently Played
                 </button>
-                <button className="text-left rounded px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 w-full flex items-center gap-2 transition-colors">
+                <button
+                  onClick={() => setFilter("updates-available")}
+                  className={`text-left rounded px-2 py-1.5 text-sm w-full flex items-center gap-2 transition-colors ${filter === "updates-available" ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
+                >
                   <Package className="h-4 w-4" />
                   <span>Updates Available</span>
                   <Badge variant="destructive" className="ml-auto text-xs">
@@ -452,7 +465,10 @@ export default function LibraryPage() {
             <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <h1 className="text-xl font-bold text-foreground">
-                  {filter === "all" ? "All Games" : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                  {filter === "all" ? "All Games" :
+                    filter === "recent-played" ? "Recently Played" :
+                      filter === "updates-available" ? "Updates Available" :
+                        filter.charAt(0).toUpperCase() + filter.slice(1)}
                 </h1>
                 <Badge variant="secondary" className="text-sm">
                   {games.length} {games.length === 1 ? 'game' : 'games'}
@@ -626,13 +642,13 @@ export default function LibraryPage() {
                               </>
                             ) : (
                               <>
-                                <Link href={`/transaction?gameId=${g.id}`} onClick={(e) => e.stopPropagation()} className="flex-1">
+                                <Link href={`/library/install?gameId=${g.id}`} onClick={(e) => e.stopPropagation()} className="flex-1">
                                   <Button size="sm" variant="default" className="w-full">
-                                    <ShoppingCart className="h-3 w-3 mr-1" /> Buy
+                                    <Download className="h-3 w-3 mr-1" /> Install
                                   </Button>
                                 </Link>
-                                <Button size="sm" variant="outline" title="Wishlist">
-                                  <Heart className="h-3 w-3" />
+                                <Button size="sm" variant="outline" onClick={(e) => openManageGame(g, e)} title="Manage">
+                                  <Settings className="h-3 w-3" />
                                 </Button>
                               </>
                             )}
@@ -654,11 +670,13 @@ export default function LibraryPage() {
                             </>
                           ) : (
                             <>
-                              <Link href={`/transaction?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
-                                <Button size="sm" variant="default">Purchase</Button>
+                              <Link href={`/library/install?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
+                                <Button size="sm" variant="default">
+                                  <Download className="h-3 w-3 mr-1" /> Install
+                                </Button>
                               </Link>
-                              <Button size="sm" variant="outline" onClick={(e) => toggleFavorite(g.id, e)}>
-                                <Heart className={`h-3 w-3 ${g.isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+                              <Button size="sm" variant="outline" onClick={(e) => openManageGame(g, e)}>
+                                <Settings className="h-3 w-3" />
                               </Button>
                             </>
                           )}
@@ -783,68 +801,61 @@ export default function LibraryPage() {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-2 py-4">
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3"
-                onClick={() => {
-                  alert(`Opening details for ${manageGame?.title}`);
-                  setManageGameDialog(false);
-                }}
-              >
-                <ExternalLink className="h-4 w-4" />
-                <span>Show Game Details</span>
-              </Button>
-
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3"
-                onClick={() => {
-                  alert(`Verifying files for ${manageGame?.title}...`);
-                  setManageGameDialog(false);
-                }}
-              >
-                <CheckCircle2 className="h-4 w-4" />
-                <span>Verify Game Files</span>
-              </Button>
-
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3"
-                onClick={() => {
-                  alert(`Opening folder selection for ${manageGame?.title}`);
-                  setManageGameDialog(false);
-                }}
-              >
-                <FolderOpen className="h-4 w-4" />
-                <span>Move Install Folder</span>
-              </Button>
-
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3"
-                onClick={() => {
-                  alert(`Opening cloud saves settings for ${manageGame?.title}`);
-                  setManageGameDialog(false);
-                }}
-              >
-                <Cloud className="h-4 w-4" />
-                <span>Cloud Saves</span>
-              </Button>
-
-              <div className="pt-2 border-t border-border">
+              <Link href={`/game/${manageGame?.id}`}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => {
-                    if (confirm(`Are you sure you want to uninstall ${manageGame?.title}?`)) {
-                      alert(`Uninstalling ${manageGame?.title}...`);
-                      setManageGameDialog(false);
-                    }
-                  }}
+                  className="w-full justify-start gap-3"
+                  onClick={() => setManageGameDialog(false)}
                 >
-                  <Trash className="h-4 w-4" />
-                  <span>Uninstall Game</span>
+                  <ExternalLink className="h-4 w-4" />
+                  <span>Show Game Details</span>
                 </Button>
+              </Link>
+
+              <Link href={`/library/verify-files?gameId=${manageGame?.id}&gameName=${encodeURIComponent(manageGame?.title || "")}`}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3"
+                  onClick={() => setManageGameDialog(false)}
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>Verify Game Files</span>
+                </Button>
+              </Link>
+
+              <Link href={`/library/move-install?gameId=${manageGame?.id}&gameName=${encodeURIComponent(manageGame?.title || "")}&size=${manageGame?.size?.replace(" GB", "") || "0"}`}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3"
+                  onClick={() => setManageGameDialog(false)}
+                >
+                  <FolderOpen className="h-4 w-4" />
+                  <span>Move Install Folder</span>
+                </Button>
+              </Link>
+
+              <Link href={`/library/cloud-saves?gameId=${manageGame?.id}&gameName=${encodeURIComponent(manageGame?.title || "")}`}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3"
+                  onClick={() => setManageGameDialog(false)}
+                >
+                  <Cloud className="h-4 w-4" />
+                  <span>Cloud Saves</span>
+                </Button>
+              </Link>
+
+              <div className="pt-2 border-t border-border">
+                <Link href={`/library/uninstall?gameId=${manageGame?.id}&gameName=${encodeURIComponent(manageGame?.title || "")}&size=${manageGame?.size?.replace(" GB", "") || "0"}`}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => setManageGameDialog(false)}
+                  >
+                    <Trash className="h-4 w-4" />
+                    <span>Uninstall Game</span>
+                  </Button>
+                </Link>
               </div>
             </div>
             <DialogFooter>

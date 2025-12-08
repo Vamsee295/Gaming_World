@@ -368,7 +368,7 @@ export default function Home() {
                     </button>
                   )}
                 </div>
-                <Link href="/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
+                <Link href="/store/wishlist" className="relative hidden md:block text-muted-foreground hover:text-foreground">
                   Wishlist
                   {wishlistCount > 0 && (
                     <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5 py-0.5">{wishlistCount}</span>
@@ -382,7 +382,7 @@ export default function Home() {
                 >
                   {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </Button>
-                <Link href="/cart" className="relative">
+                <Link href="/store/cart" className="relative">
                   <Button variant="ghost" size="icon">
                     <ShoppingCart className="h-5 w-5" />
                   </Button>
@@ -440,7 +440,7 @@ export default function Home() {
                           Open Friends Panel
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/friends">View Friends</Link>
+                          <Link href="/profile/friends">View Friends</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="/friends?tab=add">Add Friend</Link>
@@ -471,21 +471,21 @@ export default function Home() {
                         <DropdownMenuLabel className="text-foreground">{user?.name}</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => setIsPhotoDialogOpen(true)}>Change Photo</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/achievements">My Achievements</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/achievements">My Achievements</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/rewards">Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/balance">Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/coupons">Coupons</Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/rewards">Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/balance">Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/coupons">Coupons</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/account">Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/settings/account">Account <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/redeem">Redeem Code</Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/redeem-fortnite">Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/redeem/fortnite">Redeem Fortnite Gift Card <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/settings">Settings</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/terms">Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/privacy">Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
-                        <DropdownMenuItem asChild><Link href="/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/support/terms">Terms of Service <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/settings/privacy">Privacy Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/support/refund-policy">Store Refund Policy <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/store/publishers">Publisher Index <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => setIsSignOutOpen(true)}>Sign Out</DropdownMenuItem>
                       </DropdownMenuContent>
@@ -624,7 +624,7 @@ export default function Home() {
               {categories.map((category, index) => {
                 const Icon = category.icon;
                 return (
-                  <Link href="/Deals" key={category.name}>
+                  <Link href="/store/deals" key={category.name}>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
@@ -879,7 +879,7 @@ export default function Home() {
             <p className="text-xl text-muted-foreground mb-8">
               Save up to 75% on selected titles. Offer ends soon!
             </p>
-            <Link href="/Deals">
+            <Link href="/store/deals">
               <Button size="lg" className="gap-2">
                 <TrendingUp className="h-5 w-5" />
                 View All Deals
@@ -905,24 +905,24 @@ export default function Home() {
                 <h3 className="font-semibold mb-4 text-foreground">Store</h3>
                 <ul className="space-y-2 text-muted-foreground">
                   <li><Link href="/" className="hover:text-foreground transition-colors">Browse Games</Link></li>
-                  <li><Link href="/Deals" className="hover:text-foreground transition-colors">New Releases</Link></li>
-                  <li><Link href="/Deals" className="hover:text-foreground transition-colors">Top Sellers</Link></li>
+                  <li><Link href="/store/deals" className="hover:text-foreground transition-colors">New Releases</Link></li>
+                  <li><Link href="/store/deals" className="hover:text-foreground transition-colors">Top Sellers</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4 text-foreground">Support</h3>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li><Link href="/help-center" className="hover:text-foreground transition-colors">Help Center</Link></li>
-                  <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
-                  <li><Link href="/refund-policy" className="hover:text-foreground transition-colors">Refunds</Link></li>
+                  <li><Link href="/support/help-center" className="hover:text-foreground transition-colors">Help Center</Link></li>
+                  <li><Link href="/support/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
+                  <li><Link href="/support/refund-policy" className="hover:text-foreground transition-colors">Refunds</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4 text-foreground">Legal</h3>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
-                  <li><Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
-                  <li><Link href="/privacy" className="hover:text-foreground transition-colors">Cookies</Link></li>
+                  <li><Link href="/settings/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/support/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/settings/privacy" className="hover:text-foreground transition-colors">Cookies</Link></li>
                 </ul>
               </div>
             </div>

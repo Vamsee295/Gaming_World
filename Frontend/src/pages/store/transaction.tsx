@@ -200,7 +200,7 @@ export default function TransactionPage() {
             if (isWalletMode) {
                 // Wallet funding success
                 alert(`Successfully added $${fundingAmount.toFixed(2)} to your wallet!`);
-                router.push("/balance");
+                router.push("/profile/balance");
             } else {
                 // Game purchase success
                 alert("Purchase successful! Thank you for your order.");

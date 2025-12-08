@@ -371,7 +371,7 @@ export default function PurchaseHistory() {
                                 <p>• Refunds must be requested within <strong>14 days</strong> of purchase</p>
                                 <p>• Playtime must be less than <strong>2 hours</strong></p>
                                 <p>• Approved refunds take <strong>5-10 business days</strong> to process</p>
-                                <Link href="/refund-policy" className="inline-block mt-2">
+                                <Link href="/support/refund-policy" className="inline-block mt-2">
                                     <Button variant="link" className="p-0 h-auto">
                                         View Full Refund Policy →
                                     </Button>
