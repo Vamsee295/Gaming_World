@@ -491,10 +491,12 @@ export default function GameDetailPage() {
                 )}
               </div>
               <div className="flex items-center gap-4">
-                <Button size="lg" className="gap-2">
-                  <Play className="h-5 w-5" />
-                  Play Now
-                </Button>
+                <Link href={`/install?gameId=${game.id}`}>
+                  <Button size="lg" className="gap-2">
+                    <Download className="h-5 w-5" />
+                    Install
+                  </Button>
+                </Link>
                 <Button size="lg" variant="outline" className="gap-2" onClick={handleAddToCart}>
                   <ShoppingCart className="h-5 w-5" />
                   {game.discount ? (

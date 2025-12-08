@@ -18,8 +18,10 @@ export default function RefundPolicyPage() {
       title: "Redirecting...",
       description: "Opening refund request portal.",
     });
-    // In a real application, this would redirect to a specific URL
-    // router.push('/refund-submission-portal');
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      router.push('/purchase-history');
+    }, 2000);
   };
 
   const handleContactSupport = () => {
@@ -31,8 +33,10 @@ export default function RefundPolicyPage() {
       title: "Contact Support",
       description: "Opening support contact form.",
     });
-    // In a real application, this would open a contact form or support chat
-    // router.push('/support-contact');
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      router.push('/contact');
+    }, 2000);
   };
 
   return (

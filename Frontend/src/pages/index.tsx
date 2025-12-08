@@ -893,10 +893,10 @@ export default function Home() {
           <div className="container mx-auto px-4 py-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
-                <div className="flex items-center gap-2 mb-4">
+                <Link href="/" className="flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity">
                   <Gamepad2 className="h-6 w-6 text-primary" />
-                  <span className="text-xl font-bold text-foreground">STEAM</span>
-                </div>
+                  <span className="text-xl font-bold text-foreground">GameVerse</span>
+                </Link>
                 <p className="text-muted-foreground">
                   Your ultimate destination for PC gaming.
                 </p>
@@ -904,30 +904,30 @@ export default function Home() {
               <div>
                 <h3 className="font-semibold mb-4 text-foreground">Store</h3>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li><a href="#" className="hover:text-foreground transition-colors">Browse Games</a></li>
-                  <li><a href="#" className="hover:text-foreground transition-colors">New Releases</a></li>
-                  <li><a href="#" className="hover:text-foreground transition-colors">Top Sellers</a></li>
+                  <li><Link href="/" className="hover:text-foreground transition-colors">Browse Games</Link></li>
+                  <li><Link href="/Deals" className="hover:text-foreground transition-colors">New Releases</Link></li>
+                  <li><Link href="/Deals" className="hover:text-foreground transition-colors">Top Sellers</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4 text-foreground">Support</h3>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
-                  <li><a href="#" className="hover:text-foreground transition-colors">Contact Us</a></li>
-                  <li><a href="#" className="hover:text-foreground transition-colors">Refunds</a></li>
+                  <li><Link href="/help-center" className="hover:text-foreground transition-colors">Help Center</Link></li>
+                  <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
+                  <li><Link href="/refund-policy" className="hover:text-foreground transition-colors">Refunds</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4 text-foreground">Legal</h3>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li><a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
-                  <li><a href="#" className="hover:text-foreground transition-colors">Terms of Service</a></li>
-                  <li><a href="#" className="hover:text-foreground transition-colors">Cookies</a></li>
+                  <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/privacy" className="hover:text-foreground transition-colors">Cookies</Link></li>
                 </ul>
               </div>
             </div>
             <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-              <p>© 2025 Steam Gaming. All rights reserved.</p>
+              <p>© 2025 GameVerse Gaming. All rights reserved.</p>
             </div>
           </div>
         </footer>
