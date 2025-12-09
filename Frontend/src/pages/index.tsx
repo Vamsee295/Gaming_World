@@ -576,7 +576,7 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex items-center gap-4">
-                  <Link href={`/transaction?gameId=${featuredGame.id}`}>
+                  <Link href={`/store/transaction?gameId=${featuredGame.id}`}>
                     <Button size="lg" className="gap-2">
                       <Play className="h-5 w-5" />
                       Purchase

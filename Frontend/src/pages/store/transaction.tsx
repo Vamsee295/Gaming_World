@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, CreditCard, Lock, Wallet, Gift } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { ChevronLeft, CreditCard, Lock, Wallet, Gift, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useUser } from "@/context/UserContext";
 
@@ -80,6 +81,8 @@ export default function TransactionPage() {
     const [paymentMethod, setPaymentMethod] = useState<"card" | "redeem">("card");
     const [isProcessing, setIsProcessing] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [successDialog, setSuccessDialog] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
     // Determine what to purchase: single game or cart items
     const [purchaseItems, setPurchaseItems] = useState<Game[]>([]);
@@ -199,19 +202,25 @@ export default function TransactionPage() {
 
             if (isWalletMode) {
                 // Wallet funding success
-                alert(`Successfully added $${fundingAmount.toFixed(2)} to your wallet!`);
-                router.push("/profile/balance");
+                setSuccessMessage(`Successfully added $${fundingAmount.toFixed(2)} to your wallet!`);
+                setSuccessDialog(true);
+                setTimeout(() => {
+                    router.push("/profile/balance");
+                }, 2000);
             } else {
                 // Game purchase success
-                alert("Purchase successful! Thank you for your order.");
+                setSuccessMessage("Purchase successful! Thank you for your order.");
+                setSuccessDialog(true);
 
                 // Clear cart if purchasing from cart
                 if (!gameId && items.length > 0) {
                     clear();
                 }
 
-                // Redirect to library
-                router.push("/library");
+                // Redirect to library after delay
+                setTimeout(() => {
+                    router.push("/library");
+                }, 2000);
             }
         }, 2000);
     };
@@ -550,6 +559,31 @@ export default function TransactionPage() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Success Dialog */}
+            <Dialog open={successDialog} onOpenChange={setSuccessDialog}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="text-center text-2xl font-bold text-foreground flex items-center justify-center gap-2">
+                            <CheckCircle2 className="h-8 w-8 text-green-500" />
+                            Success!
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="py-6 text-center">
+                        <p className="text-lg text-muted-foreground">{successMessage}</p>
+                        {isWalletMode ? (
+                            <p className="text-sm text-muted-foreground mt-2">Redirecting to your wallet...</p>
+                        ) : (
+                            <p className="text-sm text-muted-foreground mt-2">Redirecting to your library...</p>
+                        )}
+                    </div>
+                    <DialogFooter>
+                        <Button onClick={() => setSuccessDialog(false)} variant="outline" className="w-full">
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

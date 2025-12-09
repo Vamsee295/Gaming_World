@@ -491,7 +491,7 @@ export default function GameDetailPage() {
                 )}
               </div>
               <div className="flex items-center gap-4">
-                <Link href={`/install?gameId=${game.id}`}>
+                <Link href={`/library/install?gameId=${game.id}`}>
                   <Button size="lg" className="gap-2">
                     <Download className="h-5 w-5" />
                     Install

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Gamepad2, MessageSquare, Users, Activity, Calendar, UserSearch, Home } from "lucide-react";
 
 const communityLinks = [
-  { href: "/community", label: "Home", icon: Home },
+  { href: "/", label: "Home", icon: Home },
   { href: "/community/forums", label: "Forums", icon: MessageSquare },
   { href: "/community/groups", label: "Groups", icon: Users },
   { href: "/community/activity", label: "Activity", icon: Activity },

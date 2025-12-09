@@ -85,6 +85,7 @@ export default function LibraryPage() {
   const [reviewGame, setReviewGame] = useState<LibraryGame | null>(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
+  const [reviewSuccess, setReviewSuccess] = useState(false);
 
   // New state for enhanced features
   const [hoveredGame, setHoveredGame] = useState<number | null>(null);
@@ -198,14 +199,18 @@ export default function LibraryPage() {
       return;
     }
 
-    // In a real app, this would send to backend
-    alert(`Review submitted for ${reviewGame.title}!\nRating: ${reviewRating} stars\nComment: ${reviewComment}`);
-
-    // Reset and close
+    // Close review dialog and show success
     setReviewDialog(false);
-    setReviewGame(null);
-    setReviewRating(5);
-    setReviewComment("");
+    setReviewSuccess(true);
+
+    // Auto-close success dialog after 2 seconds
+    setTimeout(() => {
+      setReviewSuccess(false);
+      // Reset review form
+      setReviewGame(null);
+      setReviewRating(5);
+      setReviewComment("");
+    }, 2000);
   };
 
 
@@ -860,6 +865,34 @@ export default function LibraryPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setManageGameDialog(false)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Review Success Dialog */}
+        <Dialog open={reviewSuccess} onOpenChange={setReviewSuccess}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-center text-2xl font-bold text-foreground flex items-center justify-center gap-2">
+                <CheckCircle2 className="h-8 w-8 text-green-500" />
+                Review Posted!
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-6 text-center">
+              <p className="text-lg text-muted-foreground mb-2">
+                Your review for <span className="font-semibold text-foreground">{reviewGame?.title}</span> has been submitted successfully!
+              </p>
+              <div className="flex items-center justify-center gap-1 mt-4">
+                {[...Array(reviewRating)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 italic">"{reviewComment}"</p>
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setReviewSuccess(false)} className="w-full">
+                Done
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

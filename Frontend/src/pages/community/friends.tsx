@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserSearch, Search, UserPlus, Trophy, Gamepad2, MapPin } from "lucide-react";
+import { UserSearch, Search, UserPlus, Trophy, Gamepad2, MapPin, CheckCircle2, Check } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import Link from "next/link";
 import CommunityNav from "@/components/community/CommunityNav";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 interface UserProfile {
   id: string;
@@ -65,18 +66,31 @@ export default function FindFriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [gameFilter, setGameFilter] = useState<string>("all");
   const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [addedFriends, setAddedFriends] = useState<string[]>([]);
+  const [successDialog, setSuccessDialog] = useState(false);
+  const [friendName, setFriendName] = useState("");
 
   const allGames = Array.from(new Set(mockUsers.flatMap(u => u.favoriteGames)));
   const allLocations = Array.from(new Set(mockUsers.map(u => u.location).filter(Boolean)));
 
   const filteredUsers = mockUsers.filter(profile => {
-    const matchesSearch = searchQuery === "" || 
+    const matchesSearch = searchQuery === "" ||
       profile.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       profile.bio?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesGame = gameFilter === "all" || profile.favoriteGames.includes(gameFilter);
     const matchesLocation = locationFilter === "all" || profile.location === locationFilter;
     return matchesSearch && matchesGame && matchesLocation;
   });
+
+  const handleAddFriend = (profile: UserProfile) => {
+    setAddedFriends(prev => [...prev, profile.id]);
+    setFriendName(profile.name);
+    setSuccessDialog(true);
+    // Auto-close after 2 seconds
+    setTimeout(() => {
+      setSuccessDialog(false);
+    }, 2000);
+  };
 
   return (
     <>
@@ -212,9 +226,23 @@ export default function FindFriendsPage() {
                           </div>
                         )}
 
-                        <Button className="w-full mt-4 gap-2">
-                          <UserPlus className="h-4 w-4" />
-                          Add Friend
+                        <Button
+                          className="w-full mt-4 gap-2"
+                          onClick={() => handleAddFriend(profile)}
+                          disabled={addedFriends.includes(profile.id)}
+                          variant={addedFriends.includes(profile.id) ? "outline" : "default"}
+                        >
+                          {addedFriends.includes(profile.id) ? (
+                            <>
+                              <Check className="h-4 w-4" />
+                              Friend Request Sent
+                            </>
+                          ) : (
+                            <>
+                              <UserPlus className="h-4 w-4" />
+                              Add Friend
+                            </>
+                          )}
                         </Button>
                       </div>
                     </CardContent>
@@ -224,6 +252,31 @@ export default function FindFriendsPage() {
             )}
           </div>
         </div>
+
+        {/* Friend Request Success Dialog */}
+        <Dialog open={successDialog} onOpenChange={setSuccessDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-center text-2xl font-bold text-foreground flex items-center justify-center gap-2">
+                <CheckCircle2 className="h-8 w-8 text-green-500" />
+                Friend Request Sent!
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-6 text-center">
+              <p className="text-lg text-muted-foreground">
+                Your friend request has been sent to <span className="font-semibold text-foreground">{friendName}</span>!
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                They'll receive a notification and can accept your request.
+              </p>
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setSuccessDialog(false)} className="w-full">
+                Done
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
