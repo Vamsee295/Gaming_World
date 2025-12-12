@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,7 +13,7 @@ import {
 import { useRewards } from "@/context/RewardsContext";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, Home, ArrowLeft } from "lucide-react";
 
 interface Reward {
   id: string;
@@ -116,8 +117,8 @@ export default function RewardsPage() {
         message.includes("Insufficient")
           ? "You do not have enough points to claim this reward!"
           : message.includes("authenticated")
-          ? "Please sign in to claim rewards"
-          : "An unexpected error occurred. Please try again."
+            ? "Please sign in to claim rewards"
+            : "An unexpected error occurred. Please try again."
       );
       setModalState("error");
       toast({
@@ -152,6 +153,17 @@ export default function RewardsPage() {
   return (
     <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Navigation Button */}
+        <div className="mb-6">
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
         <header className="mb-10 text-center sm:text-left">
           <h1 className="text-4xl sm:text-5xl font-extrabold mb-2 tracking-tight">
@@ -189,9 +201,8 @@ export default function RewardsPage() {
               return (
                 <Card
                   key={reward.id}
-                  className={`transition-all duration-300 hover:border-primary ${
-                    !affordable ? "opacity-70" : ""
-                  }`}
+                  className={`transition-all duration-300 hover:border-primary ${!affordable ? "opacity-70" : ""
+                    }`}
                 >
                   <div className="relative w-full h-32 mb-4 rounded-t-lg overflow-hidden bg-secondary">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -208,9 +219,8 @@ export default function RewardsPage() {
                     <p className="text-sm text-muted-foreground mb-4">{reward.description}</p>
                     <div className="flex justify-between items-center">
                       <span
-                        className={`text-2xl font-bold ${
-                          affordable ? "text-teal-400" : "text-destructive"
-                        }`}
+                        className={`text-2xl font-bold ${affordable ? "text-teal-400" : "text-destructive"
+                          }`}
                       >
                         {reward.cost.toLocaleString()} Pts
                       </span>

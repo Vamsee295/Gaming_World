@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
-import { AlertCircle, Mail, FileText } from "lucide-react";
+import { AlertCircle, Mail, FileText, Home, ArrowLeft } from "lucide-react";
 
 export default function RefundPolicyPage() {
   const { toast } = useToast();
@@ -42,6 +43,17 @@ export default function RefundPolicyPage() {
   return (
     <div className="min-h-screen p-4 sm:p-8 flex justify-center">
       <div className="w-full max-w-5xl">
+        {/* Navigation Button */}
+        <div className="mb-6">
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         <Card className="border-border shadow-2xl">
           {/* Header Section */}
           <CardHeader className="bg-secondary p-6 sm:p-8 rounded-t-xl">

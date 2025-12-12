@@ -1,8 +1,11 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Home, ArrowLeft } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -82,6 +85,17 @@ export default function AchievementsPage() {
       </Head>
       <div className="min-h-screen p-4 md:p-8 bg-background">
         <div className="max-w-7xl mx-auto">
+          {/* Navigation Button */}
+          <div className="mb-6">
+            <Link href="/">
+              <Button variant="outline" className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                <Home className="h-4 w-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+
           {/* Header Styling (Clean and Professional) */}
           <header className="mb-10 p-0">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 text-foreground">

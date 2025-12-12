@@ -9,9 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Users, UserPlus, Search, MessageSquare, Gamepad2, X, Check, XCircle, 
-  MoreVertical, UserMinus, Shield, Clock, Play, Circle, AlertCircle
+import {
+  Users, UserPlus, Search, MessageSquare, Gamepad2, X, Check, XCircle,
+  MoreVertical, UserMinus, Shield, Clock, Play, Circle, AlertCircle, Home, ArrowLeft
 } from "lucide-react";
 import { useFriends } from "@/context/FriendsContext";
 import { useUser } from "@/context/UserContext";
@@ -30,17 +30,17 @@ const mockUsers = [
 
 export default function FriendsPage() {
   const router = useRouter();
-  const { 
-    friends, 
-    friendRequests, 
-    addFriend, 
-    removeFriend, 
-    sendFriendRequest, 
-    acceptFriendRequest, 
-    declineFriendRequest, 
+  const {
+    friends,
+    friendRequests,
+    addFriend,
+    removeFriend,
+    sendFriendRequest,
+    acceptFriendRequest,
+    declineFriendRequest,
     cancelFriendRequest,
     blockUser,
-    pendingRequestsCount 
+    pendingRequestsCount
   } = useFriends();
   const { user } = useUser();
   const { toast } = useToast();
@@ -64,19 +64,19 @@ export default function FriendsPage() {
   // Filter friends
   const filteredFriends = useMemo(() => {
     let filtered = friends;
-    
+
     if (filter !== "all") {
       filtered = filtered.filter(f => f.status === filter);
     }
-    
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(f => 
+      filtered = filtered.filter(f =>
         f.name.toLowerCase().includes(query) ||
         f.email.toLowerCase().includes(query)
       );
     }
-    
+
     // Sort: online/playing first, then offline
     return filtered.sort((a, b) => {
       const statusOrder = { playing: 0, online: 1, away: 2, offline: 3 };
@@ -88,7 +88,7 @@ export default function FriendsPage() {
   const searchResults = useMemo(() => {
     if (!addFriendQuery.trim()) return [];
     const query = addFriendQuery.toLowerCase();
-    return mockUsers.filter(u => 
+    return mockUsers.filter(u =>
       (u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)) &&
       !friends.some(f => f.id === u.id) &&
       !friendRequests.some(r => r.fromUserId === u.id || r.toUserId === u.id)
@@ -154,7 +154,7 @@ export default function FriendsPage() {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-    
+
     if (diffMins < 1) return "Just now";
     if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
@@ -170,6 +170,17 @@ export default function FriendsPage() {
 
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Navigation Button */}
+          <div className="mb-6">
+            <Link href="/">
+              <Button variant="outline" className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                <Home className="h-4 w-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -312,13 +323,12 @@ export default function FriendsPage() {
                                     {friend.name.charAt(0)}
                                   </div>
                                 )}
-                                <div className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-background ${
-                                  friend.status === "online" || friend.status === "playing" 
-                                    ? "bg-green-500" 
-                                    : friend.status === "away"
+                                <div className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-background ${friend.status === "online" || friend.status === "playing"
+                                  ? "bg-green-500"
+                                  : friend.status === "away"
                                     ? "bg-yellow-500"
                                     : "bg-gray-500"
-                                }`} />
+                                  }`} />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="font-semibold text-foreground truncate">{friend.name}</div>
@@ -672,13 +682,12 @@ export default function FriendsPage() {
                     <div>
                       <DialogTitle>{selectedFriendData.name}</DialogTitle>
                       <div className="flex items-center gap-2 mt-1">
-                        <div className={`h-2 w-2 rounded-full ${
-                          selectedFriendData.status === "online" || selectedFriendData.status === "playing"
-                            ? "bg-green-500"
-                            : selectedFriendData.status === "away"
+                        <div className={`h-2 w-2 rounded-full ${selectedFriendData.status === "online" || selectedFriendData.status === "playing"
+                          ? "bg-green-500"
+                          : selectedFriendData.status === "away"
                             ? "bg-yellow-500"
                             : "bg-gray-500"
-                        }`} />
+                          }`} />
                         <span className="text-sm text-muted-foreground capitalize">{selectedFriendData.status}</span>
                       </div>
                     </div>

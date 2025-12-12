@@ -13,15 +13,15 @@ import { ChevronLeft, CreditCard, Lock, Wallet, Gift, CheckCircle2 } from "lucid
 import { useCart } from "@/context/CartContext";
 import { useUser } from "@/context/UserContext";
 
-// Import game images
-import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
-import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
-import img3 from "@/components/Images/Store Images/image 3.webp";
-import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
-import img5 from "@/components/Images/Store Images/image 5.webp";
-import img6 from "@/components/Images/Store Images/image 6.webp";
-import img7 from "@/components/Images/Store Images/image 7.webp";
-import img8 from "@/components/Images/Store Images/image 8.webp";
+// Import game images with descriptive names
+import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
+import spiderman from "@/components/Images/Store Images/spiderman.jpg";
+import gta6 from "@/components/Images/Store Images/gta-6.webp";
+import needForSpeed from "@/components/Images/Store Images/need-for-speed.jpg";
+import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
+import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
+import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
+import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
 
 interface Game {
     id: number;
@@ -31,14 +31,14 @@ interface Game {
 }
 
 const gameImages: { [key: number]: any } = {
-    1: homeImg,
-    2: spidermanHome,
-    3: img3,
-    4: nfsHome,
-    5: img5,
-    6: img6,
-    7: img7,
-    8: img8,
+    1: cyberpunk2077,
+    2: spiderman,
+    3: gta6,
+    4: needForSpeed,
+    5: lastOfUs,
+    6: detroit,
+    7: aWayOut,
+    8: blackMythWukong,
 };
 
 const gameTitles: { [key: number]: string } = {

@@ -17,15 +17,18 @@ import { useUser } from "@/context/UserContext";
 import { useFriends } from "@/context/FriendsContext";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 
-// Store images (new descriptive names)
-import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
-import spiderman from "@/components/Images/Store Images/spiderman.jpg";
-import gta6 from "@/components/Images/Store Images/gta-6.webp";
-import needForSpeed from "@/components/Images/Store Images/need-for-speed.jpg";
-import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
-import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
-import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
-import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
+// Store images (same as index.tsx)
+import img1 from "@/components/Images/Store Images/image 1.webp";
+import img2 from "@/components/Images/Store Images/image 2.webp";
+import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
+import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
+import img3 from "@/components/Images/Store Images/image 3.webp";
+import img4 from "@/components/Images/Store Images/image 4.webp";
+import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
+import img5 from "@/components/Images/Store Images/image 5.webp";
+import img6 from "@/components/Images/Store Images/image 6.webp";
+import img7 from "@/components/Images/Store Images/image 7.webp";
+import img8 from "@/components/Images/Store Images/image 8.webp";
 
 type Tag = "installed" | "favorites" | "action" | "cars" | "rpg" | "all" | "recent-played" | "updates-available";
 
@@ -52,14 +55,14 @@ interface LibraryGame {
 }
 
 const baseGames: LibraryGame[] = [
-  { id: 1, title: "Cyberpunk 2077", desc: "A futuristic open-world RPG set in Night City.", image: cyberpunk2077, playtime: "14 hours", lastPlayed: "Today", size: "45.8 GB", tags: ["installed", "favorites", "rpg"], rating: 4.8, genre: "RPG", version: "2.1", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 24, total: 52 }, isFavorite: true, isInstalling: false, releaseDate: "2020-12-10" },
-  { id: 2, title: "Marvel's Spiderman", desc: "Swing through NYC and fight iconic villains.", image: spiderman, playtime: "32 hours", lastPlayed: "Yesterday", size: "30.2 GB", tags: ["installed", "action"], rating: 4.6, genre: "Action", version: "1.8", hasUpdate: true, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 45, total: 50 }, isFavorite: false, isInstalling: false, releaseDate: "2022-08-12" },
-  { id: 3, title: "Grand Theft Auto 6", desc: "Open-world crime saga.", image: gta6, playtime: "5 hours", lastPlayed: "3 days ago", size: "70.0 GB", tags: ["action"], rating: 4.7, genre: "RPG", version: "1.0", hasUpdate: false, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 8, total: 75 }, isFavorite: false, isInstalling: false, releaseDate: "2024-11-15" },
-  { id: 4, title: "Need For Speed", desc: "High-octane street racing.", image: needForSpeed, playtime: "18 hours", lastPlayed: "1 week ago", size: "50.0 GB", tags: ["cars"], rating: 4.9, genre: "Racing", version: "3.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'syncing', achievements: { unlocked: 30, total: 40 }, isFavorite: true, isInstalling: false, releaseDate: "2023-11-10" },
-  { id: 5, title: "The Last Of Us", desc: "Emotional story of survival.", image: lastOfUs, playtime: "0 hours", lastPlayed: "Never", size: "82.0 GB", tags: ["action"], rating: 4.5, genre: "Action", version: "1.5", hasUpdate: true, isNew: false, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 60 }, isFavorite: false, isInstalling: false, releaseDate: "2023-03-28" },
-  { id: 6, title: "Detroit : Become Human", desc: "Choices matter in this android thriller.", image: detroit, playtime: "12 hours", lastPlayed: "2 weeks ago", size: "44.0 GB", tags: ["installed", "rpg"], rating: 4.8, genre: "RPG", version: "1.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 15, total: 48 }, isFavorite: false, isInstalling: false, releaseDate: "2019-12-12" },
-  { id: 7, title: "A Way Out", desc: "Cinematic co-op prison break.", image: aWayOut, playtime: "7 hours", lastPlayed: "4 days ago", size: "29.0 GB", tags: ["favorites", "action"], rating: 4.4, genre: "Co-op", version: "1.0", hasUpdate: false, isNew: false, cloudSyncStatus: 'error', achievements: { unlocked: 12, total: 20 }, isFavorite: true, isInstalling: false, releaseDate: "2018-03-23" },
-  { id: 8, title: "Black Myth Wukong", desc: "Mythic action adventure.", image: blackMythWukong, playtime: "0 hours", lastPlayed: "Never", size: "96.0 GB", tags: ["rpg"], rating: 4.6, genre: "Action", version: "1.1", hasUpdate: true, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 81 }, isFavorite: false, isInstalling: false, releaseDate: "2024-08-20" },
+  { id: 1, title: "Cyberpunk 2077", desc: "A futuristic open-world RPG set in Night City.", image: homeImg, playtime: "14 hours", lastPlayed: "Today", size: "45.8 GB", tags: ["installed", "favorites", "rpg"], rating: 4.8, genre: "RPG", version: "2.1", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 24, total: 52 }, isFavorite: true, isInstalling: false, releaseDate: "2020-12-10" },
+  { id: 2, title: "Marvel's Spiderman", desc: "Swing through NYC and fight iconic villains.", image: spidermanHome, playtime: "32 hours", lastPlayed: "Yesterday", size: "30.2 GB", tags: ["installed", "action"], rating: 4.6, genre: "Action", version: "1.8", hasUpdate: true, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 45, total: 50 }, isFavorite: false, isInstalling: false, releaseDate: "2022-08-12" },
+  { id: 3, title: "Grand Theft Auto 6", desc: "Open-world crime saga.", image: img3, playtime: "5 hours", lastPlayed: "3 days ago", size: "70.0 GB", tags: ["action"], rating: 4.7, genre: "RPG", version: "1.0", hasUpdate: false, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 8, total: 75 }, isFavorite: false, isInstalling: false, releaseDate: "2024-11-15" },
+  { id: 4, title: "Need For Speed", desc: "High-octane street racing.", image: nfsHome, playtime: "18 hours", lastPlayed: "1 week ago", size: "50.0 GB", tags: ["cars"], rating: 4.9, genre: "Racing", version: "3.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'syncing', achievements: { unlocked: 30, total: 40 }, isFavorite: true, isInstalling: false, releaseDate: "2023-11-10" },
+  { id: 5, title: "The Last Of Us", desc: "Emotional story of survival.", image: img5, playtime: "0 hours", lastPlayed: "Never", size: "82.0 GB", tags: ["action"], rating: 4.5, genre: "Action", version: "1.5", hasUpdate: true, isNew: false, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 60 }, isFavorite: false, isInstalling: false, releaseDate: "2023-03-28" },
+  { id: 6, title: "Detroit : Become Human", desc: "Choices matter in this android thriller.", image: img6, playtime: "12 hours", lastPlayed: "2 weeks ago", size: "44.0 GB", tags: ["installed", "rpg"], rating: 4.8, genre: "RPG", version: "1.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 15, total: 48 }, isFavorite: false, isInstalling: false, releaseDate: "2019-12-12" },
+  { id: 7, title: "A Way Out", desc: "Cinematic co-op prison break.", image: img7, playtime: "7 hours", lastPlayed: "4 days ago", size: "29.0 GB", tags: ["favorites", "action"], rating: 4.4, genre: "Co-op", version: "1.0", hasUpdate: false, isNew: false, cloudSyncStatus: 'error', achievements: { unlocked: 12, total: 20 }, isFavorite: true, isInstalling: false, releaseDate: "2018-03-23" },
+  { id: 8, title: "Black Myth Wukong", desc: "Mythic action adventure.", image: img8, playtime: "0 hours", lastPlayed: "Never", size: "96.0 GB", tags: ["rpg"], rating: 4.6, genre: "Action", version: "1.1", hasUpdate: true, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 81 }, isFavorite: false, isInstalling: false, releaseDate: "2024-08-20" },
 ];
 
 export default function LibraryPage() {
@@ -304,10 +307,10 @@ export default function LibraryPage() {
                           <Link href="/profile/friends">View Friends</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/community/friends?tab=add">Add Friend</Link>
+                          <Link href="/friends?tab=add">Add Friend</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/community/friends?tab=requests">
+                          <Link href="/friends?tab=requests">
                             Friend Requests
                             {pendingRequestsCount > 0 && (
                               <Badge className="ml-2 bg-primary text-primary-foreground">{pendingRequestsCount}</Badge>
@@ -723,7 +726,7 @@ export default function LibraryPage() {
               {selected?.tags.includes("installed") ? (
                 <Button><Play className="h-4 w-4 mr-2" /> Play</Button>
               ) : (
-                <Link href={`/store/transaction?gameId=${selected?.id}`}>
+                <Link href={`/transaction?gameId=${selected?.id}`}>
                   <Button><ShoppingCart className="h-4 w-4 mr-2" /> Purchase</Button>
                 </Link>
               )}

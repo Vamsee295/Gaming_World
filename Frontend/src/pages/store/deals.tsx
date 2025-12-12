@@ -10,15 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Search } from "lucide-react";
 
-// Images reused from the store
-import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
-import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
-import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
-import img3 from "@/components/Images/Store Images/image 3.webp";
-import img5 from "@/components/Images/Store Images/image 5.webp";
-import img6 from "@/components/Images/Store Images/image 6.webp";
-import img7 from "@/components/Images/Store Images/image 7.webp";
-import img8 from "@/components/Images/Store Images/image 8.webp";
+// Images reused from the store with descriptive names
+import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
+import spiderman from "@/components/Images/Store Images/spiderman.jpg";
+import needForSpeed from "@/components/Images/Store Images/need-for-speed.jpg";
+import gta6 from "@/components/Images/Store Images/gta-6.webp";
+import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
+import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
+import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
+import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
 
 type Deal = {
   id: number;
@@ -31,14 +31,14 @@ type Deal = {
 };
 
 const dealsData: Deal[] = [
-  { id: 1, title: "Cyberpunk 2077", price: "$59.99", discount: 20, image: homeImg, releaseDate: "Dec 2020", tags: ["RPG", "Action"] },
-  { id: 2, title: "EA SPORTS FC™ 26", price: "$49.99", discount: 50, image: spidermanHome, releaseDate: "Sep 2025", tags: ["Sports", "Multiplayer"] },
-  { id: 3, title: "Grand Theft Auto 6", price: "$39.99", image: img3, releaseDate: "2025", tags: ["Action", "Open World"] },
-  { id: 4, title: "Need For Speed", price: "$59.99", discount: 30, image: nfsHome, releaseDate: "Nov 2019", tags: ["Racing", "Action"] },
-  { id: 5, title: "The Last Of Us", price: "$0.00", image: img5, releaseDate: "Mar 2023", tags: ["Story Rich", "Survival"] },
-  { id: 6, title: "Detroit : Become Human", price: "$44.99", discount: 25, image: img6, releaseDate: "May 2018", tags: ["Narrative", "Adventure"] },
-  { id: 7, title: "A Way Out", price: "$29.99", image: img7, releaseDate: "Mar 2018", tags: ["Co-op", "Adventure"] },
-  { id: 8, title: "Black Myth Wukong", price: "$0.00", image: img8, releaseDate: "2024", tags: ["Action", "RPG"] },
+  { id: 1, title: "Cyberpunk 2077", price: "$59.99", discount: 20, image: cyberpunk2077, releaseDate: "Dec 2020", tags: ["RPG", "Action"] },
+  { id: 2, title: "EA SPORTS FC™ 26", price: "$49.99", discount: 50, image: spiderman, releaseDate: "Sep 2025", tags: ["Sports", "Multiplayer"] },
+  { id: 3, title: "Grand Theft Auto 6", price: "$39.99", image: gta6, releaseDate: "2025", tags: ["Action", "Open World"] },
+  { id: 4, title: "Need For Speed", price: "$59.99", discount: 30, image: needForSpeed, releaseDate: "Nov 2019", tags: ["Racing", "Action"] },
+  { id: 5, title: "The Last Of Us", price: "$0.00", image: lastOfUs, releaseDate: "Mar 2023", tags: ["Story Rich", "Survival"] },
+  { id: 6, title: "Detroit : Become Human", price: "$44.99", discount: 25, image: detroit, releaseDate: "May 2018", tags: ["Narrative", "Adventure"] },
+  { id: 7, title: "A Way Out", price: "$29.99", image: aWayOut, releaseDate: "Mar 2018", tags: ["Co-op", "Adventure"] },
+  { id: 8, title: "Black Myth Wukong", price: "$0.00", image: blackMythWukong, releaseDate: "2024", tags: ["Action", "RPG"] },
 ];
 
 function parsePrice(p: string) {
@@ -101,7 +101,7 @@ export default function DealsPage() {
                 onChange={e => setQuery(e.target.value)}
                 className="w-full sm:w-[320px]"
               />
-              <Button variant="outline" className="gap-2"><Search className="h-4 w-4"/>Search</Button>
+              <Button variant="outline" className="gap-2"><Search className="h-4 w-4" />Search</Button>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-[160px]"><SelectValue placeholder="Sort" /></SelectTrigger>
                 <SelectContent>
@@ -139,7 +139,7 @@ export default function DealsPage() {
                         </div>
                         <div className="text-foreground font-semibold">{deal.title}</div>
                         <div className="flex items-center gap-2">
-                          {deal.tags.slice(0,3).map(t => (
+                          {deal.tags.slice(0, 3).map(t => (
                             <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>
                           ))}
                         </div>

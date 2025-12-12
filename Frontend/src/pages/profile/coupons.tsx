@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Home, ArrowLeft } from "lucide-react";
 
 interface CouponHistoryItem {
   game: string;
@@ -184,11 +185,10 @@ function CouponCard({ coupon, onRedeem }: CouponCardProps) {
           <Button
             onClick={() => onRedeem(coupon)}
             disabled={!isRedeemable}
-            className={`w-full ${
-              isRedeemable
-                ? "bg-primary hover:bg-primary/90 text-primary-foreground"
-                : "cursor-not-allowed"
-            }`}
+            className={`w-full ${isRedeemable
+              ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+              : "cursor-not-allowed"
+              }`}
           >
             {isRedeemable ? "Redeem / Apply Now" : statusInfo.text}
           </Button>
@@ -230,16 +230,16 @@ export default function CouponsPage() {
       prev.map((c) =>
         c.id === coupon.id
           ? {
-              ...c,
-              history: [
-                ...c.history,
-                {
-                  game: gameApplied,
-                  date: new Date().toISOString().split("T")[0],
-                  saved: amountSaved,
-                },
-              ],
-            }
+            ...c,
+            history: [
+              ...c.history,
+              {
+                game: gameApplied,
+                date: new Date().toISOString().split("T")[0],
+                saved: amountSaved,
+              },
+            ],
+          }
           : c
       )
     );
@@ -261,6 +261,17 @@ export default function CouponsPage() {
   return (
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-6xl mx-auto border-2 border-border rounded-xl p-4 md:p-10 bg-card">
+        {/* Navigation Button */}
+        <div className="mb-6">
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
         <h1 className="text-4xl md:text-6xl font-extrabold text-center mb-10 tracking-tight">
           Coupons & Offers

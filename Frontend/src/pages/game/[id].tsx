@@ -10,17 +10,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import img1 from "@/components/Images/Store Images/image 1.webp";
-import img2 from "@/components/Images/Store Images/image 2.webp";
-import img3 from "@/components/Images/Store Images/image 3.webp";
-import img4 from "@/components/Images/Store Images/image 4.webp";
-import img5 from "@/components/Images/Store Images/image 5.webp";
-import img6 from "@/components/Images/Store Images/image 6.webp";
-import img7 from "@/components/Images/Store Images/image 7.webp";
-import img8 from "@/components/Images/Store Images/image 8.webp";
+import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
+import spiderman from "@/components/Images/Store Images/spiderman.jpg";
+import gta6 from "@/components/Images/Store Images/gta-6.webp";
+import needForSpeed from "@/components/Images/Store Images/need-for-speed.jpg";
+import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
+import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
+import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
+import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
 
 const gameImages: Record<number, any> = {
-  1: img1, 2: img2, 3: img3, 4: img4, 5: img5, 6: img6, 7: img7, 8: img8
+  1: cyberpunk2077, 2: spiderman, 3: gta6, 4: needForSpeed, 5: lastOfUs, 6: detroit, 7: aWayOut, 8: blackMythWukong
 };
 
 const gamesData: Record<number, any> = {
@@ -53,7 +53,7 @@ const gamesData: Record<number, any> = {
         storage: "70 GB SSD"
       }
     },
-    screenshots: [img1, img2, img3],
+    screenshots: [cyberpunk2077, spiderman, gta6],
     featured: true,
     reviews: [
       { user: "NightRider92", rating: 5, date: "Dec 1, 2024", comment: "Absolutely phenomenal! The story gripped me from start to finish. Night City feels alive and vibrant." },
@@ -102,7 +102,7 @@ const gamesData: Record<number, any> = {
         storage: "75 GB SSD"
       }
     },
-    screenshots: [img2, img3, img4],
+    screenshots: [spiderman, gta6, needForSpeed],
     reviews: [
       { user: "WebHead2023", rating: 5, date: "Dec 2, 2024", comment: "Swinging through New York has never felt this good! The movement mechanics are perfection." },
       { user: "SpideySupreme", rating: 5, date: "Nov 29, 2024", comment: "Every superhero fan needs to play this. The story made me cry and the action is incredible!" },
@@ -149,7 +149,7 @@ const gamesData: Record<number, any> = {
         storage: "150 GB SSD"
       }
     },
-    screenshots: [img3, img4, img5],
+    screenshots: [gta6, needForSpeed, lastOfUs],
     reviews: [
       { user: "ViceCityKing", rating: 5, date: "Dec 3, 2024", comment: "This is what we've been waiting for! The scale and detail of the world is unprecedented." },
       { user: "RockstarFan", rating: 5, date: "Nov 30, 2024", comment: "Absolutely incredible! The dual protagonist system works perfectly and the story is gripping." },
@@ -196,7 +196,7 @@ const gamesData: Record<number, any> = {
         storage: "50 GB SSD"
       }
     },
-    screenshots: [img4, img5, img6],
+    screenshots: [needForSpeed, lastOfUs, detroit],
     reviews: [
       { user: "SpeedDemon420", rating: 5, date: "Dec 4, 2024", comment: "Pure adrenaline rush! The police chases are intense and the customization is incredible." },
       { user: "NitroKing", rating: 5, date: "Dec 1, 2024", comment: "Best racing game I've played! The graphics blow me away and the soundtrack is fire!" },
@@ -243,7 +243,7 @@ const gamesData: Record<number, any> = {
         storage: "100 GB SSD"
       }
     },
-    screenshots: [img5, img6, img7],
+    screenshots: [lastOfUs, detroit, aWayOut],
     reviews: [
       { user: "EllieFanForever", rating: 5, date: "Dec 5, 2024", comment: "A masterpiece of storytelling. Had me in tears multiple times. Joel and Ellie are unforgettable." },
       { user: "SurvivorGamer", rating: 5, date: "Dec 2, 2024", comment: "The best narrative-driven game ever made. Every moment is carefully crafted and meaningful." },
@@ -291,7 +291,7 @@ const gamesData: Record<number, any> = {
         storage: "55 GB SSD"
       }
     },
-    screenshots: [img6, img7, img8],
+    screenshots: [detroit, aWayOut, blackMythWukong],
     reviews: [
       { user: "ConnorRK800", rating: 5, date: "Dec 6, 2024", comment: "The choice system is revolutionary! Every decision genuinely impacts the story in meaningful ways." },
       { user: "MarkusFreedom", rating: 5, date: "Dec 3, 2024", comment: "One of the most thought-provoking games I've ever played. The android revolution story is powerful!" },
@@ -338,7 +338,7 @@ const gamesData: Record<number, any> = {
         storage: "25 GB SSD"
       }
     },
-    screenshots: [img7, img8, img1],
+    screenshots: [aWayOut, blackMythWukong, cyberpunk2077],
     reviews: [
       { user: "VincentTeam", rating: 5, date: "Dec 7, 2024", comment: "The best co-op experience I've ever had! Playing with my best friend was an unforgettable journey." },
       { user: "LeosBrother", rating: 5, date: "Dec 4, 2024", comment: "Incredible storytelling and unique split-screen mechanics. The ending blew my mind!" },
@@ -385,7 +385,7 @@ const gamesData: Record<number, any> = {
         storage: "130 GB SSD"
       }
     },
-    screenshots: [img8, img1, img2],
+    screenshots: [blackMythWukong, cyberpunk2077, spiderman],
     reviews: [
       { user: "MonkeyKingFan", rating: 5, date: "Dec 8, 2024", comment: "A stunning achievement in game design! The Chinese mythology is beautifully represented." },
       { user: "JourneyWestGamer", rating: 5, date: "Dec 5, 2024", comment: "Best action combat I've experienced! Every boss fight is a work of art. Game Science crushed it!" },

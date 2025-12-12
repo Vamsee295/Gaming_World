@@ -3,15 +3,15 @@ import { Play, Pause, Settings, X, HardDrive, Download, ChevronRight } from 'luc
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-// Import game images
-import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
-import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
-import img3 from "@/components/Images/Store Images/image 3.webp";
-import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
-import img5 from "@/components/Images/Store Images/image 5.webp";
-import img6 from "@/components/Images/Store Images/image 6.webp";
-import img7 from "@/components/Images/Store Images/image 7.webp";
-import img8 from "@/components/Images/Store Images/image 8.webp";
+// Import game images with descriptive names
+import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
+import spiderman from "@/components/Images/Store Images/spiderman.jpg";
+import gta6 from "@/components/Images/Store Images/gta-6.webp";
+import needForSpeed from "@/components/Images/Store Images/need-for-speed.jpg";
+import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
+import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
+import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
+import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
 
 // --- Types ---
 
@@ -46,8 +46,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '1': {
         id: '1',
         title: 'Cyberpunk 2077',
-        coverImage: homeImg,
-        heroImage: homeImg,
+        coverImage: cyberpunk2077,
+        heroImage: cyberpunk2077,
         totalSize: 7.3 * 1024 * 1024 * 1024,
         diskReq: 9.0 * 1024 * 1024 * 1024,
         developer: 'CD Projekt Red'
@@ -55,8 +55,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '2': {
         id: '2',
         title: "Marvel's Spiderman",
-        coverImage: spidermanHome,
-        heroImage: spidermanHome,
+        coverImage: spiderman,
+        heroImage: spiderman,
         totalSize: 6.8 * 1024 * 1024 * 1024,
         diskReq: 8.5 * 1024 * 1024 * 1024,
         developer: 'Insomniac Games'
@@ -64,8 +64,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '3': {
         id: '3',
         title: 'Grand Theft Auto 6',
-        coverImage: img3,
-        heroImage: img3,
+        coverImage: gta6,
+        heroImage: gta6,
         totalSize: 8.2 * 1024 * 1024 * 1024,
         diskReq: 10.0 * 1024 * 1024 * 1024,
         developer: 'Rockstar Games'
@@ -73,8 +73,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '4': {
         id: '4',
         title: 'Need For Speed',
-        coverImage: nfsHome,
-        heroImage: nfsHome,
+        coverImage: needForSpeed,
+        heroImage: needForSpeed,
         totalSize: 5.5 * 1024 * 1024 * 1024,
         diskReq: 7.0 * 1024 * 1024 * 1024,
         developer: 'Ghost Games'
@@ -82,8 +82,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '5': {
         id: '5',
         title: 'The Last Of Us',
-        coverImage: img5,
-        heroImage: img5,
+        coverImage: lastOfUs,
+        heroImage: lastOfUs,
         totalSize: 7.0 * 1024 * 1024 * 1024,
         diskReq: 8.8 * 1024 * 1024 * 1024,
         developer: 'Naughty Dog'
@@ -91,8 +91,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '6': {
         id: '6',
         title: 'Detroit: Become Human',
-        coverImage: img6,
-        heroImage: img6,
+        coverImage: detroit,
+        heroImage: detroit,
         totalSize: 6.3 * 1024 * 1024 * 1024,
         diskReq: 7.8 * 1024 * 1024 * 1024,
         developer: 'Quantic Dream'
@@ -100,8 +100,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '7': {
         id: '7',
         title: 'A Way Out',
-        coverImage: img7,
-        heroImage: img7,
+        coverImage: aWayOut,
+        heroImage: aWayOut,
         totalSize: 4.5 * 1024 * 1024 * 1024,
         diskReq: 5.8 * 1024 * 1024 * 1024,
         developer: 'Hazelight Studios'
@@ -109,8 +109,8 @@ const GAME_DATA: { [key: string]: GameMetadata } = {
     '8': {
         id: '8',
         title: 'Black Myth Wukong',
-        coverImage: img8,
-        heroImage: img8,
+        coverImage: blackMythWukong,
+        heroImage: blackMythWukong,
         totalSize: 9.2 * 1024 * 1024 * 1024,
         diskReq: 11.5 * 1024 * 1024 * 1024,
         developer: 'Game Science'

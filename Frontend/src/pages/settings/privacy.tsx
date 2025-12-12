@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { Mail, FileText, Shield, Settings } from "lucide-react";
+import { Mail, FileText, Shield, Settings, Home, ArrowLeft } from "lucide-react";
 
 export default function PrivacyPage() {
   return (
@@ -22,6 +22,17 @@ export default function PrivacyPage() {
 
       {/* Main Content Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Navigation Button */}
+        <div className="mb-6">
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         {/* Privacy Policy Title Card */}
         <Card className="mb-12 border-border">
           <CardContent className="p-8 sm:p-10">

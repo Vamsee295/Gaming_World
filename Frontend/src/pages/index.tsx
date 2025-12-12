@@ -24,17 +24,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
-import img1 from "@/components/Images/Store Images/image 1.webp";
-import img2 from "@/components/Images/Store Images/image 2.webp";
-import spidermanHome from "@/components/Images/Store Images/SPIDERMAN HOMEPAGE.jpg";
-import img3 from "@/components/Images/Store Images/image 3.webp";
-import img4 from "@/components/Images/Store Images/image 4.webp";
-import nfsHome from "@/components/Images/Store Images/NFS HOMESCREEN.jpg";
-import img5 from "@/components/Images/Store Images/image 5.webp";
-import img6 from "@/components/Images/Store Images/image 6.webp";
-import img7 from "@/components/Images/Store Images/image 7.webp";
-import img8 from "@/components/Images/Store Images/image 8.webp";
-import homeImg from "@/components/Images/Store Images/HOME SCREEN.jpg";
+import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
+import spiderman from "@/components/Images/Store Images/spiderman.jpg";
+import gta6 from "@/components/Images/Store Images/gta-6.webp";
+import needForSpeed from "@/components/Images/Store Images/need-for-speed.jpg";
+import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
+import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
+import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
+import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
 
 interface Game {
   id: number;
@@ -53,7 +50,7 @@ const games: Game[] = [
     title: "Cyberpunk 2077",
     price: "$59.99",
     discount: 20,
-    image: homeImg,
+    image: cyberpunk2077,
     rating: 4.8,
     genre: "RPG",
     featured: true
@@ -63,7 +60,7 @@ const games: Game[] = [
     title: "Marvel's Spiderman",
     price: "$49.99",
     discount: 15,
-    image: spidermanHome,
+    image: spiderman,
     rating: 4.6,
     genre: "Strategy"
   },
@@ -71,7 +68,7 @@ const games: Game[] = [
     id: 3,
     title: "Grand Theft Auto 6",
     price: "$39.99",
-    image: img3,
+    image: gta6,
     rating: 4.7,
     genre: "Racing"
   },
@@ -80,7 +77,7 @@ const games: Game[] = [
     title: "Need For Speed",
     price: "$59.99",
     discount: 30,
-    image: nfsHome,
+    image: needForSpeed,
     rating: 4.9,
     genre: "Action"
   },
@@ -88,7 +85,7 @@ const games: Game[] = [
     id: 5,
     title: "The Last Of Us",
     price: "$0.00",
-    image: img5,
+    image: lastOfUs,
     rating: 4.5,
     genre: "FPS"
   },
@@ -97,7 +94,7 @@ const games: Game[] = [
     title: "Detroit : Become Human",
     price: "$44.99",
     discount: 25,
-    image: img6,
+    image: detroit,
     rating: 4.8,
     genre: "MMORPG"
   },
@@ -105,7 +102,7 @@ const games: Game[] = [
     id: 7,
     title: "A Way Out",
     price: "$29.99",
-    image: img7,
+    image: aWayOut,
     rating: 4.4,
     genre: "Horror"
   },
@@ -113,7 +110,7 @@ const games: Game[] = [
     id: 8,
     title: "Black Myth Wukong",
     price: "$0.00",
-    image: img8,
+    image: blackMythWukong,
     rating: 4.6,
     genre: "Battle Royale"
   }
@@ -443,10 +440,10 @@ export default function Home() {
                           <Link href="/profile/friends">View Friends</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/friends?tab=add">Add Friend</Link>
+                          <Link href="/community/friends?tab=add">Add Friend</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/friends?tab=requests">
+                          <Link href="/community/friends?tab=requests">
                             Friend Requests
                             {pendingRequestsCount > 0 && (
                               <Badge className="ml-2 bg-primary text-primary-foreground">{pendingRequestsCount}</Badge>

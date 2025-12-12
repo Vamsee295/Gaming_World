@@ -158,7 +158,7 @@ export default function BalancePage() {
   // Handle preset amount selection - Navigate to transaction page
   const handleSelectAmount = (amount: number) => {
     // Navigate to transaction page with wallet funding mode
-    router.push(`/transaction?mode=wallet&amount=${amount}`);
+    router.push(`/store/transaction?mode=wallet&amount=${amount}`);
   };
 
   // Handle payment confirmation
