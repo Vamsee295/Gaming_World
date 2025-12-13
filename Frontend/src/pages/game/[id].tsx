@@ -8,9 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft, Copy, Check } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft, Copy, Check, Globe, Zap, Target, Sparkles, Trophy, Map, Swords, Cpu, Car, Shield, ChevronDown } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { EnhancedYouTubePlayer } from "@/components/ui/EnhancedYouTubePlayer";
+import { FeatureCard } from "@/components/ui/FeatureCard";
+import { GameplaySystemCard } from "@/components/ui/GameplaySystemCard";
+import { ImageLightbox } from "@/components/ui/ImageLightbox";
+import { RatingBreakdown } from "@/components/ui/RatingBreakdown";
+import { EditionCard } from "@/components/ui/EditionCard";
+import { RelatedGameCard } from "@/components/ui/RelatedGameCard";
 import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
 import spiderman from "@/components/Images/Store Images/spiderman.jpg";
 import gta6 from "@/components/Images/Store Images/gta-6.webp";
@@ -407,16 +415,256 @@ const gamesData: Record<number, any> = {
   }
 };
 
+// Extended Game Data - Features, Videos, Editions, etc.
+const extendedGameData: Record<number, any> = {
+  1: { // Cyberpunk 2077
+    tagline: "A next-gen open-world RPG set in Night City",
+    trailerVideoId: "8X2kIfS6fb8",
+    features: [
+      { icon: Globe, title: "Open World Freedom", description: "Explore Night City with no loading screens and immersive verticality" },
+      { icon: Zap, title: "Deep RPG Systems", description: "Builds, perks, cyberware, and choices that truly matter" },
+      { icon: Target, title: "Story & Choices", description: "Decisions shape endings, relationships, and the world around you" },
+      { icon: Sparkles, title: "Visual Fidelity", description: "Ray tracing, next-gen lighting, and photorealistic graphics" },
+      { icon: Trophy, title: "Replayability", description: "Multiple lifepaths, endings, and playstyles to discover" },
+    ],
+    aboutTabs: {
+      overview: "Cyberpunk 2077 is an open-world, action-adventure RPG set in the megalopolis of Night City. As V, a mercenary outlaw, you'll navigate a world obsessed with power, glamour and body modification in your quest for a one-of-a-kind implant—the key to immortality.",
+      story: "After a heist goes wrong, V is left with a biochip containing the digital ghost of legendary rocker Johnny Silverhand. Together, they must find a way to separate before V's mind is overwritten. Navigate corporate warfare, gang conflicts, and personal relationships in a story about identity, mortality, and what it means to be alive.",
+      gameplay: "Choose your playstyle: run and gun, stealth hacking, or pure melee combat. Upgrade your cyberware with mantis blades, gorilla arms, and neural implants. Hack into systems, manipulate enemies, and take control of the environment. Every approach is viable.",
+      world: "Night City is divided into six distinct districts, each with its own culture, gangs, and stories. From the corporate towers of City Center to the gang-ruled streets of Pacifica, every corner hides secrets, gigs, and unforgettable characters.",
+      customization: "Modify V's appearance, skills, and abilities. Install cyberware to gain superhuman abilities. Customize weapons and vehicles. Choose your backstory as Nomad, Street Kid, or Corpo—each offering unique dialogue options and story moments.",
+    },
+    gameplaySystems: [
+      { name: "Combat & Cyberware", description: "Engage in visceral gunfights or brutal melee combat enhanced by cyberware implants", bullets: ["Mantis Blades, Gorilla Arms & more", "Weapon customization & mods", "Slow-motion Sandevistan implant"], image: cyberpunk2077 },
+      { name: "Hacking & Netrunning", description: "Infiltrate systems, control enemies, and turn the environment into a weapon", bullets: ["Breach Protocol mini-games", "Quickhack abilities", "Disable security systems"], image: spiderman },
+      { name: "Character Builds", description: "Deep progression system with perks across five skill trees", bullets: ["Body, Reflexes, Technical, Intelligence, Cool", "Respec your character anytime", "100+ perks to unlock"], image: gta6 },
+    ],
+    ratingBreakdown: { 5: 9, 4: 5, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$59.99", features: ["Base game", "All updates & patches", "Photo mode"], isPopular: false },
+      { name: "Deluxe Edition", price: "$79.99", features: ["Base game", "Phantom Liberty expansion", "Bonus items & weapons", "Digital artbook"], isPopular: true },
+      { name: "Ultimate Edition", price: "$99.99", features: ["Everything from Deluxe", "Season Pass", "Exclusive cosmetics", "Soundtrack"], isPopular: false },
+    ],
+    relatedGames: [2, 3, 5],
+  },
+  2: { // Spider-Man
+    tagline: "Swing through Marvel's New York as the iconic web-slinger",
+    trailerVideoId: "R2Ebc_OFeug",
+    features: [
+      { icon: Globe, title: "Iconic New York", description: "Swing through a beautifully recreated Manhattan" },
+      { icon: Zap, title: "Fluid Combat", description: "Master acrobatic combat and web-based abilities" },
+      { icon: Target, title: "Gripping Story", description: "Experience Peter Parker's greatest challenge yet" },
+      { icon: Sparkles, title: "Suit Collection", description: "Unlock and customize dozens of iconic suits" },
+      { icon: Trophy, title: "Hero Activities", description: "Stop crimes, solve puzzles, and protect the city" },
+    ],
+    aboutTabs: {
+      overview: "Experience the complete story of Marvel's Spider-Man. Swing through vibrant neighborhoods and fight crime with mastery in this action-packed adventure.",
+      story: "Peter Parker has been protecting New York for eight years. When a new threat emerges, he must balance his personal life with his responsibility as Spider-Man. Face iconic villains and forge new alliances in Marvel's New York.",
+      gameplay: "Web-swing with unprecedented fluidity and freedom. Combat combines acrobatics, web abilities, and gadgets. Use stealth or go in guns blazing—the choice is yours.",
+      world: "Explore all of Manhattan, from Harlem to Chinatown. Each neighborhood is living and breathing with crimes to stop, collectibles to find, and side missions that matter.",
+      customization: "Unlock suits from Spider-Man's rich history—each with unique powers. Craft gadgets and upgrade abilities to match your playstyle.",
+    },
+    gameplaySystems: [
+      { name: "Web-Swinging", description: "Physics-based traversal that makes every swing feel authentic and exhilarating", bullets: ["Point Launch and swing", "Wall-run and parkour", "Air tricks and combos"], image: spiderman },
+      { name: "Combat System", description: "Dynamic combat blending acrobatics with devastating web attacks", bullets: ["Web shooters & gadgets", "Environmental takedowns", "Signature moves"], image: gta6 },
+      { name: "Suit Powers", description: "Each suit grants unique abilities to enhance your playstyle", bullets: ["40+ suits to unlock", "Unique suit powers", "Mix and match abilities"], image: needForSpeed },
+    ],
+    ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$49.99", features: ["Base game", "All post-launch updates", "Photo mode"], isPopular: false },
+      { name: "Complete Edition", price: "$69.99", features: ["Base game", "The City That Never Sleeps DLC", "3 story chapters", "New suits & abilities"], isPopular: true },
+    ],
+    relatedGames: [1, 4, 5],
+  },
+  3: { // GTA 6
+    tagline: "Return to Vice City in the most ambitious GTA yet",
+    trailerVideoId: "QdBZY2fkU-0",
+    features: [
+      { icon: Globe, title: "Massive Open World", description: "Explore the largest and most detailed map in GTA history" },
+      { icon: Zap, title: "Dual Protagonists", description: "Play as two characters with intertwining stories" },
+      { icon: Target, title: "Next-Gen Heists", description: "Plan and execute elaborate criminal operations" },
+      { icon: Sparkles, title: "Living World", description: "Dynamic NPCs, weather, and living ecosystems" },
+      { icon: Trophy, title: "Online Evolution", description: "GTA Online taken to unprecedented heights" },
+    ],
+    aboutTabs: {
+      overview: "Return to Vice City in the most ambitious and immersive Grand Theft Auto game ever made. Experience a living, breathing world like never before.",
+      story: "Follow two protagonists—Jason and Lucia—as they navigate the criminal underworld of Vice City. From small-time robberies to elaborate heists, build your empire.",
+      gameplay: "Experience refined driving, shooting, and stealth mechanics. Plan heists with multiple approaches. Customize vehicles and properties.",
+      world: "Vice City and surrounding areas offer unprecedented variety—from neon-lit beaches to dangerous swamps. Every inch is packed with activities.",
+      customization: "Customize characters, vehicles, and properties. Build your criminal empire with businesses and safe houses across the map.",
+    },
+    gameplaySystems: [
+      { name: "Heist Planning", description: "Scout locations, recruit crew members, and choose your approach", bullets: ["Multiple approach options", "Recruit specialists", "Risk vs reward systems"], image: gta6 },
+      { name: "Vehicle Mastery", description: "Drive, fly, and sail across Vice City with realistic physics", bullets: ["Cars, bikes, boats, aircraft", "Deep customization", "Realistic handling"], image: needForSpeed },
+      { name: "Empire Building", description: "Establish and manage criminal enterprises across the city", bullets: ["Properties and businesses", "Passive income streams", "Territory control"], image: lastOfUs },
+    ],
+    ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$69.99", features: ["Base game", "GTA Online access", "Bonus cash"], isPopular: false },
+      { name: "Premium Edition", price: "$99.99", features: ["Base game", "Premium Online content", "$2M bonus cash", "Exclusive vehicles"], isPopular: true },
+    ],
+    relatedGames: [1, 4, 7],
+  },
+  4: { // Need For Speed
+    tagline: "Own the streets in the ultimate illegal race experience",
+    trailerVideoId: "_ODYfDWxVJI",
+    features: [
+      { icon: Car, title: "Intense Racing", description: "Adrenaline-fueled street races and pursuits" },
+      { icon: Zap, title: "Deep Customization", description: "Modify every aspect of your dream car" },
+      { icon: Shield, title: "Police Chases", description: "High-stakes pursuits with dynamic AI" },
+      { icon: Sparkles, title: "Night City", description: "Race through stunning urban environments" },
+      { icon: Trophy, title: "Risk & Reward", description: "Push your limits for bigger payouts" },
+    ],
+    aboutTabs: {
+      overview: "Experience illegal street racing at its finest. Customize your ride, evade the police, and dominate the underground racing scene.",
+      story: "Build your reputation from unknown racer to street legend. Navigate rival crews, law enforcement, and high-stakes races.",
+      gameplay: "Master drift mechanics, nitrous boosts, and aggressive takedowns. Every race is a battle for supremacy and cash.",
+      world: "Race through detailed cityscapes with dynamic weather and time of day. Discover hidden routes and shortcuts.",
+      customization: "Modify performance, visuals, and handling. Thousands of parts and paint options to create your perfect ride.",
+    },
+    gameplaySystems: [
+      { name: "Racing Mechanics", description: "Arcade-style racing with drift, nitrous, and aggressive driving", bullets: ["Drift to earn nitrous", "Takedown rivals", "Perfect launch timing"], image: needForSpeed },
+      { name: "Car Customization", description: "Deep modification system for performance and visual upgrades", bullets: ["Engine swaps", "Visual customization", "Tuning & handling"], image: lastOfUs },
+      { name: "Heat System", description: "Push your luck to earn more cash but risk losing it all", bullets: ["Heat levels increase rewards", "Escape to bank cash", "High risk, high reward"], image: detroit },
+    ],
+    ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$59.99", features: ["Base game", "Starter car pack"], isPopular: false },
+      { name: "Deluxe Edition", price: "$79.99", features: ["Base game", "Deluxe car pack", "Exclusive customization", "Bonus REP"], isPopular: true },
+    ],
+    relatedGames: [2, 3, 6],
+  },
+  5: { // The Last Of Us
+    tagline: "A story of survival, loss, and redemption in a pandemic world",
+    trailerVideoId: "R2Ebc_OFeug",
+    features: [
+      { icon: Target, title: "Emotional Storytelling", description: "Experience one of gaming's greatest narratives" },
+      { icon: Swords, title: "Tense Combat", description: "Survival-focused combat with limited resources" },
+      { icon: Map, title: "Post-Pandemic World", description: "Journey across a beautifully desolate America" },
+      { icon: Sparkles, title: "Visual Masterpiece", description: "Stunning graphics and art direction" },
+      { icon: Trophy, title: "Character Chemistry", description: "Unforgettable relationship between Joel and Ellie" },
+    ],
+    aboutTabs: {
+      overview: "The Last of Us is a genre-defining experience blending survival and action to tell an emotional story of two survivors in post-pandemic America.",
+      story: "Twenty years after a fungal outbreak, Joel must smuggle 14-year-old Ellie across the country. What starts as a job becomes a journey that will change both of them forever. Experience hope, loss, and sacrifice.",
+      gameplay: "Scavenge for resources, craft weapons and items, and use stealth or combat to survive. Every bullet counts. Choose when to fight and when to hide.",
+      world: "Travel through abandoned cities reclaimed by nature. From Boston's quarantine zone to Salt Lake City, witness humanity's fall and nature's return.",
+      customization: "Upgrade Joel's abilities through pills and training. Improve weapons at workbenches. Manage limited resources carefully.",
+    },
+    gameplaySystems: [
+      { name: "Stealth & Survival", description: "Use stealth to avoid or eliminate threats with limited resources", bullets: ["Listen mode to track enemies", "Stealth kills & distractions", "Environmental awareness"], image: lastOfUs },
+      { name: "Crafting System", description: "Scavenge materials to craft essential survival items", bullets: ["Health kits & Molotovs", "Upgraded melee weapons", "Resource management"], image: detroit },
+      { name: "Infected Combat", description: "Face terrifying infected in various stages of mutation", bullets: ["Runners, Clickers, Bloaters", "Unique behaviors", "Terrifying encounters"], image: aWayOut },
+    ],
+    ratingBreakdown: { 5: 12, 4: 2, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$59.99", features: ["Base game", "Left Behind DLC", "Enhanced graphics"], isPopular: true },
+    ],
+    relatedGames: [1, 6, 7],
+  },
+  6: { // Detroit: Become Human
+    tagline: "Shape the future through choices in this android revolution",
+    trailerVideoId: "QD1pbWCJcKQ",
+    features: [
+      { icon: Target, title: "Branching Narrative", description: "Every choice shapes the story in meaningful ways" },
+      { icon: Swords, title: "Three Perspectives", description: "Play as three unique androids with different stories" },
+      { icon: Sparkles, title: "Photorealistic Graphics", description: "Motion-captured performances bring characters to life" },
+      { icon: Trophy, title: "Multiple Endings", description: "Dozens of possible outcomes based on your decisions" },
+      { icon: Map, title: "Moral Dilemmas", description: "Face difficult choices about consciousness and humanity" },
+    ],
+    aboutTabs: {
+      overview: "Detroit: Become Human is a neo-noir thriller where your choices shape a branching narrative about three androids discovering what it means to be alive.",
+      story: "In 2038 Detroit, androids serve humanity. Play as Connor, Kara, and Markus—three androids who must choose between obedience and freedom. Your decisions determine their fate and the fate of their people.",
+      gameplay: "Make split-second decisions in tense scenarios. Investigate crime scenes, engage in quick-time events, and shape relationships through dialogue choices.",
+      world: "Explore a near-future Detroit where androids are commonplace. Every location is meticulously detailed and every character reacts to your choices.",
+      customization: "Your choices customize the story. Relationships, character survival, and the android revolution's outcome all depend on you.",
+    },
+    gameplaySystems: [
+      { name: "Choice & Consequence", description: "Every decision creates ripples that affect the entire narrative", bullets: ["Branching story paths", "Character relationships", "Life or death choices"], image: detroit },
+      { name: "Investigation", description: "Analyze crime scenes and reconstruct events as Connor", bullets: ["Evidence scanning", "Event reconstruction", "Deduction challenges"], image: aWayOut },
+      { name: "Revolution Path", description: "Lead the android revolution as Markus or protect Kara's family", bullets: ["Peaceful or violent", "Multiple endings", "Moral dilemmas"], image: blackMythWukong },
+    ],
+    ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$33.74", features: ["Base game", "Digital art book"], isPopular: true },
+    ],
+    relatedGames: [5, 7, 8],
+  },
+  7: { // A Way Out
+    tagline: "Two prisoners, one escape—exclusively co-op adventure",
+    trailerVideoId: "yGZGSdgJVPM",
+    features: [
+      { icon: Users, title: "Exclusive Co-op", description: "Designed from the ground up for two players" },
+      { icon: Target, title: "Cinematic Story", description: "Emotional narrative with unforgettable twists" },
+      { icon: Gamepad2, title: "Split-Screen Action", description: "Asymmetric gameplay and unique perspectives" },
+      { icon: Trophy, title: "Varied Gameplay", description: "Action, stealth, driving, and more" },
+      { icon: Sparkles, title: "Friend Pass", description: "Invite a friend for free with Friend Pass" },
+    ],
+    aboutTabs: {
+      overview: "A Way Out is an exclusively co-op adventure about two prisoners escaping together. Experience a cinematic story unlike anything else—only in co-op.",
+      story: "Leo and Vincent are imprisoned for different crimes. To escape and achieve their goals, they must work together. What begins as a breakout becomes an epic journey across the country.",
+      gameplay: "Play online or local split-screen. Work together to solve puzzles, fight enemies, and make critical decisions. Each player has unique moments and perspectives.",
+      world: "From prison to Mexico, experience varied locations. Each chapter brings new challenges and gameplay mechanics.",
+      customization: "Choices affect character relationships and some story beats. Work together to decide the best approach.",
+    },
+    gameplaySystems: [
+      { name: "Co-op Mechanics", description: "Unique gameplay requiring constant cooperation and communication", bullets: ["Asymmetric tasks", "Synchronized actions", "Split-screen dynamics"], image: aWayOut },
+      { name: "Varied Gameplay", description: "Experience action, stealth, driving, and mini-games", bullets: ["Prison escape sequences", "Car chases", "Stealth infiltration"], image: blackMythWukong },
+      { name: "Emotional Journey", description: "Build a bond with your co-op partner through the story", bullets: ["Character development", "Relationship building", "Shocking twists"], image: cyberpunk2077 },
+    ],
+    ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$29.99", features: ["Base game", "Friend Pass included"], isPopular: true },
+    ],
+    relatedGames: [5, 6, 8],
+  },
+  8: { // Black Myth Wukong
+    tagline: "Embark on an epic journey as the Destined One",
+    trailerVideoId: "O2nNljv0MOw",
+    features: [
+      { icon: Swords, title: "Souls-like Combat", description: "Challenging and rewarding action combat" },
+      { icon: Sparkles, title: "Unreal Engine 5", description: "Stunning visuals powered by next-gen tech" },
+      { icon: Trophy, title: "72 Transformations", description: "Transform into various creatures and enemies" },
+      { icon: Map, title: "Chinese Mythology", description: "Rich lore from Journey to the West" },
+      { icon: Cpu, title: "Deep Customization", description: "Extensive skill trees and staff upgrades" },
+    ],
+    aboutTabs: {
+      overview: "Black Myth: Wukong is an action RPG rooted in Chinese mythology. Become the Destined One and uncover the truth beneath the legend of the Monkey King.",
+      story: "Based on Journey to the West, experience a dark reimagining of the legendary tale. Uncover secrets, battle gods and demons, and discover your destiny.",
+      gameplay: "Master the staff and transformation abilities. Engage in challenging boss battles that test your skills. Learn enemy patterns and adapt your strategy.",
+      world: "Journey through beautifully realized locations from Chinese mythology—from celestial palaces to demon-infested forests.",
+      customization: "Unlock abilities across multiple skill trees. Upgrade your staff with different forms. Master transformation powers.",
+    },
+    gameplaySystems: [
+      { name: "Staff Combat", description: "Master various staff techniques and combos", bullets: ["Light & heavy attacks", "Staff stance changes", "Combo mastery"], image: blackMythWukong },
+      { name: "Transformation", description: "Transform into defeated enemies to gain their powers", bullets: ["72 transformation forms", "Unique abilities", "Tactical advantages"], image: cyberpunk2077 },
+      { name: "Boss Battles", description: "Face legendary creatures from Chinese mythology", bullets: ["Epic encounters", "Pattern recognition", "Challenging difficulty"], image: spiderman },
+    ],
+    ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
+    editions: [
+      { name: "Standard Edition", price: "$59.99", features: ["Base game", "Digital artbook"], isPopular: false },
+      { name: "Deluxe Edition", price: "$79.99", features: ["Base game", "Season Pass", "Exclusive armor sets", "Soundtrack"], isPopular: true },
+    ],
+    relatedGames: [1, 2, 6],
+  },
+};
+
 export default function GameDetailPage() {
   const router = useRouter();
   const { id } = router.query;
   const gameId = id ? parseInt(id as string) : null;
-  const game = gameId ? gamesData[gameId] : null;
+  const baseGame = gameId ? gamesData[gameId] : null;
+  const gameExtensions = gameId ? extendedGameData[gameId] : null;
+  const game = baseGame && gameExtensions ? { ...baseGame, ...gameExtensions } : baseGame;
   const { addItem } = useCart();
   const { addItem: addWishlistItem, removeItem: removeWishlistItem, items: wishlistItems } = useWishlist();
   const isInWishlist = gameId ? wishlistItems.some(item => item.id === gameId) : false;
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isSystemRequirementsOpen, setIsSystemRequirementsOpen] = useState(false);
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   if (!game) {
     return (
@@ -505,7 +753,7 @@ export default function GameDetailPage() {
         </div>
 
         {/* Hero Section */}
-        <div className="relative h-[500px] overflow-hidden">
+        <div className="relative h-[600px] overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src={gameImages[game.id]}
@@ -523,7 +771,12 @@ export default function GameDetailPage() {
                   <Badge key={tag} variant="secondary">{tag}</Badge>
                 ))}
               </div>
-              <h1 className="text-5xl font-bold mb-4 text-foreground">{game.title}</h1>
+              <h1 className="text-5xl font-bold mb-2 text-foreground">{game.title}</h1>
+              {game.tagline && (
+                <p className="text-xl text-muted-foreground mb-6 italic">
+                  "{game.tagline}"
+                </p>
+              )}
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 fill-primary text-primary" />
@@ -555,6 +808,12 @@ export default function GameDetailPage() {
                 <Button size="lg" variant="outline" onClick={handleWishlistToggle}>
                   <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
                 </Button>
+                {game.trailerVideoId && (
+                  <Button size="lg" variant="outline" className="gap-2" onClick={() => setIsTrailerOpen(true)}>
+                    <Play className="h-5 w-5" />
+                    Watch Trailer
+                  </Button>
+                )}
                 <Button size="lg" variant="outline" onClick={() => setIsShareDialogOpen(true)}>
                   <Share2 className="h-5 w-5" />
                 </Button>
@@ -562,6 +821,23 @@ export default function GameDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Why Play This Game - Features */}
+        {game.features && game.features.length > 0 && (
+          <div className="container mx-auto px-4 py-16 bg-secondary/10">
+            <h2 className="text-4xl font-bold text-center mb-12">Why Play This Game?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+              {game.features.map((feature: any, index: number) => (
+                <FeatureCard
+                  key={index}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-12">
@@ -575,16 +851,77 @@ export default function GameDetailPage() {
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
                 <TabsContent value="about" className="space-y-6">
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4 text-foreground">About This Game</h2>
-                    <p className="text-muted-foreground leading-relaxed">{game.longDescription || game.description}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-3 text-foreground">Screenshots</h3>
+                  {game.aboutTabs ? (
+                    <Tabs defaultValue="overview" className="w-full">
+                      <TabsList className="grid w-full grid-cols-5">
+                        <TabsTrigger value="overview">Overview</TabsTrigger>
+                        <TabsTrigger value="story">Story</TabsTrigger>
+                        <TabsTrigger value="gameplay">Gameplay</TabsTrigger>
+                        <TabsTrigger value="world">World</TabsTrigger>
+                        <TabsTrigger value="customization">Customization</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="overview" className="mt-6">
+                        <p className="text-muted-foreground leading-relaxed text-lg">{game.aboutTabs.overview}</p>
+                      </TabsContent>
+                      <TabsContent value="story" className="mt-6">
+                        <h3 className="text-2xl font-bold mb-4">Story</h3>
+                        <p className="text-muted-foreground leading-relaxed text-lg">{game.aboutTabs.story}</p>
+                      </TabsContent>
+                      <TabsContent value="gameplay" className="mt-6">
+                        <h3 className="text-2xl font-bold mb-4">Gameplay</h3>
+                        <p className="text-muted-foreground leading-relaxed text-lg">{game.aboutTabs.gameplay}</p>
+                      </TabsContent>
+                      <TabsContent value="world" className="mt-6">
+                        <h3 className="text-2xl font-bold mb-4">World</h3>
+                        <p className="text-muted-foreground leading-relaxed text-lg">{game.aboutTabs.world}</p>
+                      </TabsContent>
+                      <TabsContent value="customization" className="mt-6">
+                        <h3 className="text-2xl font-bold mb-4">Customization</h3>
+                        <p className="text-muted-foreground leading-relaxed text-lg">{game.aboutTabs.customization}</p>
+                      </TabsContent>
+                    </Tabs>
+                  ) : (
+                    <div>
+                      <h2 className="text-2xl font-bold mb-4 text-foreground">About This Game</h2>
+                      <p className="text-muted-foreground leading-relaxed">{game.longDescription || game.description}</p>
+                    </div>
+                  )}
+
+                  {/* Gameplay Systems */}
+                  {game.gameplaySystems && game.gameplaySystems.length > 0 && (
+                    <div className="mt-12 space-y-6">
+                      <h2 className="text-3xl font-bold">Gameplay Systems</h2>
+                      <div className="space-y-6">
+                        {game.gameplaySystems.map((system: any, index: number) => (
+                          <GameplaySystemCard
+                            key={index}
+                            name={system.name}
+                            description={system.description}
+                            bullets={system.bullets}
+                            image={system.image}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Screenshots with Lightbox */}
+                  <div className="mt-12">
+                    <h3 className="text-2xl font-bold mb-6 text-foreground">Screenshots</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {game.screenshots?.map((screenshot: any, index: number) => (
-                        <div key={index} className="relative aspect-video overflow-hidden rounded-lg">
+                        <div
+                          key={index}
+                          className="relative aspect-video overflow-hidden rounded-lg cursor-pointer hover:opacity-80 transition-opacity group"
+                          onClick={() => {
+                            setLightboxIndex(index);
+                            setLightboxOpen(true);
+                          }}
+                        >
                           <Image src={screenshot} alt={`${game.title} screenshot ${index + 1}`} fill className="object-cover" />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                            <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -649,6 +986,16 @@ export default function GameDetailPage() {
                   </div>
                 </TabsContent>
                 <TabsContent value="reviews">
+                  {game.ratingBreakdown && (
+                    <div className="mb-8">
+                      <RatingBreakdown
+                        ratings={game.ratingBreakdown}
+                        totalReviews={game.reviews?.length || 0}
+                        averageRating={game.rating}
+                      />
+                    </div>
+                  )}
+
                   <div className="space-y-4">
                     {game.reviews && game.reviews.length > 0 ? game.reviews.map((review: any, index: number) => (
                       <Card key={index}>
@@ -707,6 +1054,50 @@ export default function GameDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Game Editions */}
+        {game.editions && game.editions.length > 0 && (
+          <div className="container mx-auto px-4 py-16 bg-secondary/10">
+            <h2 className="text-4xl font-bold text-center mb-12">Choose Your Edition</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {game.editions.map((edition: any, index: number) => (
+                <EditionCard
+                  key={index}
+                  name={edition.name}
+                  price={edition.price}
+                  features={edition.features}
+                  isPopular={edition.isPopular}
+                  gameId={game.id}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Related Games */}
+        {game.relatedGames && game.relatedGames.length > 0 && (
+          <div className="container mx-auto px-4 py-16">
+            <h2 className="text-4xl font-bold mb-12">You May Also Like</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {game.relatedGames.map((relatedId: number) => {
+                const relatedGame = gamesData[relatedId];
+                if (!relatedGame) return null;
+                return (
+                  <RelatedGameCard
+                    key={relatedId}
+                    id={relatedGame.id}
+                    title={relatedGame.title}
+                    price={relatedGame.price}
+                    discount={relatedGame.discount}
+                    rating={relatedGame.rating}
+                    image={gameImages[relatedGame.id]}
+                    genre={relatedGame.genre}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Share Dialog */}
@@ -805,6 +1196,32 @@ export default function GameDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Trailer Dialog */}
+      <Dialog open={isTrailerOpen} onOpenChange={setIsTrailerOpen}>
+        <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] p-0 bg-black">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {isTrailerOpen && game.trailerVideoId && (
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${game.trailerVideoId}?autoplay=1&mute=0&loop=1&playlist=${game.trailerVideoId}&rel=0&modestbranding=1&controls=1&showinfo=0&iv_load_policy=3&fs=1`}
+                title={`${game.title} Trailer`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        images={game.screenshots || []}
+        initialIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        gameTitle={game.title}
+      />
     </>
   );
 }

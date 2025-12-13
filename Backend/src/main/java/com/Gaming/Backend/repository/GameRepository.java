@@ -39,4 +39,49 @@ public interface GameRepository extends JpaRepository<Game, Long> {
                                 @Param("minPrice") Double minPrice,
                                 @Param("maxPrice") Double maxPrice,
                                 Pageable pageable);
+    
+    // Personalized recommendation methods
+    
+    /**
+     * Find games by multiple genres (for personalized recommendations)
+     */
+    List<Game> findByActiveTrueAndGenreIn(List<String> genres, Pageable pageable);
+    
+    /**
+     * Find games with discount greater than threshold
+     */
+    List<Game> findByActiveTrueAndDiscountGreaterThan(Double minDiscount, Pageable pageable);
+    
+    /**
+     * Find editor's choice games
+     */
+    List<Game> findByActiveTrueAndEditorPickTrue(Pageable pageable);
+    
+    /**
+     * Find recently released games
+     */
+    @Query("SELECT g FROM Game g WHERE g.active = true AND g.releaseDate >= :sinceDate ORDER BY g.releaseDate DESC")
+    List<Game> findRecentlyReleased(@Param("sinceDate") java.time.LocalDate sinceDate, Pageable pageable);
+    
+    /**
+     * Find free to play games or games under a certain price
+     */
+    @Query("SELECT g FROM Game g WHERE g.active = true AND (g.isFreeToPlay = true OR g.price <= :maxPrice)")
+    List<Game> findBudgetGames(@Param("maxPrice") Double maxPrice, Pageable pageable);
+    
+    /**
+     * Find games by publisher name (for "Because You Viewed" recommendations)
+     */
+    List<Game> findByActiveTrueAndPublisherId(Long publisherId, Pageable pageable);
+    
+    /**
+     * Find trending games (high rating + recent activity)
+     */
+    @Query("SELECT g FROM Game g WHERE g.active = true ORDER BY g.averageRating DESC, g.downloads DESC")
+    List<Game> findTrendingGames(Pageable pageable);
+    
+    /**
+     * Find games by IDs (for fetching recently viewed games)
+     */
+    List<Game> findByIdIn(List<Long> ids);
 }

@@ -72,6 +72,16 @@ public class Game {
 
     private Integer reviewCount = 0;
 
+    // Recommendation fields for personalized homepage
+    @Column(name = "is_free_to_play")
+    private Boolean isFreeToPlay = false;
+
+    @Column(name = "featured")
+    private Boolean featured = false;
+
+    @Column(name = "editor_pick")
+    private Boolean editorPick = false;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
