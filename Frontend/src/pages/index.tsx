@@ -3,10 +3,18 @@ import Head from "next/head";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Card3D from "@/components/ui/Card3D";
+import dynamic from "next/dynamic";
+
+// Dynamically import particle component to avoid SSR issues
+// TODO: Uncomment after npm install completes
+// const AmbientParticles = dynamic(() => import("@/components/effects/AmbientParticles"), {
+//   ssr: false,
+// });
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Play, ShoppingCart, Star, TrendingUp, Gamepad2, Zap, Clock, Users, ExternalLink, ArrowUp, X, Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Sun, Moon, Bell } from "lucide-react";
+import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -299,13 +307,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background relative">
+        {/* Ambient Particles Background */}
+        {/* TODO: Uncomment after npm install completes */}
+        {/* <AmbientParticles /> */}
         {/* Navigation */}
         <motion.nav
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.6 }}
-          className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          className="sticky top-0 z-50 border-b border-border glass-dark"
         >
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -318,7 +329,7 @@ export default function Home() {
                   <span className="text-2xl font-bold text-foreground">GameVerse</span>
                 </motion.div>
                 <div className="hidden md:flex items-center gap-6">
-                  <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Store</a>
+                  <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Store</Link>
                   <Link href="/library" className="text-muted-foreground hover:text-foreground transition-colors">Library</Link>
                   <DropdownMenu>
                     <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
@@ -501,6 +512,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             className="relative h-[600px] overflow-hidden"
+            style={{ perspective: '1000px' }}
           >
             <div className="absolute inset-0">
               <Image
@@ -573,8 +585,8 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex items-center gap-4">
-                  <Link href={`/store/transaction?gameId=${featuredGame.id}`}>
-                    <Button size="lg" className="gap-2">
+                  <Link href={`/game/${featuredGame.id}`}>
+                    <Button size="lg" className="gap-2 glow-gradient">
                       <Play className="h-5 w-5" />
                       Purchase
                     </Button>
@@ -582,7 +594,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="gap-2"
+                    className="gap-2 btn-ripple"
                     onClick={() => {
                       const basePrice = parseFloat(featuredGame.price.slice(1));
                       const effective = featuredGame.discount ? basePrice * (1 - featuredGame.discount / 100) : basePrice;
@@ -748,14 +760,12 @@ export default function Home() {
                 </div>
               ) : (
                 paginatedGames.map((game) => (
-                  <motion.div
-                    key={game.id}
-                    variants={itemVariants}
-                    whileHover={{ y: -8 }}
-                    className="group cursor-pointer"
-                  >
+                  <Card3D key={game.id} className="group cursor-pointer" intensity={10}>
                     <Link href={`/game/${game.id}`}>
-                      <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                      <motion.div
+                        variants={itemVariants}
+                        className="relative overflow-hidden rounded-lg border border-border bg-secondary card-3d-content"
+                      >
                         <div className="aspect-[16/9] overflow-hidden relative">
                           <Image
                             src={game.image as any}
@@ -763,10 +773,11 @@ export default function Home() {
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
                         {game.discount && (
                           <div className="absolute top-3 right-3">
-                            <Badge className="bg-green-600 text-white">-{game.discount}%</Badge>
+                            <Badge className="bg-green-600 text-white badge-glow">-{game.discount}%</Badge>
                           </div>
                         )}
                         <div className="p-4">
@@ -774,7 +785,7 @@ export default function Home() {
                             {game.title}
                           </h3>
                           <div className="flex items-center justify-between mb-3">
-                            <Badge variant="secondary">{game.genre}</Badge>
+                            <Badge variant="secondary" className="smooth-hover">{game.genre}</Badge>
                             <div className="flex items-center gap-1">
                               <Star className="h-4 w-4 fill-primary text-primary" />
                               <span className="text-sm text-foreground">{game.rating}</span>
@@ -783,8 +794,8 @@ export default function Home() {
                           <div className="flex items-center justify-between">
                             {game.discount ? (
                               <div className="flex items-center gap-2">
-                                <span className="text-sm line-through text-muted-foreground">{game.price}</span>
-                                <span className="text-lg font-bold text-green-500">
+                                <span className="text-sm line-through text-muted-foreground price-shake">{game.price}</span>
+                                <span className="text-lg font-bold text-green-500 price-slide-in price-glow">
                                   ${(parseFloat(game.price.slice(1)) * (1 - game.discount / 100)).toFixed(2)}
                                 </span>
                               </div>
@@ -797,6 +808,7 @@ export default function Home() {
                               <Button
                                 size="sm"
                                 variant="outline"
+                                className="btn-ripple glow-gradient-hover"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
@@ -805,26 +817,38 @@ export default function Home() {
                                   addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
                                 }}
                               >
-                                Add to Cart
+                                <ShoppingCart className="h-4 w-4" />
                               </Button>
                               <Button
                                 size="sm"
+                                variant="outline"
+                                className="btn-ripple"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
                                   const basePrice = parseFloat(game.price.slice(1));
                                   const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
                                   addWishlistItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image as any });
+
+                                  // Store SVG reference before setTimeout
+                                  const svg = e.currentTarget.querySelector('svg');
+                                  if (svg) {
+                                    svg.classList.add('animate-heart-pop');
+                                    setTimeout(() => {
+                                      svg.classList.remove('animate-heart-pop');
+                                    }, 300);
+                                  }
                                 }}
+                                aria-label="Add to wishlist"
                               >
-                                Wishlist
+                                <Heart className="h-4 w-4" />
                               </Button>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     </Link>
-                  </motion.div>
+                  </Card3D>
                 )))}
             </motion.div>
 
@@ -864,24 +888,32 @@ export default function Home() {
         </section>
 
         {/* Special Offers */}
-        <section className="container mx-auto px-4 py-12">
+        <section className="container mx-auto px-4 py-12 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg border border-border p-12 text-center"
+            className="relative overflow-hidden bg-gradient-to-r from-purple-900/30 via-blue-900/30 to-cyan-900/30 rounded-lg border border-border p-12 text-center backdrop-blur-sm"
+            style={{
+              boxShadow: '0 0 50px rgba(147, 51, 234, 0.2), inset 0 0 50px rgba(6, 182, 212, 0.1)',
+            }}
           >
-            <h2 className="text-4xl font-bold mb-4 text-foreground">Weekend Special Sale</h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Save up to 75% on selected titles. Offer ends soon!
-            </p>
-            <Link href="/store/deals">
-              <Button size="lg" className="gap-2">
-                <TrendingUp className="h-5 w-5" />
-                View All Deals
-              </Button>
-            </Link>
+            {/* Animated gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse" />
+
+            <div className="relative z-10">
+              <h2 className="text-4xl font-bold mb-4 text-foreground">Weekend Special Sale</h2>
+              <p className="text-xl text-muted-foreground mb-8">
+                Save up to 75% on selected titles. Offer ends soon!
+              </p>
+              <Link href="/store/deals">
+                <Button size="lg" className="gap-2 glow-gradient text-lg px-8">
+                  <TrendingUp className="h-5 w-5" />
+                  View All Deals
+                </Button>
+              </Link>
+            </div>
           </motion.div>
         </section>
 
