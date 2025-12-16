@@ -373,7 +373,7 @@
     scroll-snap-type: x mandatory;
   }
 
-  .scroll-snap-x > * {
+  .scroll-snap-x>* {
     scroll-snap-align: start;
   }
 }
@@ -383,6 +383,7 @@
   0% {
     background-position: -200px 0;
   }
+
   100% {
     background-position: calc(200px + 100%) 0;
   }
@@ -390,12 +391,10 @@
 
 @layer components {
   .skeleton {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.05) 0px,
-      rgba(255, 255, 255, 0.1) 40px,
-      rgba(255, 255, 255, 0.05) 80px
-    );
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0.05) 0px,
+        rgba(255, 255, 255, 0.1) 40px,
+        rgba(255, 255, 255, 0.05) 80px);
     background-size: 200px 100%;
     animation: skeletonLoading 1.5s infinite;
   }
