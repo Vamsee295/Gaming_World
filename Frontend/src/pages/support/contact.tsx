@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Mail, Clock, CheckCircle2, Send } from "lucide-react";
+import { ArrowLeft, Mail, Clock, CheckCircle2, Send, Upload, Image as ImageIcon, X, FileText, Paperclip } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
 export default function ContactUs() {
@@ -23,6 +23,8 @@ export default function ContactUs() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [ticketId, setTicketId] = useState("");
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const [filePreviews, setFilePreviews] = useState<{ file: File, preview: string }[]>([]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,6 +48,38 @@ export default function ContactUs() {
             game: "",
             message: ""
         });
+        setUploadedFiles([]);
+        setFilePreviews([]);
+    };
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        const newFiles = [...uploadedFiles, ...files];
+        setUploadedFiles(newFiles);
+
+        // Create previews for image files
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setFilePreviews(prev => [...prev, { file, preview: reader.result as string }]);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    };
+
+    const removeFile = (fileToRemove: File) => {
+        setUploadedFiles(prev => prev.filter(f => f !== fileToRemove));
+        setFilePreviews(prev => prev.filter(p => p.file !== fileToRemove));
+    };
+
+    const formatFileSize = (bytes: number) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
     };
 
     if (isSubmitted) {
@@ -295,6 +329,95 @@ export default function ContactUs() {
                                                 <p className="text-xs text-muted-foreground mt-2">
                                                     Tip: Include any error messages, screenshots, or steps to reproduce the issue
                                                 </p>
+                                            </div>
+
+                                            {/* File Upload Section */}
+                                            <div className="space-y-4">
+                                                <Label>Attachments (Optional)</Label>
+                                                <div className="border-2 border-dashed border-border rounded-lg p-6 hover:border-primary/50 transition-colors">
+                                                    <input
+                                                        type="file"
+                                                        id="file-upload"
+                                                        multiple
+                                                        accept="image/*,.pdf,.doc,.docx,.txt,.log"
+                                                        onChange={handleFileUpload}
+                                                        className="hidden"
+                                                    />
+                                                    <label
+                                                        htmlFor="file-upload"
+                                                        className="flex flex-col items-center justify-center cursor-pointer"
+                                                    >
+                                                        <Upload className="h-12 w-12 text-muted-foreground mb-3" />
+                                                        <p className="text-sm font-medium text-foreground mb-1">
+                                                            Click to upload or drag and drop
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            Images, PDFs, and documents (Max 10MB each)
+                                                        </p>
+                                                    </label>
+                                                </div>
+
+                                                {/* Uploaded Files Display */}
+                                                {uploadedFiles.length > 0 && (
+                                                    <div className="space-y-3">
+                                                        <div className="flex items-center gap-2 text-sm font-medium">
+                                                            <Paperclip className="h-4 w-4" />
+                                                            <span>{uploadedFiles.length} file(s) attached</span>
+                                                        </div>
+
+                                                        {/* Image Previews */}
+                                                        {filePreviews.length > 0 && (
+                                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                                {filePreviews.map((preview, idx) => (
+                                                                    <div key={idx} className="relative group">
+                                                                        <img
+                                                                            src={preview.preview}
+                                                                            alt={preview.file.name}
+                                                                            className="w-full h-24 object-cover rounded-lg border border-border"
+                                                                        />
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => removeFile(preview.file)}
+                                                                            className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                        >
+                                                                            <X className="h-3 w-3" />
+                                                                        </button>
+                                                                        <p className="text-xs text-muted-foreground mt-1 truncate">
+                                                                            {preview.file.name}
+                                                                        </p>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Non-Image Files List */}
+                                                        <div className="space-y-2">
+                                                            {uploadedFiles.filter(file => !file.type.startsWith('image/')).map((file, idx) => (
+                                                                <div
+                                                                    key={idx}
+                                                                    className="flex items-center justify-between p-3 bg-secondary rounded-lg"
+                                                                >
+                                                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                                        <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                                                                        <div className="min-w-0 flex-1">
+                                                                            <p className="text-sm font-medium truncate">{file.name}</p>
+                                                                            <p className="text-xs text-muted-foreground">
+                                                                                {formatFileSize(file.size)}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => removeFile(file)}
+                                                                        className="ml-2 p-1 hover:bg-destructive/10 rounded transition-colors"
+                                                                    >
+                                                                        <X className="h-4 w-4 text-destructive" />
+                                                                    </button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <Button

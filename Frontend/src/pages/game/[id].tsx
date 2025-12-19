@@ -3,13 +3,16 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft, Copy, Check, Globe, Zap, Target, Sparkles, Trophy, Map, Swords, Cpu, Car, Shield, ChevronDown } from "lucide-react";
+import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft, Copy, Check, Globe, Zap, Target, Sparkles, Trophy, Map, Swords, Cpu, Car, Shield, ChevronDown, MessageSquarePlus, ThumbsUp, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { EnhancedYouTubePlayer } from "@/components/ui/EnhancedYouTubePlayer";
@@ -19,6 +22,7 @@ import { ImageLightbox } from "@/components/ui/ImageLightbox";
 import { RatingBreakdown } from "@/components/ui/RatingBreakdown";
 import { EditionCard } from "@/components/ui/EditionCard";
 import { RelatedGameCard } from "@/components/ui/RelatedGameCard";
+// Store Images (for main game cards)
 import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
 import spiderman from "@/components/Images/Store Images/spiderman.jpg";
 import gta6 from "@/components/Images/Store Images/gta-6.webp";
@@ -27,6 +31,59 @@ import lastOfUs from "@/components/Images/Store Images/last-of-us.webp";
 import detroit from "@/components/Images/Store Images/detroit-become-human.webp";
 import aWayOut from "@/components/Images/Store Images/a-way-out.webp";
 import blackMythWukong from "@/components/Images/Store Images/black-myth-wukong.webp";
+
+// Cyberpunk 2077 Screenshots
+import cyberpunk1 from "@/components/Images/Cyberpunk/cyberpunk 1.jpg";
+import cyberpunk2 from "@/components/Images/Cyberpunk/cyberpunk 2.jpg";
+import cyberpunk3 from "@/components/Images/Cyberpunk/cyberpunk 3.jpg";
+import cyberpunk4 from "@/components/Images/Cyberpunk/cyberpunk 4.jpg";
+import cyberpunk5 from "@/components/Images/Cyberpunk/cyberpunk 5.jpg";
+
+// SpiderMan Screenshots
+import spiderman1 from "@/components/Images/SpiderMan/Spiderman 1.jpg";
+import spiderman2 from "@/components/Images/SpiderMan/Spiderman 2 (2).jpg";
+import spiderman3 from "@/components/Images/SpiderMan/Spiderman 3.png";
+import spiderman4 from "@/components/Images/SpiderMan/Spiderman 4.png";
+import spiderman1alt from "@/components/Images/SpiderMan/Spiderman 1.jpeg";
+
+// GTA 6 Screenshots
+import gta1 from "@/components/Images/Gta 6/grand theft auto 6 1.jpg";
+import gta2 from "@/components/Images/Gta 6/grand theft auto 6 2.jpg";
+import gta3 from "@/components/Images/Gta 6/grand theft auto 6 3.jpg";
+import gta4 from "@/components/Images/Gta 6/grand theft auto 6 4.jpg";
+import gta5 from "@/components/Images/Gta 6/grand theft auto 6 5.jpg";
+
+// Need for Speed Screenshots
+import nfs1 from "@/components/Images/Need for space/need for speed 1.jpg";
+import nfs2 from "@/components/Images/Need for space/need for speed 2.jpg";
+import nfs3 from "@/components/Images/Need for space/need for speed 3.jpg";
+import nfs4 from "@/components/Images/Need for space/need for speed 4.jpg";
+import nfs5 from "@/components/Images/Need for space/need for speed 5.jpg";
+
+// The Last of Us Screenshots
+import lastofus1 from "@/components/Images/The Last of us/last of us 1.jpeg";
+import lastofus2 from "@/components/Images/The Last of us/last of us 2.jpeg";
+import lastofus3 from "@/components/Images/The Last of us/last of us 3.jpeg";
+import lastofus4 from "@/components/Images/The Last of us/last of us 4.jpeg";
+import lastofus5 from "@/components/Images/The Last of us/last of us 5.jpeg";
+
+// Detroit: Become Human Screenshots
+import detroit1 from "@/components/Images/Detroit/detroit become human 1.jpg";
+import detroit2 from "@/components/Images/Detroit/detroit become human 2.jpg";
+import detroit3 from "@/components/Images/Detroit/detroit become human 3.jpg";
+import detroit4 from "@/components/Images/Detroit/detroit become human 4.jpg";
+import detroit5 from "@/components/Images/Detroit/detroit become human 5.png";
+
+// A Way Out Screenshots
+import awayout1 from "@/components/Images/A way out/a way out 1.jpg";
+import awayout2 from "@/components/Images/A way out/a way out 2.png";
+
+// Black Myth Wukong Screenshots
+import wukong1 from "@/components/Images/Black Myth Wukong/black myth wukong 1.jpeg";
+import wukong2 from "@/components/Images/Black Myth Wukong/black myth wukong 2.jpg";
+import wukong3 from "@/components/Images/Black Myth Wukong/black myth wukong 3.jpg";
+import wukong4 from "@/components/Images/Black Myth Wukong/black myth wukong 4.jpg";
+import wukong5 from "@/components/Images/Black Myth Wukong/black myth wukong 5.jpg";
 
 const gameImages: Record<number, any> = {
   1: cyberpunk2077, 2: spiderman, 3: gta6, 4: needForSpeed, 5: lastOfUs, 6: detroit, 7: aWayOut, 8: blackMythWukong
@@ -62,7 +119,7 @@ const gamesData: Record<number, any> = {
         storage: "70 GB SSD"
       }
     },
-    screenshots: [cyberpunk2077, spiderman, gta6],
+    screenshots: [cyberpunk1, cyberpunk2, cyberpunk3, cyberpunk4, cyberpunk5],
     featured: true,
     reviews: [
       { user: "NightRider92", rating: 5, date: "Dec 1, 2024", comment: "Absolutely phenomenal! The story gripped me from start to finish. Night City feels alive and vibrant." },
@@ -111,7 +168,7 @@ const gamesData: Record<number, any> = {
         storage: "75 GB SSD"
       }
     },
-    screenshots: [spiderman, gta6, needForSpeed],
+    screenshots: [spiderman1, spiderman2, spiderman3, spiderman4, spiderman1alt],
     reviews: [
       { user: "WebHead2023", rating: 5, date: "Dec 2, 2024", comment: "Swinging through New York has never felt this good! The movement mechanics are perfection." },
       { user: "SpideySupreme", rating: 5, date: "Nov 29, 2024", comment: "Every superhero fan needs to play this. The story made me cry and the action is incredible!" },
@@ -158,7 +215,7 @@ const gamesData: Record<number, any> = {
         storage: "150 GB SSD"
       }
     },
-    screenshots: [gta6, needForSpeed, lastOfUs],
+    screenshots: [gta1, gta2, gta3, gta4, gta5],
     reviews: [
       { user: "ViceCityKing", rating: 5, date: "Dec 3, 2024", comment: "This is what we've been waiting for! The scale and detail of the world is unprecedented." },
       { user: "RockstarFan", rating: 5, date: "Nov 30, 2024", comment: "Absolutely incredible! The dual protagonist system works perfectly and the story is gripping." },
@@ -205,7 +262,7 @@ const gamesData: Record<number, any> = {
         storage: "50 GB SSD"
       }
     },
-    screenshots: [needForSpeed, lastOfUs, detroit],
+    screenshots: [nfs1, nfs2, nfs3, nfs4, nfs5],
     reviews: [
       { user: "SpeedDemon420", rating: 5, date: "Dec 4, 2024", comment: "Pure adrenaline rush! The police chases are intense and the customization is incredible." },
       { user: "NitroKing", rating: 5, date: "Dec 1, 2024", comment: "Best racing game I've played! The graphics blow me away and the soundtrack is fire!" },
@@ -252,7 +309,7 @@ const gamesData: Record<number, any> = {
         storage: "100 GB SSD"
       }
     },
-    screenshots: [lastOfUs, detroit, aWayOut],
+    screenshots: [lastofus1, lastofus2, lastofus3, lastofus4, lastofus5],
     reviews: [
       { user: "EllieFanForever", rating: 5, date: "Dec 5, 2024", comment: "A masterpiece of storytelling. Had me in tears multiple times. Joel and Ellie are unforgettable." },
       { user: "SurvivorGamer", rating: 5, date: "Dec 2, 2024", comment: "The best narrative-driven game ever made. Every moment is carefully crafted and meaningful." },
@@ -300,7 +357,7 @@ const gamesData: Record<number, any> = {
         storage: "55 GB SSD"
       }
     },
-    screenshots: [detroit, aWayOut, blackMythWukong],
+    screenshots: [detroit1, detroit2, detroit3, detroit4, detroit5],
     reviews: [
       { user: "ConnorRK800", rating: 5, date: "Dec 6, 2024", comment: "The choice system is revolutionary! Every decision genuinely impacts the story in meaningful ways." },
       { user: "MarkusFreedom", rating: 5, date: "Dec 3, 2024", comment: "One of the most thought-provoking games I've ever played. The android revolution story is powerful!" },
@@ -347,7 +404,7 @@ const gamesData: Record<number, any> = {
         storage: "25 GB SSD"
       }
     },
-    screenshots: [aWayOut, blackMythWukong, cyberpunk2077],
+    screenshots: [awayout1, awayout2, awayout1, awayout2, awayout1],
     reviews: [
       { user: "VincentTeam", rating: 5, date: "Dec 7, 2024", comment: "The best co-op experience I've ever had! Playing with my best friend was an unforgettable journey." },
       { user: "LeosBrother", rating: 5, date: "Dec 4, 2024", comment: "Incredible storytelling and unique split-screen mechanics. The ending blew my mind!" },
@@ -394,7 +451,7 @@ const gamesData: Record<number, any> = {
         storage: "130 GB SSD"
       }
     },
-    screenshots: [blackMythWukong, cyberpunk2077, spiderman],
+    screenshots: [wukong1, wukong2, wukong3, wukong4, wukong5],
     reviews: [
       { user: "MonkeyKingFan", rating: 5, date: "Dec 8, 2024", comment: "A stunning achievement in game design! The Chinese mythology is beautifully represented." },
       { user: "JourneyWestGamer", rating: 5, date: "Dec 5, 2024", comment: "Best action combat I've experienced! Every boss fight is a work of art. Game Science crushed it!" },
@@ -435,9 +492,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Modify V's appearance, skills, and abilities. Install cyberware to gain superhuman abilities. Customize weapons and vehicles. Choose your backstory as Nomad, Street Kid, or Corpo—each offering unique dialogue options and story moments.",
     },
     gameplaySystems: [
-      { name: "Combat & Cyberware", description: "Engage in visceral gunfights or brutal melee combat enhanced by cyberware implants", bullets: ["Mantis Blades, Gorilla Arms & more", "Weapon customization & mods", "Slow-motion Sandevistan implant"], image: cyberpunk2077 },
-      { name: "Hacking & Netrunning", description: "Infiltrate systems, control enemies, and turn the environment into a weapon", bullets: ["Breach Protocol mini-games", "Quickhack abilities", "Disable security systems"], image: spiderman },
-      { name: "Character Builds", description: "Deep progression system with perks across five skill trees", bullets: ["Body, Reflexes, Technical, Intelligence, Cool", "Respec your character anytime", "100+ perks to unlock"], image: gta6 },
+      { name: "Combat & Cyberware", description: "Engage in visceral gunfights or brutal melee combat enhanced by cyberware implants", bullets: ["Mantis Blades, Gorilla Arms & more", "Weapon customization & mods", "Slow-motion Sandevistan implant"], image: cyberpunk1 },
+      { name: "Hacking & Netrunning", description: "Infiltrate systems, control enemies, and turn the environment into a weapon", bullets: ["Breach Protocol mini-games", "Quickhack abilities", "Disable security systems"], image: cyberpunk2 },
+      { name: "Character Builds", description: "Deep progression system with perks across five skill trees", bullets: ["Body, Reflexes, Technical, Intelligence, Cool", "Respec your character anytime", "100+ perks to unlock"], image: cyberpunk3 },
     ],
     ratingBreakdown: { 5: 9, 4: 5, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -465,9 +522,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Unlock suits from Spider-Man's rich history—each with unique powers. Craft gadgets and upgrade abilities to match your playstyle.",
     },
     gameplaySystems: [
-      { name: "Web-Swinging", description: "Physics-based traversal that makes every swing feel authentic and exhilarating", bullets: ["Point Launch and swing", "Wall-run and parkour", "Air tricks and combos"], image: spiderman },
-      { name: "Combat System", description: "Dynamic combat blending acrobatics with devastating web attacks", bullets: ["Web shooters & gadgets", "Environmental takedowns", "Signature moves"], image: gta6 },
-      { name: "Suit Powers", description: "Each suit grants unique abilities to enhance your playstyle", bullets: ["40+ suits to unlock", "Unique suit powers", "Mix and match abilities"], image: needForSpeed },
+      { name: "Web-Swinging", description: "Physics-based traversal that makes every swing feel authentic and exhilarating", bullets: ["Point Launch and swing", "Wall-run and parkour", "Air tricks and combos"], image: spiderman1 },
+      { name: "Combat System", description: "Dynamic combat blending acrobatics with devastating web attacks", bullets: ["Web shooters & gadgets", "Environmental takedowns", "Signature moves"], image: spiderman2 },
+      { name: "Suit Powers", description: "Each suit grants unique abilities to enhance your playstyle", bullets: ["40+ suits to unlock", "Unique suit powers", "Mix and match abilities"], image: spiderman3 },
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -494,9 +551,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Customize characters, vehicles, and properties. Build your criminal empire with businesses and safe houses across the map.",
     },
     gameplaySystems: [
-      { name: "Heist Planning", description: "Scout locations, recruit crew members, and choose your approach", bullets: ["Multiple approach options", "Recruit specialists", "Risk vs reward systems"], image: gta6 },
-      { name: "Vehicle Mastery", description: "Drive, fly, and sail across Vice City with realistic physics", bullets: ["Cars, bikes, boats, aircraft", "Deep customization", "Realistic handling"], image: needForSpeed },
-      { name: "Empire Building", description: "Establish and manage criminal enterprises across the city", bullets: ["Properties and businesses", "Passive income streams", "Territory control"], image: lastOfUs },
+      { name: "Heist Planning", description: "Scout locations, recruit crew members, and choose your approach", bullets: ["Multiple approach options", "Recruit specialists", "Risk vs reward systems"], image: gta1 },
+      { name: "Vehicle Mastery", description: "Drive, fly, and sail across Vice City with realistic physics", bullets: ["Cars, bikes, boats, aircraft", "Deep customization", "Realistic handling"], image: gta2 },
+      { name: "Empire Building", description: "Establish and manage criminal enterprises across the city", bullets: ["Properties and businesses", "Passive income streams", "Territory control"], image: gta3 },
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -523,9 +580,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Modify performance, visuals, and handling. Thousands of parts and paint options to create your perfect ride.",
     },
     gameplaySystems: [
-      { name: "Racing Mechanics", description: "Arcade-style racing with drift, nitrous, and aggressive driving", bullets: ["Drift to earn nitrous", "Takedown rivals", "Perfect launch timing"], image: needForSpeed },
-      { name: "Car Customization", description: "Deep modification system for performance and visual upgrades", bullets: ["Engine swaps", "Visual customization", "Tuning & handling"], image: lastOfUs },
-      { name: "Heat System", description: "Push your luck to earn more cash but risk losing it all", bullets: ["Heat levels increase rewards", "Escape to bank cash", "High risk, high reward"], image: detroit },
+      { name: "Racing Mechanics", description: "Arcade-style racing with drift, nitrous, and aggressive driving", bullets: ["Drift to earn nitrous", "Takedown rivals", "Perfect launch timing"], image: nfs1 },
+      { name: "Car Customization", description: "Deep modification system for performance and visual upgrades", bullets: ["Engine swaps", "Visual customization", "Tuning & handling"], image: nfs2 },
+      { name: "Heat System", description: "Push your luck to earn more cash but risk losing it all", bullets: ["Heat levels increase rewards", "Escape to bank cash", "High risk, high reward"], image: nfs3 },
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -552,9 +609,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Upgrade Joel's abilities through pills and training. Improve weapons at workbenches. Manage limited resources carefully.",
     },
     gameplaySystems: [
-      { name: "Stealth & Survival", description: "Use stealth to avoid or eliminate threats with limited resources", bullets: ["Listen mode to track enemies", "Stealth kills & distractions", "Environmental awareness"], image: lastOfUs },
-      { name: "Crafting System", description: "Scavenge materials to craft essential survival items", bullets: ["Health kits & Molotovs", "Upgraded melee weapons", "Resource management"], image: detroit },
-      { name: "Infected Combat", description: "Face terrifying infected in various stages of mutation", bullets: ["Runners, Clickers, Bloaters", "Unique behaviors", "Terrifying encounters"], image: aWayOut },
+      { name: "Stealth & Survival", description: "Use stealth to avoid or eliminate threats with limited resources", bullets: ["Listen mode to track enemies", "Stealth kills & distractions", "Environmental awareness"], image: lastofus1 },
+      { name: "Crafting System", description: "Scavenge materials to craft essential survival items", bullets: ["Health kits & Molotovs", "Upgraded melee weapons", "Resource management"], image: lastofus2 },
+      { name: "Infected Combat", description: "Face terrifying infected in various stages of mutation", bullets: ["Runners, Clickers, Bloaters", "Unique behaviors", "Terrifying encounters"], image: lastofus3 },
     ],
     ratingBreakdown: { 5: 12, 4: 2, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -580,9 +637,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Your choices customize the story. Relationships, character survival, and the android revolution's outcome all depend on you.",
     },
     gameplaySystems: [
-      { name: "Choice & Consequence", description: "Every decision creates ripples that affect the entire narrative", bullets: ["Branching story paths", "Character relationships", "Life or death choices"], image: detroit },
-      { name: "Investigation", description: "Analyze crime scenes and reconstruct events as Connor", bullets: ["Evidence scanning", "Event reconstruction", "Deduction challenges"], image: aWayOut },
-      { name: "Revolution Path", description: "Lead the android revolution as Markus or protect Kara's family", bullets: ["Peaceful or violent", "Multiple endings", "Moral dilemmas"], image: blackMythWukong },
+      { name: "Choice & Consequence", description: "Every decision creates ripples that affect the entire narrative", bullets: ["Branching story paths", "Character relationships", "Life or death choices"], image: detroit1 },
+      { name: "Investigation", description: "Analyze crime scenes and reconstruct events as Connor", bullets: ["Evidence scanning", "Event reconstruction", "Deduction challenges"], image: detroit2 },
+      { name: "Revolution Path", description: "Lead the android revolution as Markus or protect Kara's family", bullets: ["Peaceful or violent", "Multiple endings", "Moral dilemmas"], image: detroit3 },
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -608,9 +665,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Choices affect character relationships and some story beats. Work together to decide the best approach.",
     },
     gameplaySystems: [
-      { name: "Co-op Mechanics", description: "Unique gameplay requiring constant cooperation and communication", bullets: ["Asymmetric tasks", "Synchronized actions", "Split-screen dynamics"], image: aWayOut },
-      { name: "Varied Gameplay", description: "Experience action, stealth, driving, and mini-games", bullets: ["Prison escape sequences", "Car chases", "Stealth infiltration"], image: blackMythWukong },
-      { name: "Emotional Journey", description: "Build a bond with your co-op partner through the story", bullets: ["Character development", "Relationship building", "Shocking twists"], image: cyberpunk2077 },
+      { name: "Co-op Mechanics", description: "Unique gameplay requiring constant cooperation and communication", bullets: ["Asymmetric tasks", "Synchronized actions", "Split-screen dynamics"], image: awayout1 },
+      { name: "Varied Gameplay", description: "Experience action, stealth, driving, and mini-games", bullets: ["Prison escape sequences", "Car chases", "Stealth infiltration"], image: awayout2 },
+      { name: "Emotional Journey", description: "Build a bond with your co-op partner through the story", bullets: ["Character development", "Relationship building", "Shocking twists"], image: awayout1 },
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -636,9 +693,9 @@ const extendedGameData: Record<number, any> = {
       customization: "Unlock abilities across multiple skill trees. Upgrade your staff with different forms. Master transformation powers.",
     },
     gameplaySystems: [
-      { name: "Staff Combat", description: "Master various staff techniques and combos", bullets: ["Light & heavy attacks", "Staff stance changes", "Combo mastery"], image: blackMythWukong },
-      { name: "Transformation", description: "Transform into defeated enemies to gain their powers", bullets: ["72 transformation forms", "Unique abilities", "Tactical advantages"], image: cyberpunk2077 },
-      { name: "Boss Battles", description: "Face legendary creatures from Chinese mythology", bullets: ["Epic encounters", "Pattern recognition", "Challenging difficulty"], image: spiderman },
+      { name: "Staff Combat", description: "Master various staff techniques and combos", bullets: ["Light & heavy attacks", "Staff stance changes", "Combo mastery"], image: wukong1 },
+      { name: "Transformation", description: "Transform into defeated enemies to gain their powers", bullets: ["72 transformation forms", "Unique abilities", "Tactical advantages"], image: wukong2 },
+      { name: "Boss Battles", description: "Face legendary creatures from Chinese mythology", bullets: ["Epic encounters", "Pattern recognition", "Challenging difficulty"], image: wukong3 },
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
@@ -665,6 +722,17 @@ export default function GameDetailPage() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [isSystemRequirementsOpen, setIsSystemRequirementsOpen] = useState(false);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+
+  // Review system state
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewLikes, setReviewLikes] = useState<Record<number, number>>({});
+  const [reviewComments, setReviewComments] = useState<Record<number, any[]>>({});
+  const [activeCommentBox, setActiveCommentBox] = useState<number | null>(null);
+  const [commentText, setCommentText] = useState("");
+  const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set());
 
   if (!game) {
     return (
@@ -732,6 +800,68 @@ export default function GameDetailPage() {
         break;
     }
   };
+
+  const handleSubmitReview = () => {
+    if (!reviewComment.trim()) {
+      alert("Please write a review comment");
+      return;
+    }
+
+    const newReview = {
+      user: "You",
+      rating: reviewRating,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      comment: reviewComment
+    };
+
+    setUserReviews([newReview, ...userReviews]);
+    setReviewComment("");
+    setReviewRating(5);
+    setIsReviewDialogOpen(false);
+  };
+
+  const handleLikeReview = (reviewIndex: number) => {
+    if (likedReviews.has(reviewIndex)) {
+      // Unlike
+      setLikedReviews(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(reviewIndex);
+        return newSet;
+      });
+      setReviewLikes(prev => ({
+        ...prev,
+        [reviewIndex]: (prev[reviewIndex] || 0) - 1
+      }));
+    } else {
+      // Like
+      setLikedReviews(prev => new Set([...Array.from(prev), reviewIndex]));
+      setReviewLikes(prev => ({
+        ...prev,
+        [reviewIndex]: (prev[reviewIndex] || 0) + 1
+      }));
+    }
+  };
+
+  const handleAddComment = (reviewIndex: number) => {
+    if (!commentText.trim()) return;
+
+    const newComment = {
+      user: "You",
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      text: commentText
+    };
+
+    setReviewComments(prev => ({
+      ...prev,
+      [reviewIndex]: [...(prev[reviewIndex] || []), newComment]
+    }));
+
+    setCommentText("");
+    setActiveCommentBox(null);
+  };
+
+  // Combine user reviews with game reviews
+  const allReviews = [...userReviews, ...(game?.reviews || [])];
 
   return (
     <>
@@ -848,7 +978,6 @@ export default function GameDetailPage() {
                 <TabsList>
                   <TabsTrigger value="about">About</TabsTrigger>
                   <TabsTrigger value="requirements">System Requirements</TabsTrigger>
-                  <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
                 <TabsContent value="about" className="space-y-6">
                   {game.aboutTabs ? (
@@ -985,43 +1114,7 @@ export default function GameDetailPage() {
                     </div>
                   </div>
                 </TabsContent>
-                <TabsContent value="reviews">
-                  {game.ratingBreakdown && (
-                    <div className="mb-8">
-                      <RatingBreakdown
-                        ratings={game.ratingBreakdown}
-                        totalReviews={game.reviews?.length || 0}
-                        averageRating={game.rating}
-                      />
-                    </div>
-                  )}
 
-                  <div className="space-y-4">
-                    {game.reviews && game.reviews.length > 0 ? game.reviews.map((review: any, index: number) => (
-                      <Card key={index}>
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <h4 className="font-semibold text-foreground">{review.user}</h4>
-                              <p className="text-sm text-muted-foreground">{review.date}</p>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={`h-4 w-4 ${i < Math.floor(review.rating) ? 'fill-primary text-primary' : i < review.rating ? 'fill-primary/50 text-primary' : 'text-muted'}`} />
-                              ))}
-                              <span className="ml-2 text-sm font-semibold text-foreground">{review.rating}</span>
-                            </div>
-                          </div>
-                          <p className="text-muted-foreground">{review.comment}</p>
-                        </CardContent>
-                      </Card>
-                    )) : (
-                      <div className="text-center py-12 border border-border rounded-lg bg-secondary">
-                        <p className="text-muted-foreground">No reviews yet. Be the first to review!</p>
-                      </div>
-                    )}
-                  </div>
-                </TabsContent>
               </Tabs>
             </div>
 
@@ -1073,6 +1166,181 @@ export default function GameDetailPage() {
             </div>
           </div>
         )}
+
+        {/* Reviews Section */}
+        <div className="container mx-auto px-4 py-16 bg-secondary/5">
+          <div className="max-w-7xl mx-auto">
+            {/* Reviews Header */}
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-4xl font-bold">Reviews</h2>
+              <Badge variant="secondary" className="text-sm px-3 py-1">
+                Based on {game.reviews ? game.reviews.length : 0} reviews
+              </Badge>
+            </div>
+
+            {/* Rating Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+              {/* Overall Rating */}
+              <Card className="lg:col-span-1">
+                <CardContent className="p-8 text-center">
+                  <div className="text-6xl font-bold text-foreground mb-2">{game.rating}</div>
+                  <div className="flex items-center justify-center mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`h-6 w-6 ${i < Math.floor(game.rating) ? 'fill-primary text-primary' : i < game.rating ? 'fill-primary/50 text-primary' : 'text-muted'}`} />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground">Based on {game.reviews ? game.reviews.length : 0} reviews</p>
+                </CardContent>
+              </Card>
+
+              {/* Rating Breakdown */}
+              {game.ratingBreakdown && (
+                <Card className="lg:col-span-2">
+                  <CardContent className="p-8">
+                    <h3 className="font-semibold text-lg mb-4">Rating Distribution</h3>
+                    <div className="space-y-3">
+                      {[5, 4, 3, 2, 1].map((rating) => {
+                        const count = game.ratingBreakdown[rating] || 0;
+                        const total = game.reviews ? game.reviews.length : 1;
+                        const percentage = (count / total) * 100;
+                        return (
+                          <div key={rating} className="flex items-center gap-4">
+                            <div className="flex items-center gap-1 w-16">
+                              <span className="text-sm font-medium">{rating}</span>
+                              <Star className="h-4 w-4 fill-primary text-primary" />
+                            </div>
+                            <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-primary transition-all duration-500"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                            <span className="text-sm text-muted-foreground w-12 text-right">{count}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* Individual Reviews */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold">Community Reviews</h3>
+                <Button onClick={() => setIsReviewDialogOpen(true)} className="bg-primary hover:bg-primary/90">
+                  <MessageSquarePlus className="h-4 w-4 mr-2" />
+                  Write a Review
+                </Button>
+              </div>
+              {allReviews && allReviews.length > 0 ? allReviews.map((review: any, index: number) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-lg font-bold text-primary">
+                              {review.user.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-foreground text-lg">{review.user}</h4>
+                            <p className="text-sm text-muted-foreground">{review.date}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-5 w-5 ${i < Math.floor(review.rating) ? 'fill-primary text-primary' : i < review.rating ? 'fill-primary/50 text-primary' : 'text-muted'}`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-lg font-bold text-foreground">{review.rating}</span>
+                        </div>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed mb-4">{review.comment}</p>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-4 pt-3 border-t border-border">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleLikeReview(index)}
+                          className={likedReviews.has(index) ? "text-primary" : "text-muted-foreground"}
+                        >
+                          <ThumbsUp className={`h-4 w-4 mr-1 ${likedReviews.has(index) ? "fill-primary" : ""}`} />
+                          Helpful ({reviewLikes[index] || 0})
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setActiveCommentBox(activeCommentBox === index ? null : index)}
+                          className="text-muted-foreground"
+                        >
+                          <MessageCircle className="h-4 w-4 mr-1" />
+                          Comment ({reviewComments[index]?.length || 0})
+                        </Button>
+                      </div>
+
+                      {/* Comment Input */}
+                      {activeCommentBox === index && (
+                        <div className="mt-4 space-y-3">
+                          <div className="flex gap-2">
+                            <Input
+                              placeholder="Write a comment..."
+                              value={commentText}
+                              onChange={(e) => setCommentText(e.target.value)}
+                              onKeyPress={(e) => e.key === 'Enter' && handleAddComment(index)}
+                              className="flex-1"
+                            />
+                            <Button onClick={() => handleAddComment(index)} size="sm">
+                              Post
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Comments Thread */}
+                      {reviewComments[index] && reviewComments[index].length > 0 && (
+                        <div className="mt-4 space-y-3 pl-4 border-left-2 border-l-2 border-primary/20">
+                          {reviewComments[index].map((comment: any, commentIdx: number) => (
+                            <div key={commentIdx} className="bg-secondary/30 rounded-lg p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-semibold text-sm text-foreground">{comment.user}</span>
+                                <span className="text-xs text-muted-foreground">{comment.date}</span>
+                              </div>
+                              <p className="text-sm text-muted-foreground">{comment.text}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )) : (
+                <Card>
+                  <CardContent className="p-12 text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary mb-4">
+                      <Star className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">No reviews yet</h3>
+                    <p className="text-muted-foreground">Be the first to review this game!</p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
+        </div>
+
 
         {/* Related Games */}
         {game.relatedGames && game.relatedGames.length > 0 && (
@@ -1222,6 +1490,55 @@ export default function GameDetailPage() {
         onClose={() => setLightboxOpen(false)}
         gameTitle={game.title}
       />
+
+      {/* Review Submission Dialog */}
+      <Dialog open={isReviewDialogOpen} onOpenChange={setIsReviewDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Write a Review for {game.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Your Rating</label>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => setReviewRating(star)}
+                    className="transition-transform hover:scale-110"
+                  >
+                    <Star
+                      className={`h-8 w-8 cursor-pointer ${star <= reviewRating ? 'fill-primary text-primary' : 'text-muted-foreground'}`}
+                    />
+                  </button>
+                ))}
+                <span className="ml-2 text-lg font-semibold">{reviewRating}/5</span>
+              </div>
+            </div>
+            <div>
+              <label htmlFor="review-comment" className="text-sm font-medium mb-2 block">
+                Your Review
+              </label>
+              <Textarea
+                id="review-comment"
+                placeholder="Share your thoughts about this game..."
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                rows={5}
+                className="resize-none"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsReviewDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitReview} className="bg-primary">
+              Submit Review
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

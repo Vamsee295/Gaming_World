@@ -49,17 +49,18 @@ interface LibraryGame {
   isInstalling: boolean;
   installProgress?: number;
   releaseDate: string;
+  trailerVideoId?: string;
 }
 
 const baseGames: LibraryGame[] = [
-  { id: 1, title: "Cyberpunk 2077", desc: "A futuristic open-world RPG set in Night City.", image: cyberpunk2077, playtime: "14 hours", lastPlayed: "Today", size: "45.8 GB", tags: ["installed", "favorites", "rpg"], rating: 4.8, genre: "RPG", version: "2.1", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 24, total: 52 }, isFavorite: true, isInstalling: false, releaseDate: "2020-12-10" },
-  { id: 2, title: "Marvel's Spiderman", desc: "Swing through NYC and fight iconic villains.", image: spiderman, playtime: "32 hours", lastPlayed: "Yesterday", size: "30.2 GB", tags: ["installed", "action"], rating: 4.6, genre: "Action", version: "1.8", hasUpdate: true, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 45, total: 50 }, isFavorite: false, isInstalling: false, releaseDate: "2022-08-12" },
-  { id: 3, title: "Grand Theft Auto 6", desc: "Open-world crime saga.", image: gta6, playtime: "5 hours", lastPlayed: "3 days ago", size: "70.0 GB", tags: ["action"], rating: 4.7, genre: "RPG", version: "1.0", hasUpdate: false, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 8, total: 75 }, isFavorite: false, isInstalling: false, releaseDate: "2024-11-15" },
-  { id: 4, title: "Need For Speed", desc: "High-octane street racing.", image: needForSpeed, playtime: "18 hours", lastPlayed: "1 week ago", size: "50.0 GB", tags: ["cars"], rating: 4.9, genre: "Racing", version: "3.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'syncing', achievements: { unlocked: 30, total: 40 }, isFavorite: true, isInstalling: false, releaseDate: "2023-11-10" },
-  { id: 5, title: "The Last Of Us", desc: "Emotional story of survival.", image: lastOfUs, playtime: "0 hours", lastPlayed: "Never", size: "82.0 GB", tags: ["action"], rating: 4.5, genre: "Action", version: "1.5", hasUpdate: true, isNew: false, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 60 }, isFavorite: false, isInstalling: false, releaseDate: "2023-03-28" },
-  { id: 6, title: "Detroit : Become Human", desc: "Choices matter in this android thriller.", image: detroit, playtime: "12 hours", lastPlayed: "2 weeks ago", size: "44.0 GB", tags: ["installed", "rpg"], rating: 4.8, genre: "RPG", version: "1.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 15, total: 48 }, isFavorite: false, isInstalling: false, releaseDate: "2019-12-12" },
-  { id: 7, title: "A Way Out", desc: "Cinematic co-op prison break.", image: aWayOut, playtime: "7 hours", lastPlayed: "4 days ago", size: "29.0 GB", tags: ["favorites", "action"], rating: 4.4, genre: "Co-op", version: "1.0", hasUpdate: false, isNew: false, cloudSyncStatus: 'error', achievements: { unlocked: 12, total: 20 }, isFavorite: true, isInstalling: false, releaseDate: "2018-03-23" },
-  { id: 8, title: "Black Myth Wukong", desc: "Mythic action adventure.", image: blackMythWukong, playtime: "0 hours", lastPlayed: "Never", size: "96.0 GB", tags: ["rpg"], rating: 4.6, genre: "Action", version: "1.1", hasUpdate: true, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 81 }, isFavorite: false, isInstalling: false, releaseDate: "2024-08-20" },
+  { id: 1, title: "Cyberpunk 2077", desc: "A futuristic open-world RPG set in Night City.", image: cyberpunk2077, playtime: "14 hours", lastPlayed: "Today", size: "45.8 GB", tags: ["installed", "favorites", "rpg"], rating: 4.8, genre: "RPG", version: "2.1", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 24, total: 52 }, isFavorite: true, isInstalling: false, releaseDate: "2020-12-10", trailerVideoId: "8X2kIfS6fb8" },
+  { id: 2, title: "Marvel's Spiderman", desc: "Swing through NYC and fight iconic villains.", image: spiderman, playtime: "32 hours", lastPlayed: "Yesterday", size: "30.2 GB", tags: ["installed", "action"], rating: 4.6, genre: "Action", version: "1.8", hasUpdate: true, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 45, total: 50 }, isFavorite: false, isInstalling: false, releaseDate: "2022-08-12", trailerVideoId: "R2Ebc_OFeug" },
+  { id: 3, title: "Grand Theft Auto 6", desc: "Open-world crime saga.", image: gta6, playtime: "5 hours", lastPlayed: "3 days ago", size: "70.0 GB", tags: ["action"], rating: 4.7, genre: "RPG", version: "1.0", hasUpdate: false, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 8, total: 75 }, isFavorite: false, isInstalling: false, releaseDate: "2024-11-15", trailerVideoId: "QdBZY2fkU-0" },
+  { id: 4, title: "Need For Speed", desc: "High-octane street racing.", image: needForSpeed, playtime: "18 hours", lastPlayed: "1 week ago", size: "50.0 GB", tags: ["cars"], rating: 4.9, genre: "Racing", version: "3.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'syncing', achievements: { unlocked: 30, total: 40 }, isFavorite: true, isInstalling: false, releaseDate: "2023-11-10", trailerVideoId: "_ODYfDWxVJI" },
+  { id: 5, title: "The Last Of Us", desc: "Emotional story of survival.", image: lastOfUs, playtime: "0 hours", lastPlayed: "Never", size: "82.0 GB", tags: ["action"], rating: 4.5, genre: "Action", version: "1.5", hasUpdate: true, isNew: false, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 60 }, isFavorite: false, isInstalling: false, releaseDate: "2023-03-28", trailerVideoId: "R2Ebc_OFeug" },
+  { id: 6, title: "Detroit : Become Human", desc: "Choices matter in this android thriller.", image: detroit, playtime: "12 hours", lastPlayed: "2 weeks ago", size: "44.0 GB", tags: ["installed", "rpg"], rating: 4.8, genre: "RPG", version: "1.2", hasUpdate: false, isNew: false, cloudSyncStatus: 'synced', achievements: { unlocked: 15, total: 48 }, isFavorite: false, isInstalling: false, releaseDate: "2019-12-12", trailerVideoId: "QD1pbWCJcKQ" },
+  { id: 7, title: "A Way Out", desc: "Cinematic co-op prison break.", image: aWayOut, playtime: "7 hours", lastPlayed: "4 days ago", size: "29.0 GB", tags: ["favorites", "action"], rating: 4.4, genre: "Co-op", version: "1.0", hasUpdate: false, isNew: false, cloudSyncStatus: 'error', achievements: { unlocked: 12, total: 20 }, isFavorite: true, isInstalling: false, releaseDate: "2018-03-23", trailerVideoId: "yGZGSdgJVPM" },
+  { id: 8, title: "Black Myth Wukong", desc: "Mythic action adventure.", image: blackMythWukong, playtime: "0 hours", lastPlayed: "Never", size: "96.0 GB", tags: ["rpg"], rating: 4.6, genre: "Action", version: "1.1", hasUpdate: true, isNew: true, cloudSyncStatus: 'disabled', achievements: { unlocked: 0, total: 81 }, isFavorite: false, isInstalling: false, releaseDate: "2024-08-20", trailerVideoId: "O2nNljv0MOw" },
 ];
 
 export default function LibraryPage() {
@@ -633,7 +634,18 @@ export default function LibraryPage() {
                         {/* Action Buttons */}
                         {!listView && (hoveredGame === g.id || true) && (
                           <div className="flex items-center gap-2 mt-3" onClick={(e) => e.preventDefault()}>
-                            {g.tags.includes("installed") ? (
+                            {g.hasUpdate ? (
+                              <>
+                                <Link href={`/library/install?gameId=${g.id}`} onClick={(e) => e.stopPropagation()} className="flex-1">
+                                  <Button size="sm" variant="default" className="w-full bg-orange-500 hover:bg-orange-600">
+                                    <Download className="h-3 w-3 mr-1" /> Update
+                                  </Button>
+                                </Link>
+                                <Button size="sm" variant="outline" onClick={(e) => openManageGame(g, e)} title="Manage">
+                                  <Settings className="h-3 w-3" />
+                                </Button>
+                              </>
+                            ) : g.id % 2 === 0 ? (
                               <>
                                 <Button size="sm" variant="default" onClick={(e) => { e.preventDefault(); openDetails(g); }} className="flex-1">
                                   <Play className="h-3 w-3 mr-1" /> Play
@@ -661,7 +673,18 @@ export default function LibraryPage() {
                       {/* List View Actions */}
                       {listView && (
                         <div className="px-4 flex gap-2" onClick={(e) => e.preventDefault()}>
-                          {g.tags.includes("installed") ? (
+                          {g.hasUpdate ? (
+                            <>
+                              <Link href={`/library/install?gameId=${g.id}`} onClick={(e) => e.stopPropagation()}>
+                                <Button size="sm" variant="default" className="bg-orange-500 hover:bg-orange-600">
+                                  <Download className="h-3 w-3 mr-1" /> Update
+                                </Button>
+                              </Link>
+                              <Button size="sm" variant="outline" onClick={(e) => openManageGame(g, e)}>
+                                <Settings className="h-3 w-3" />
+                              </Button>
+                            </>
+                          ) : g.id % 2 === 0 ? (
                             <>
                               <Button size="sm" variant="default" onClick={(e) => { e.preventDefault(); openDetails(g); }}>
                                 <Play className="h-3 w-3 mr-1" /> Play
@@ -753,42 +776,20 @@ export default function LibraryPage() {
               <DialogTitle className="text-foreground">Write a Review for {reviewGame?.title}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              {/* Star Rating */}
-              <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">Rating</label>
-                <div className="flex items-center gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`h-8 w-8 cursor-pointer transition-colors ${star <= reviewRating ? 'fill-primary text-primary' : 'text-muted hover:text-primary/50'
-                        }`}
-                      onClick={() => setReviewRating(star)}
-                    />
-                  ))}
-                  <span className="ml-2 text-sm font-semibold text-foreground">{reviewRating} / 5</span>
-                </div>
-              </div>
-
-              {/* Comment */}
-              <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">Your Review</label>
-                <Textarea
-                  placeholder="Share your experience with this game..."
-                  value={reviewComment}
-                  onChange={(e) => setReviewComment(e.target.value)}
-                  className="min-h-[120px] resize-none"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  {reviewComment.length} / 500 characters
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                To write a review, please visit the game's detail page.
+              </p>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setReviewDialog(false)}>Cancel</Button>
-              <Button onClick={handleSubmitReview} disabled={!reviewComment.trim()}>
-                <MessageSquarePlus className="h-4 w-4 mr-2" />
-                Submit Review
-              </Button>
+              <Button variant="outline" onClick={() => setReviewDialog(false)}>Close</Button>
+              {reviewGame && (
+                <Link href={`/game/${reviewGame.id}`}>
+                  <Button onClick={() => setReviewDialog(false)}>
+                    <MessageSquarePlus className="h-4 w-4 mr-2" />
+                    Go to Game Page
+                  </Button>
+                </Link>
+              )}
             </DialogFooter>
           </DialogContent>
         </Dialog>

@@ -51,6 +51,7 @@ interface Game {
   rating: number;
   genre: string;
   featured?: boolean;
+  trailerVideoId?: string;
 }
 
 const games: Game[] = [
@@ -62,7 +63,8 @@ const games: Game[] = [
     image: cyberpunk2077,
     rating: 4.8,
     genre: "RPG",
-    featured: true
+    featured: true,
+    trailerVideoId: "8X2kIfS6fb8"
   },
   {
     id: 2,
@@ -71,7 +73,8 @@ const games: Game[] = [
     discount: 15,
     image: spiderman,
     rating: 4.6,
-    genre: "Strategy"
+    genre: "Strategy",
+    trailerVideoId: "R2Ebc_OFeug"
   },
   {
     id: 3,
@@ -79,7 +82,8 @@ const games: Game[] = [
     price: "$39.99",
     image: gta6,
     rating: 4.7,
-    genre: "Racing"
+    genre: "Racing",
+    trailerVideoId: "QdBZY2fkU-0"
   },
   {
     id: 4,
@@ -88,7 +92,8 @@ const games: Game[] = [
     discount: 30,
     image: needForSpeed,
     rating: 4.9,
-    genre: "Action"
+    genre: "Action",
+    trailerVideoId: "_ODYfDWxVJI"
   },
   {
     id: 5,
@@ -96,7 +101,8 @@ const games: Game[] = [
     price: "$0.00",
     image: lastOfUs,
     rating: 4.5,
-    genre: "FPS"
+    genre: "FPS",
+    trailerVideoId: "R2Ebc_OFeug"
   },
   {
     id: 6,
@@ -105,7 +111,8 @@ const games: Game[] = [
     discount: 25,
     image: detroit,
     rating: 4.8,
-    genre: "MMORPG"
+    genre: "MMORPG",
+    trailerVideoId: "QD1pbWCJcKQ"
   },
   {
     id: 7,
@@ -113,7 +120,8 @@ const games: Game[] = [
     price: "$29.99",
     image: aWayOut,
     rating: 4.4,
-    genre: "Horror"
+    genre: "Horror",
+    trailerVideoId: "yGZGSdgJVPM"
   },
   {
     id: 8,
@@ -121,7 +129,8 @@ const games: Game[] = [
     price: "$0.00",
     image: blackMythWukong,
     rating: 4.6,
-    genre: "Battle Royale"
+    genre: "Battle Royale",
+    trailerVideoId: "O2nNljv0MOw"
   }
 ];
 
