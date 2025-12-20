@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal } from "lucide-react";
+import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal, Monitor, Youtube, Twitter, Shield, Eye } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -32,6 +32,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
 import spiderman from "@/components/Images/Store Images/spiderman.jpg";
 import gta6 from "@/components/Images/Store Images/gta-6.webp";
@@ -52,6 +53,9 @@ interface Game {
   genre: string;
   featured?: boolean;
   trailerVideoId?: string;
+  reviewCount?: number;
+  releaseYear?: string;
+  platforms?: string[];
 }
 
 const games: Game[] = [
@@ -64,7 +68,10 @@ const games: Game[] = [
     rating: 4.8,
     genre: "RPG",
     featured: true,
-    trailerVideoId: "8X2kIfS6fb8"
+    trailerVideoId: "8X2kIfS6fb8",
+    reviewCount: 23400,
+    releaseYear: "2020",
+    platforms: ["PC", "PlayStation", "Xbox"]
   },
   {
     id: 2,
@@ -74,7 +81,10 @@ const games: Game[] = [
     image: spiderman,
     rating: 4.6,
     genre: "Strategy",
-    trailerVideoId: "R2Ebc_OFeug"
+    trailerVideoId: "R2Ebc_OFeug",
+    reviewCount: 18700,
+    releaseYear: "2018",
+    platforms: ["PC", "PlayStation"]
   },
   {
     id: 3,
@@ -83,7 +93,10 @@ const games: Game[] = [
     image: gta6,
     rating: 4.7,
     genre: "Racing",
-    trailerVideoId: "QdBZY2fkU-0"
+    trailerVideoId: "QdBZY2fkU-0",
+    reviewCount: 45200,
+    releaseYear: "2024",
+    platforms: ["PC", "PlayStation", "Xbox"]
   },
   {
     id: 4,
@@ -93,7 +106,10 @@ const games: Game[] = [
     image: needForSpeed,
     rating: 4.9,
     genre: "Action",
-    trailerVideoId: "_ODYfDWxVJI"
+    trailerVideoId: "_ODYfDWxVJI",
+    reviewCount: 31500,
+    releaseYear: "2023",
+    platforms: ["PC", "PlayStation", "Xbox"]
   },
   {
     id: 5,
@@ -102,7 +118,10 @@ const games: Game[] = [
     image: lastOfUs,
     rating: 4.5,
     genre: "FPS",
-    trailerVideoId: "R2Ebc_OFeug"
+    trailerVideoId: "R2Ebc_OFeug",
+    reviewCount: 52800,
+    releaseYear: "2013",
+    platforms: ["PC", "PlayStation"]
   },
   {
     id: 6,
@@ -112,7 +131,10 @@ const games: Game[] = [
     image: detroit,
     rating: 4.8,
     genre: "MMORPG",
-    trailerVideoId: "QD1pbWCJcKQ"
+    trailerVideoId: "QD1pbWCJcKQ",
+    reviewCount: 15900,
+    releaseYear: "2018",
+    platforms: ["PC", "PlayStation"]
   },
   {
     id: 7,
@@ -121,7 +143,10 @@ const games: Game[] = [
     image: aWayOut,
     rating: 4.4,
     genre: "Horror",
-    trailerVideoId: "yGZGSdgJVPM"
+    trailerVideoId: "yGZGSdgJVPM",
+    reviewCount: 8700,
+    releaseYear: "2018",
+    platforms: ["PC", "PlayStation", "Xbox"]
   },
   {
     id: 8,
@@ -130,15 +155,18 @@ const games: Game[] = [
     image: blackMythWukong,
     rating: 4.6,
     genre: "Battle Royale",
-    trailerVideoId: "O2nNljv0MOw"
+    trailerVideoId: "O2nNljv0MOw",
+    reviewCount: 12300,
+    releaseYear: "2024",
+    platforms: ["PC", "PlayStation"]
   }
 ];
 
 const categories = [
-  { name: "Action", icon: Zap },
-  { name: "RPG", icon: Gamepad2 },
-  { name: "Strategy", icon: TrendingUp },
-  { name: "Racing", icon: Clock }
+  { name: "Action", icon: Zap, count: 342, description: "Fast-paced adventures" },
+  { name: "RPG", icon: Gamepad2, count: 215, description: "Epic story-driven games" },
+  { name: "Strategy", icon: TrendingUp, count: 128, description: "Tactical challenges" },
+  { name: "Racing", icon: Clock, count: 97, description: "High-speed thrills" }
 ];
 
 export default function Home() {
@@ -152,6 +180,8 @@ export default function Home() {
   const [showFilters, setShowFilters] = useState(false);
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<string>("popular");
+  const [countdownTime, setCountdownTime] = useState("");
   const gamesPerPage = 8;
   const featuredGames = games.filter(g => g.featured || g.discount).slice(0, 3);
   const featuredGame = featuredGames[currentCarouselIndex] || games[0];
@@ -178,6 +208,27 @@ export default function Home() {
   const [recentlyReleasedGames, setRecentlyReleasedGames] = useState<GameDTO[]>([]);
   const [budgetGames, setBudgetGames] = useState<GameDTO[]>([]);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true);
+
+  // Helper function to format review counts
+  const formatReviewCount = (count: number): string => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`;
+    }
+    return count.toString();
+  };
+
+  // Helper function to get platform icon
+  const getPlatformIcon = (platform: string) => {
+    switch (platform) {
+      case "PC":
+        return <Monitor className="h-3 w-3" />;
+      case "PlayStation":
+      case "Xbox":
+        return <Gamepad2 className="h-3 w-3" />;
+      default:
+        return null;
+    }
+  };
 
   const handleSignOut = () => {
     // Clear session data if toggle is checked
@@ -272,9 +323,41 @@ export default function Home() {
       filtered = filtered.filter(game => game.rating >= ratingFilter);
     }
 
+    // Sorting
+    switch (sortBy) {
+      case "price-low":
+        filtered.sort((a, b) => {
+          const priceA = parseFloat(a.price.slice(1));
+          const priceB = parseFloat(b.price.slice(1));
+          return priceA - priceB;
+        });
+        break;
+      case "price-high":
+        filtered.sort((a, b) => {
+          const priceA = parseFloat(a.price.slice(1));
+          const priceB = parseFloat(b.price.slice(1));
+          return priceB - priceA;
+        });
+        break;
+      case "rating":
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case "newest":
+        filtered.sort((a, b) => {
+          const yearA = parseInt(a.releaseYear || "0");
+          const yearB = parseInt(b.releaseYear || "0");
+          return yearB - yearA;
+        });
+        break;
+      case "popular":
+      default:
+        filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+        break;
+    }
+
     setFilteredGames(filtered);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [searchQuery, selectedCategory, priceFilter, ratingFilter]);
+  }, [searchQuery, selectedCategory, priceFilter, ratingFilter, sortBy]);
 
   // Pagination
   const totalPages = Math.ceil(filteredGames.length / gamesPerPage);
@@ -345,6 +428,50 @@ export default function Home() {
       return () => clearInterval(interval);
     }
   }, [featuredGames.length]);
+
+  // Countdown timer for Weekend Sale
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const currentDay = now.getDay();
+      const currentHour = now.getHours();
+
+      // Calculate next Sunday 11:59 PM
+      let daysUntilSunday = 7 - currentDay;
+      if (daysUntilSunday === 0 && currentHour >= 23) {
+        daysUntilSunday = 7;
+      } else if (daysUntilSunday === 0) {
+        daysUntilSunday = 0;
+      }
+
+      const endOfWeekend = new Date(now);
+      endOfWeekend.setDate(now.getDate() + daysUntilSunday);
+      endOfWeekend.setHours(23, 59, 59, 999);
+
+      const diff = endOfWeekend.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setCountdownTime("Offer ended");
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      let timeString = "";
+      if (days > 0) timeString += `${days}d `;
+      if (hours > 0 || days > 0) timeString += `${hours}h `;
+      timeString += `${minutes}m ${seconds}s`;
+
+      setCountdownTime(timeString.trim());
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -459,7 +586,7 @@ export default function Home() {
                 >
                   {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </Button>
-                <Link href="/store/cart" className="relative">
+                <Link href="/store/cart" className="relative" title="Secure Checkout with SSL Encryption">
                   <Button variant="ghost" size="icon">
                     <ShoppingCart className="h-5 w-5" />
                   </Button>
@@ -614,14 +741,14 @@ export default function Home() {
                 </button>
 
                 {/* Carousel Indicators */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-3">
                   {featuredGames.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentCarouselIndex(index)}
-                      className={`h-2 rounded-full transition-all ${index === currentCarouselIndex
-                        ? 'w-8 bg-primary'
-                        : 'w-2 bg-muted-foreground/50 hover:bg-muted-foreground'
+                      className={`rounded-full transition-all hover:scale-110 ${index === currentCarouselIndex
+                        ? 'h-3 w-10 bg-primary shadow-lg shadow-primary/50'
+                        : 'h-3 w-3 bg-muted-foreground/50 hover:bg-muted-foreground'
                         }`}
                       aria-label={`Go to slide ${index + 1}`}
                     />
@@ -682,6 +809,20 @@ export default function Home() {
                       <span>{featuredGame.price}</span>
                     )}
                   </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-2 btn-ripple"
+                    onClick={() => {
+                      const basePrice = parseFloat(featuredGame.price.slice(1));
+                      const effective = featuredGame.discount ? basePrice * (1 - featuredGame.discount / 100) : basePrice;
+                      addWishlistItem({ id: featuredGame.id, title: featuredGame.title, price: Number(effective.toFixed(2)), image: featuredGame.image as any });
+                    }}
+                    aria-label="Add to wishlist"
+                  >
+                    <Heart className="h-5 w-5" />
+                    Wishlist
+                  </Button>
                 </div>
               </motion.div>
             </div>
@@ -702,6 +843,49 @@ export default function Home() {
             </div>
           </section>
         )}
+
+        {/* Community Stats Banner */}
+        <section className="container mx-auto px-4 py-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-xl border border-primary/20 p-8"
+          >
+            <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+            <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Users className="h-6 w-6 text-primary mr-2" />
+                  <span className="text-3xl md:text-4xl font-bold text-foreground">2.5M+</span>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Active Players</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Gamepad2 className="h-6 w-6 text-primary mr-2" />
+                  <span className="text-3xl md:text-4xl font-bold text-foreground">8,500+</span>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Games Available</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Star className="h-6 w-6 text-primary mr-2" />
+                  <span className="text-3xl md:text-4xl font-bold text-foreground">1.2M+</span>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">User Reviews</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Shield className="h-6 w-6 text-primary mr-2" />
+                  <span className="text-3xl md:text-4xl font-bold text-foreground">100%</span>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Secure Checkout</p>
+              </div>
+            </div>
+          </motion.div>
+        </section>
 
         {/* Personalized Recommendation Sections */}
 
@@ -1082,14 +1266,26 @@ export default function Home() {
                       transition={{ delay: index * 0.1, duration: 0.5 }}
                       whileHover={{ y: -5 }}
                     >
-                      <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg transition-all duration-300 cursor-pointer">
-                        <CardContent className="p-8 flex flex-col items-center text-center">
-                          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-                            <Icon className="h-10 w-10 text-primary" />
+                      <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
+                        <CardContent className="p-8 flex flex-col items-center text-center relative">
+                          {/* Animated background gradient on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                          <div className="relative z-10 w-full">
+                            <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+                              <Icon className="h-10 w-10 text-primary" />
+                            </div>
+                            <h3 className="text-xl font-bold text-foreground mb-2">
+                              {category.name}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {(category as any).description}
+                            </p>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-xs font-medium">
+                              <span className="text-primary font-bold">{(category as any).count}</span>
+                              <span className="text-muted-foreground">games</span>
+                            </div>
                           </div>
-                          <h3 className="text-xl font-bold text-foreground">
-                            {category.name}
-                          </h3>
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -1111,6 +1307,18 @@ export default function Home() {
             <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
               <h2 className="text-3xl font-bold text-foreground">Trending Games</h2>
               <div className="flex items-center gap-3">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="popular">Most Popular</SelectItem>
+                    <SelectItem value="rating">Highest Rated</SelectItem>
+                    <SelectItem value="price-low">Price: Low to High</SelectItem>
+                    <SelectItem value="price-high">Price: High to Low</SelectItem>
+                    <SelectItem value="newest">Newly Released</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Button
                   variant="outline"
                   onClick={() => setShowFilters(!showFilters)}
@@ -1221,15 +1429,47 @@ export default function Home() {
                             <Badge className="bg-green-600 text-white badge-glow">-{game.discount}%</Badge>
                           </div>
                         )}
+                        {/* Active Players Badge for Popular Games */}
+                        {game.reviewCount && game.reviewCount > 30000 && (
+                          <div className="absolute top-3 left-3">
+                            <Badge className="bg-blue-600/90 text-white flex items-center gap-1 backdrop-blur-sm">
+                              <Users className="h-3 w-3" />
+                              Popular
+                            </Badge>
+                          </div>
+                        )}
                         <div className="p-4">
                           <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
                             {game.title}
                           </h3>
+                          {/* Platform Icons & Release Year */}
+                          <div className="flex items-center gap-2 mb-2">
+                            {game.platforms && game.platforms.length > 0 && (
+                              <div className="flex items-center gap-1">
+                                {game.platforms.slice(0, 3).map((platform, idx) => (
+                                  <div key={idx} className="text-muted-foreground" title={platform}>
+                                    {getPlatformIcon(platform)}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {game.releaseYear && (
+                              <>
+                                <span className="text-muted-foreground text-xs">•</span>
+                                <span className="text-muted-foreground text-xs">{game.releaseYear}</span>
+                              </>
+                            )}
+                          </div>
                           <div className="flex items-center justify-between mb-3">
                             <Badge variant="secondary" className="smooth-hover">{game.genre}</Badge>
                             <div className="flex items-center gap-1">
                               <Star className="h-4 w-4 fill-primary text-primary" />
                               <span className="text-sm text-foreground">{game.rating}</span>
+                              {game.reviewCount && (
+                                <span className="text-xs text-muted-foreground ml-1">
+                                  ({formatReviewCount(game.reviewCount)})
+                                </span>
+                              )}
                             </div>
                           </div>
                           <div className="flex items-center justify-between">
@@ -1345,6 +1585,12 @@ export default function Home() {
 
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-4 text-foreground">Weekend Special Sale</h2>
+              {countdownTime && (
+                <div className="inline-block bg-primary/20 border border-primary rounded-lg px-6 py-3 mb-4">
+                  <p className="text-sm text-muted-foreground mb-1">Offer ends in:</p>
+                  <p className="text-2xl font-bold text-primary">{countdownTime}</p>
+                </div>
+              )}
               <p className="text-xl text-muted-foreground mb-8">
                 Save up to 75% on selected titles. Offer ends soon!
               </p>
@@ -1361,15 +1607,27 @@ export default function Home() {
         {/* Footer */}
         <footer className="border-t border-border mt-20">
           <div className="container mx-auto px-4 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
               <div>
                 <Link href="/" className="flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity">
                   <Gamepad2 className="h-6 w-6 text-primary" />
                   <span className="text-xl font-bold text-foreground">GameVerse</span>
                 </Link>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground mb-4">
                   Your ultimate destination for PC gaming.
                 </p>
+                {/* Social Media Links */}
+                <div className="flex items-center gap-3">
+                  <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Discord">
+                    <Gamepad2 className="h-5 w-5" />
+                  </a>
+                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="YouTube">
+                    <Youtube className="h-5 w-5" />
+                  </a>
+                </div>
               </div>
               <div>
                 <h3 className="font-semibold mb-4 text-foreground">Store</h3>
@@ -1394,6 +1652,9 @@ export default function Home() {
                   <li><Link href="/support/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
                   <li><Link href="/settings/privacy" className="hover:text-foreground transition-colors">Cookies</Link></li>
                 </ul>
+              </div>
+              <div>
+                <NewsletterSignup />
               </div>
             </div>
             <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
