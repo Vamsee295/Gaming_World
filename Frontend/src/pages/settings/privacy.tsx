@@ -10,7 +10,7 @@ export default function PrivacyPage() {
       {/* Header Section */}
       <header className="bg-card shadow-xl sticky top-0 z-10 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-extrabold tracking-tight">EpicStream Network</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight">GameVerse</h1>
           <a href="#contact-info">
             <Button>
               <Mail className="w-4 h-4 mr-2" />
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
             <h2 className="text-4xl sm:text-5xl font-extrabold mb-4">Privacy Policy</h2>
             <p className="text-lg text-muted-foreground mt-4">Last Updated: November 8, 2025</p>
             <p className="mt-6 text-muted-foreground leading-relaxed">
-              Welcome to EpicStream Network. Your privacy is critically important to us. This policy
+              Welcome to GameVerse. Your privacy is critically important to us. This policy
               outlines how we collect, use, and protect your personal data when you use our game
               streaming platform and related services.
             </p>
@@ -320,10 +320,10 @@ export default function PrivacyPage() {
                   <p>
                     <strong>Email:</strong>{" "}
                     <a
-                      href="mailto:privacy@epicstream.net"
+                      href="mailto:privacy@gameverse.com"
                       className="underline hover:no-underline"
                     >
-                      privacy@epicstream.net
+                      privacy@gameverse.com
                     </a>
                   </p>
                   <p>
@@ -331,7 +331,7 @@ export default function PrivacyPage() {
                     Officer
                   </p>
                 </div>
-                <a href="mailto:privacy@epicstream.net">
+                <a href="mailto:privacy@gameverse.com">
                   <Button className="mt-6 bg-background text-primary hover:bg-background/90">
                     <Mail className="w-4 h-4 mr-2" />
                     Send Privacy Inquiry Email
@@ -347,7 +347,7 @@ export default function PrivacyPage() {
       <footer className="bg-card mt-12 py-8 border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground">
           <p>
-            &copy; 2025 EpicStream Network. All rights reserved. |{" "}
+            &copy; 2025 GameVerse. All rights reserved. |{" "}
             <Link href="/support/terms" className="hover:text-foreground transition duration-300">
               Terms of Service
             </Link>

@@ -17,7 +17,7 @@ export default function CartPage() {
         <h1 className="text-2xl font-bold text-foreground">My Cart</h1>
         <div className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5">
           <Coins className="h-4 w-4 text-primary" />
-          <span className="text-sm text-foreground font-semibold">Epic Rewards</span>
+          <span className="text-sm text-foreground font-semibold">GameVerse Rewards</span>
           <span className="text-sm text-primary">₹0.00</span>
         </div>
       </div>
@@ -25,10 +25,17 @@ export default function CartPage() {
       {items.length === 0 ? (
         <div className="text-center py-20 border border-border rounded-lg bg-secondary">
           <ShoppingCart className="mx-auto h-10 w-10 text-muted-foreground mb-4" />
-          <p className="text-muted-foreground mb-6">Your cart is empty.</p>
-          <Link href="/">
-            <Button>Browse Games</Button>
-          </Link>
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-xl font-semibold text-foreground">Your cart is empty</h2>
+            <p className="text-muted-foreground max-w-sm mx-auto">
+              Looks like you haven't added any games yet. Explore our store to find your next adventure!
+            </p>
+            <Link href="/">
+              <Button size="lg" className="mt-2 min-w-[200px]">
+                Browse Store
+              </Button>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

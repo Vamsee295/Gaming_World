@@ -58,10 +58,10 @@ export default function RefundPolicyPage() {
           {/* Header Section */}
           <CardHeader className="bg-secondary p-6 sm:p-8 rounded-t-xl">
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-primary">
-              Store Refund Policy
+              GameVerse Store Refund Policy
             </h1>
             <p className="mt-2 text-muted-foreground text-lg">
-              Epic Stream: Your satisfaction is important to us. Please review our policy
+              GameVerse: Your satisfaction is important to us. Please review our policy
               guidelines below.
             </p>
           </CardHeader>

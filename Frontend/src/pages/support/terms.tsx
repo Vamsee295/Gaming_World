@@ -47,7 +47,7 @@ export default function TermsPage() {
                 1. Introduction / Agreement
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Welcome to the Epic Stream Platform. By accessing or using our services, games,
+                Welcome to GameVerse. By accessing or using our services, games,
                 applications, or website (the "Service"), you agree to be bound by these Terms and
                 Conditions. <strong>If you do not agree to these terms, you may not use the Service.</strong>{" "}
                 These terms constitute a legally binding agreement between you and the platform.
@@ -189,7 +189,7 @@ export default function TermsPage() {
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Refunds for purchases will be processed strictly in accordance with the official{" "}
-                <strong>Store Refund Rules</strong> published on our dedicated policy page (linked
+                <strong>GameVerse Store Refund Rules</strong> published on our dedicated policy page (linked
                 below). Certain items, such as used virtual currency or non-transferable digital
                 goods, may be explicitly non-refundable.
               </p>
@@ -294,7 +294,7 @@ export default function TermsPage() {
                     href="mailto:legal@epicstream.com"
                     className="text-primary hover:text-primary/80 transition duration-150"
                   >
-                    legal@epicstream.com
+                    legal@gameverse.com
                   </a>
                 </li>
                 <li>

@@ -25,10 +25,17 @@ export default function WishlistPage() {
       {items.length === 0 ? (
         <div className="text-center py-20 border border-border rounded-lg bg-secondary">
           <Heart className="mx-auto h-10 w-10 text-muted-foreground mb-4" />
-          <p className="text-muted-foreground mb-6">Your wishlist is empty.</p>
-          <Link href="/">
-            <Button>Browse Games</Button>
-          </Link>
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-xl font-semibold text-foreground">Your wishlist is empty</h2>
+            <p className="text-muted-foreground max-w-sm mx-auto">
+              Keep track of games you want to play. Add them to your wishlist to get notified about sales!
+            </p>
+            <Link href="/">
+              <Button size="lg" className="mt-2 min-w-[200px]">
+                Explore Games
+              </Button>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">

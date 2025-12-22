@@ -677,7 +677,7 @@ export default function Home() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild><Link href="/profile/achievements">My Achievements</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild><Link href="/profile/rewards">Epic Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
+                        <DropdownMenuItem asChild><Link href="/profile/rewards">GameVerse Rewards <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/profile/balance">Account Balance <ExternalLink className="ml-auto h-3.5 w-3.5" /></Link></DropdownMenuItem>
                         <DropdownMenuItem asChild><Link href="/profile/coupons">Coupons</Link></DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -701,8 +701,8 @@ export default function Home() {
           </div>
         </motion.nav>
 
-        {/* Hero Carousel Section */}
-        {featuredGames.length > 0 && (
+        {/* Hero Carousel Section - Hidden when searching */}
+        {!searchQuery && featuredGames.length > 0 && (
           <motion.section
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -843,49 +843,6 @@ export default function Home() {
             </div>
           </section>
         )}
-
-        {/* Community Stats Banner */}
-        <section className="container mx-auto px-4 py-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-xl border border-primary/20 p-8"
-          >
-            <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-            <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Users className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-3xl md:text-4xl font-bold text-foreground">2.5M+</span>
-                </div>
-                <p className="text-sm text-muted-foreground font-medium">Active Players</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Gamepad2 className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-3xl md:text-4xl font-bold text-foreground">8,500+</span>
-                </div>
-                <p className="text-sm text-muted-foreground font-medium">Games Available</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Star className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-3xl md:text-4xl font-bold text-foreground">1.2M+</span>
-                </div>
-                <p className="text-sm text-muted-foreground font-medium">User Reviews</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Shield className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-3xl md:text-4xl font-bold text-foreground">100%</span>
-                </div>
-                <p className="text-sm text-muted-foreground font-medium">Secure Checkout</p>
-              </div>
-            </div>
-          </motion.div>
-        </section>
 
         {/* Personalized Recommendation Sections */}
 
@@ -1586,10 +1543,9 @@ export default function Home() {
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-4 text-foreground">Weekend Special Sale</h2>
               {countdownTime && (
-                <div className="inline-block bg-primary/20 border border-primary rounded-lg px-6 py-3 mb-4">
-                  <p className="text-sm text-muted-foreground mb-1">Offer ends in:</p>
-                  <p className="text-2xl font-bold text-primary">{countdownTime}</p>
-                </div>
+                <p className="text-xl text-muted-foreground mb-2">
+                  Offer ends in: <span className="font-bold text-primary">{countdownTime}</span>
+                </p>
               )}
               <p className="text-xl text-muted-foreground mb-8">
                 Save up to 75% on selected titles. Offer ends soon!
@@ -1600,6 +1556,124 @@ export default function Home() {
                   View All Deals
                 </Button>
               </Link>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Community Stats - Square Cards */}
+        <section className="container mx-auto px-4 py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl font-bold mb-8 text-foreground text-center">Our Community Highlights</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0, duration: 0.5 }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
+                  <CardContent className="p-8 flex flex-col items-center text-center relative">
+                    {/* Animated background gradient on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <div className="relative z-10 w-full">
+                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+                        <Users className="h-10 w-10 text-primary" />
+                      </div>
+                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                        2.5M+
+                      </h3>
+                      <p className="text-sm text-muted-foreground font-medium">
+                        Active Players
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
+                  <CardContent className="p-8 flex flex-col items-center text-center relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <div className="relative z-10 w-full">
+                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+                        <Gamepad2 className="h-10 w-10 text-primary" />
+                      </div>
+                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                        8,500+
+                      </h3>
+                      <p className="text-sm text-muted-foreground font-medium">
+                        Games Available
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
+                  <CardContent className="p-8 flex flex-col items-center text-center relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <div className="relative z-10 w-full">
+                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+                        <Star className="h-10 w-10 text-primary" />
+                      </div>
+                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                        1.2M+
+                      </h3>
+                      <p className="text-sm text-muted-foreground font-medium">
+                        User Reviews
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
+                  <CardContent className="p-8 flex flex-col items-center text-center relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <div className="relative z-10 w-full">
+                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+                        <Shield className="h-10 w-10 text-primary" />
+                      </div>
+                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                        100%
+                      </h3>
+                      <p className="text-sm text-muted-foreground font-medium">
+                        Secure Checkout
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </motion.div>
         </section>

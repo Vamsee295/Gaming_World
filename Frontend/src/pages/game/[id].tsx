@@ -13,7 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft, Copy, Check, Globe, Zap, Target, Sparkles, Trophy, Map, Swords, Cpu, Car, Shield, ChevronDown, MessageSquarePlus, ThumbsUp, MessageCircle } from "lucide-react";
+import Header from "@/components/Header";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/components/ui/use-toast";
 import { useWishlist } from "@/context/WishlistContext";
 import { EnhancedYouTubePlayer } from "@/components/ui/EnhancedYouTubePlayer";
 import { FeatureCard } from "@/components/ui/FeatureCard";
@@ -712,8 +714,10 @@ export default function GameDetailPage() {
   const gameId = id ? parseInt(id as string) : null;
   const baseGame = gameId ? gamesData[gameId] : null;
   const gameExtensions = gameId ? extendedGameData[gameId] : null;
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const game = baseGame && gameExtensions ? { ...baseGame, ...gameExtensions } : baseGame;
   const { addItem } = useCart();
+  const { toast } = useToast();
   const { addItem: addWishlistItem, removeItem: removeWishlistItem, items: wishlistItems } = useWishlist();
   const isInWishlist = gameId ? wishlistItems.some(item => item.id === gameId) : false;
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
@@ -734,7 +738,16 @@ export default function GameDetailPage() {
   const [commentText, setCommentText] = useState("");
   const [likedReviews, setLikedReviews] = useState<Set<number>>(new Set());
 
-  if (!game) {
+  // Fix for scroll bug: Wait until router is ready and game data is loaded
+  if (!router.isReady || !game) {
+    if (!router.isReady) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -871,6 +884,7 @@ export default function GameDetailPage() {
       </Head>
 
       <div className="min-h-screen bg-background">
+        <Header />
         {/* Breadcrumb */}
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -920,19 +934,32 @@ export default function GameDetailPage() {
               <div className="flex items-center gap-4 flex-wrap">
                 <Link href={`/store/transaction?gameId=${game.id}`}>
                   <Button size="lg" className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">
-                    <ShoppingCart className="h-5 w-5" />
-                    Add to Kart
+                    <Play className="h-5 w-5" />
+                    Buy Now
                   </Button>
                 </Link>
-                <Button size="lg" variant="outline" className="gap-2" onClick={handleAddToCart}>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => {
+                    handleAddToCart();
+                    toast({
+                      title: "Added to Cart",
+                      description: `${game.title} has been added to your cart.`,
+                    });
+                  }}
+                >
                   <ShoppingCart className="h-5 w-5" />
+                  <span>Add to Cart</span>
+                  <span className="ml-2 text-muted-foreground opacity-60">|</span>
                   {game.discount ? (
                     <>
-                      <span className="line-through text-muted-foreground">{game.price}</span>
-                      <span className="text-green-500">${effectivePrice.toFixed(2)}</span>
+                      <span className="line-through text-muted-foreground ml-2 text-xs">{game.price}</span>
+                      <span className="text-green-500 ml-1">${effectivePrice.toFixed(2)}</span>
                     </>
                   ) : (
-                    <span>{game.price}</span>
+                    <span className="ml-2">{game.price}</span>
                   )}
                 </Button>
                 <Button size="lg" variant="outline" onClick={handleWishlistToggle}>
