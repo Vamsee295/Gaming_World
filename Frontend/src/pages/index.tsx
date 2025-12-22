@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useMagicBentoCard } from "@/hooks/useMagicBento";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,7 @@ import dynamic from "next/dynamic";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal, Monitor, Youtube, Twitter, Shield, Eye } from "lucide-react";
+import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal, Monitor, Youtube, Twitter, Shield, Eye, Facebook, Instagram, Twitch } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -33,6 +34,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Switch } from "@/components/ui/switch";
 import ChangePhotoDialog from "@/components/profile/ChangePhotoDialog";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import LogoLoop from "@/components/LogoLoop";
 import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
 import spiderman from "@/components/Images/Store Images/spiderman.jpg";
 import gta6 from "@/components/Images/Store Images/gta-6.webp";
@@ -169,6 +171,230 @@ const categories = [
   { name: "Racing", icon: Clock, count: 97, description: "High-speed thrills" }
 ];
 
+// CategoryCard component with Magic Bento effects
+const CategoryCardWithMagic: React.FC<{ category: any; index: number; Icon: any }> = ({ category, index, Icon }) => {
+  const cardRef = useMagicBentoCard({
+    enableTilt: true,
+    enableMagnetism: true,
+    enableBorderGlow: true,
+    clickEffect: true,
+    glowColor: '59, 130, 246' // blue color matching primary
+  });
+
+  return (
+    <Link href="/store/deals">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: index * 0.1, duration: 0.5 }}
+        ref={cardRef}
+        className="h-full bg-card rounded-xl border border-border/50 transition-all duration-300 cursor-pointer overflow-hidden group"
+        style={{ position: 'relative' }}
+      >
+        <CardContent className="p-8 flex flex-col items-center text-center relative">
+          {/* Animated background gradient on hover */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          <div className="relative z-10 w-full">
+            <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+              <Icon className="h-10 w-10 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">
+              {category.name}
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              {category.description}
+            </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-xs font-medium">
+              <span className="text-primary font-bold">{category.count}</span>
+              <span className="text-muted-foreground">games</span>
+            </div>
+          </div>
+        </CardContent>
+      </motion.div>
+    </Link>
+  );
+};
+
+// GameCard component with Magic Bento effects for Trending Games grid
+const GameCardWithMagic: React.FC<{ game: any; handleGameClick: (id: number) => void; addItem: any; addWishlistItem: any; formatReviewCount: (count: number) => string; getPlatformIcon: (platform: string) => any }> = ({
+  game,
+  handleGameClick,
+  addItem,
+  addWishlistItem,
+  formatReviewCount,
+  getPlatformIcon
+}) => {
+  const cardRef = useMagicBentoCard({
+    enableTilt: true,
+    enableMagnetism: true,
+    enableBorderGlow: true,
+    clickEffect: true,
+    glowColor: '59, 130, 246'
+  });
+
+  return (
+    <div ref={cardRef} className="group cursor-pointer" style={{ position: 'relative' }}>
+      <Link href={`/game/${game.id}`}>
+        <motion.div
+          variants={{}}
+          className="relative overflow-hidden rounded-lg border border-border bg-secondary card-3d-content"
+        >
+          <div className="aspect-[16/9] overflow-hidden relative">
+            <Image
+              src={game.image as any}
+              alt={game.title}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </div>
+          {game.discount && (
+            <div className="absolute top-3 right-3">
+              <Badge className="bg-green-600 text-white badge-glow">-{game.discount}%</Badge>
+            </div>
+          )}
+          {game.reviewCount && game.reviewCount > 30000 && (
+            <div className="absolute top-3 left-3">
+              <Badge className="bg-blue-600/90 text-white flex items-center gap-1 backdrop-blur-sm">
+                <Users className="h-3 w-3" />
+                Popular
+              </Badge>
+            </div>
+          )}
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+              {game.title}
+            </h3>
+            <div className="flex items-center gap-2 mb-2">
+              {game.platforms && game.platforms.length > 0 && (
+                <div className="flex items-center gap-1">
+                  {game.platforms.slice(0, 3).map((platform: string, idx: number) => (
+                    <div key={idx} className="text-muted-foreground" title={platform}>
+                      {getPlatformIcon(platform)}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {game.releaseYear && (
+                <>
+                  <span className="text-muted-foreground text-xs">•</span>
+                  <span className="text-muted-foreground text-xs">{game.releaseYear}</span>
+                </>
+              )}
+            </div>
+            <div className="flex items-center justify-between mb-3">
+              <Badge variant="secondary" className="smooth-hover">{game.genre}</Badge>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-primary text-primary" />
+                <span className="text-sm text-foreground">{game.rating}</span>
+                {game.reviewCount && (
+                  <span className="text-xs text-muted-foreground ml-1">
+                    ({formatReviewCount(game.reviewCount)})
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              {game.discount ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm line-through text-muted-foreground price-shake">{game.price}</span>
+                  <span className="text-lg font-bold text-green-500 price-slide-in price-glow">
+                    ${(parseFloat(game.price.slice(1)) * (1 - game.discount / 100)).toFixed(2)}
+                  </span>
+                </div>
+              ) : (
+                <span className="text-lg font-bold text-foreground">
+                  {game.price === "$0.00" ? "Free" : game.price}
+                </span>
+              )}
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="btn-ripple glow-gradient-hover"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const basePrice = parseFloat(game.price.slice(1));
+                    const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                    addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
+                  }}
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="btn-ripple"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const basePrice = parseFloat(game.price.slice(1));
+                    const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
+                    addWishlistItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image as any });
+                    const svg = e.currentTarget.querySelector('svg');
+                    if (svg) {
+                      svg.classList.add('animate-heart-pop');
+                      setTimeout(() => {
+                        svg.classList.remove('animate-heart-pop');
+                      }, 300);
+                    }
+                  }}
+                  aria-label="Add to wishlist"
+                >
+                  <Heart className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </Link>
+    </div>
+  );
+};
+
+// CommunityHighlightCard component with Magic Bento effects
+const CommunityHighlightCard: React.FC<{ icon: any; value: string; label: string; delay: number }> = ({ icon: Icon, value, label, delay }) => {
+  const cardRef = useMagicBentoCard({
+    enableTilt: true,
+    enableMagnetism: true,
+    enableBorderGlow: true,
+    clickEffect: true,
+    glowColor: '59, 130, 246'
+  });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.5 }}
+      ref={cardRef}
+      className="h-full bg-card rounded-xl border border-border/50 transition-all duration-300 cursor-pointer overflow-hidden group"
+      style={{ position: 'relative' }}
+    >
+      <CardContent className="p-8 flex flex-col items-center text-center relative">
+        {/* Animated background gradient on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        <div className="relative z-10 w-full">
+          <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
+            <Icon className="h-10 w-10 text-primary" />
+          </div>
+          <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            {value}
+          </h3>
+          <p className="text-sm text-muted-foreground font-medium">
+            {label}
+          </p>
+        </div>
+      </CardContent>
+    </motion.div>
+  );
+};
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
@@ -229,6 +455,82 @@ export default function Home() {
         return null;
     }
   };
+
+  // Platform logos for footer animation
+  const platformLogos = [
+    {
+      node: <Gamepad2 className="h-6 w-6" />,
+      title: "Discord",
+      href: "https://discord.com",
+      ariaLabel: "Visit our Discord"
+    },
+    {
+      node: <Twitter className="h-6 w-6" />,
+      title: "Twitter",
+      href: "https://twitter.com",
+      ariaLabel: "Follow us on Twitter"
+    },
+    {
+      node: <Youtube className="h-6 w-6" />,
+      title: "YouTube",
+      href: "https://youtube.com",
+      ariaLabel: "Subscribe on YouTube"
+    },
+    {
+      node: <Facebook className="h-6 w-6" />,
+      title: "Facebook",
+      href: "https://facebook.com",
+      ariaLabel: "Like us on Facebook"
+    },
+    {
+      node: <Monitor className="h-6 w-6" />,
+      title: "Steam",
+      href: "https://store.steampowered.com",
+      ariaLabel: "Visit Steam"
+    },
+    {
+      node: <Gamepad2 className="h-6 w-6" />,
+      title: "PlayStation",
+      href: "https://playstation.com",
+      ariaLabel: "Visit PlayStation"
+    },
+    {
+      node: <Gamepad2 className="h-6 w-6" />,
+      title: "Xbox",
+      href: "https://xbox.com",
+      ariaLabel: "Visit Xbox"
+    },
+    {
+      node: <Zap className="h-6 w-6" />,
+      title: "Epic Games",
+      href: "https://epicgames.com",
+      ariaLabel: "Visit Epic Games"
+    },
+    {
+      node: <Star className="h-6 w-6" />,
+      title: "Nintendo",
+      href: "https://nintendo.com",
+      ariaLabel: "Visit Nintendo"
+    },
+    {
+      node: <Twitch className="h-6 w-6" />,
+      title: "Twitch",
+      href: "https://twitch.tv",
+      ariaLabel: "Watch on Twitch"
+    },
+    {
+      node: <Instagram className="h-6 w-6" />,
+      title: "Instagram",
+      href: "https://instagram.com",
+      ariaLabel: "Follow on Instagram"
+    },
+    {
+      node: <Play className="h-6 w-6" />,
+      title: "TikTok",
+      href: "https://tiktok.com",
+      ariaLabel: "Follow on TikTok"
+    },
+  ];
 
   const handleSignOut = () => {
     // Clear session data if toggle is checked
@@ -719,7 +1021,8 @@ export default function Home() {
                 priority
                 key={currentCarouselIndex}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+              {/* Dark gradient overlay - consistent in both themes to preserve image saturation */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
             </div>
 
             {/* Carousel Navigation */}
@@ -766,14 +1069,14 @@ export default function Home() {
                 className="max-w-2xl"
               >
                 <Badge className="mb-4 bg-primary text-primary-foreground">Featured Game</Badge>
-                <h1 className="text-6xl font-bold mb-4 text-foreground">{featuredGame.title}</h1>
-                <p className="text-xl text-muted-foreground mb-6">
+                <h1 className="text-6xl font-bold mb-4 text-white">{featuredGame.title}</h1>
+                <p className="text-xl text-gray-200 mb-6">
                   Experience the next generation of gaming with stunning visuals and immersive gameplay.
                 </p>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="flex items-center gap-1">
                     <Star className="h-5 w-5 fill-primary text-primary" />
-                    <span className="text-foreground font-semibold">{featuredGame.rating}</span>
+                    <span className="text-white font-semibold">{featuredGame.rating}</span>
                   </div>
                   <Badge variant="secondary">{featuredGame.genre}</Badge>
                   {featuredGame.discount && (
@@ -800,13 +1103,13 @@ export default function Home() {
                     <ShoppingCart className="h-5 w-5" />
                     {featuredGame.discount ? (
                       <>
-                        <span className="line-through text-muted-foreground">{featuredGame.price}</span>
-                        <span className="text-green-500">
+                        <span className="line-through text-gray-300">{featuredGame.price}</span>
+                        <span className="text-green-400">
                           ${(parseFloat(featuredGame.price.slice(1)) * (1 - featuredGame.discount / 100)).toFixed(2)}
                         </span>
                       </>
                     ) : (
-                      <span>{featuredGame.price}</span>
+                      <span className="text-white">{featuredGame.price}</span>
                     )}
                   </Button>
                   <Button
@@ -1215,38 +1518,12 @@ export default function Home() {
               {categories.map((category, index) => {
                 const Icon = category.icon;
                 return (
-                  <Link href="/store/deals" key={category.name}>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                      whileHover={{ y: -5 }}
-                    >
-                      <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
-                        <CardContent className="p-8 flex flex-col items-center text-center relative">
-                          {/* Animated background gradient on hover */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                          <div className="relative z-10 w-full">
-                            <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
-                              <Icon className="h-10 w-10 text-primary" />
-                            </div>
-                            <h3 className="text-xl font-bold text-foreground mb-2">
-                              {category.name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground mb-3">
-                              {(category as any).description}
-                            </p>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-xs font-medium">
-                              <span className="text-primary font-bold">{(category as any).count}</span>
-                              <span className="text-muted-foreground">games</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </Link>
+                  <CategoryCardWithMagic
+                    key={category.name}
+                    category={category}
+                    index={index}
+                    Icon={Icon}
+                  />
                 );
               })}
             </div>
@@ -1366,127 +1643,15 @@ export default function Home() {
                 </div>
               ) : (
                 paginatedGames.map((game) => (
-                  <Card3D key={game.id} className="group cursor-pointer" intensity={10}>
-                    <Link href={`/game/${game.id}`}>
-                      <motion.div
-                        variants={itemVariants}
-                        className="relative overflow-hidden rounded-lg border border-border bg-secondary card-3d-content"
-                      >
-                        <div className="aspect-[16/9] overflow-hidden relative">
-                          <Image
-                            src={game.image as any}
-                            alt={game.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </div>
-                        {game.discount && (
-                          <div className="absolute top-3 right-3">
-                            <Badge className="bg-green-600 text-white badge-glow">-{game.discount}%</Badge>
-                          </div>
-                        )}
-                        {/* Active Players Badge for Popular Games */}
-                        {game.reviewCount && game.reviewCount > 30000 && (
-                          <div className="absolute top-3 left-3">
-                            <Badge className="bg-blue-600/90 text-white flex items-center gap-1 backdrop-blur-sm">
-                              <Users className="h-3 w-3" />
-                              Popular
-                            </Badge>
-                          </div>
-                        )}
-                        <div className="p-4">
-                          <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
-                            {game.title}
-                          </h3>
-                          {/* Platform Icons & Release Year */}
-                          <div className="flex items-center gap-2 mb-2">
-                            {game.platforms && game.platforms.length > 0 && (
-                              <div className="flex items-center gap-1">
-                                {game.platforms.slice(0, 3).map((platform, idx) => (
-                                  <div key={idx} className="text-muted-foreground" title={platform}>
-                                    {getPlatformIcon(platform)}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {game.releaseYear && (
-                              <>
-                                <span className="text-muted-foreground text-xs">•</span>
-                                <span className="text-muted-foreground text-xs">{game.releaseYear}</span>
-                              </>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between mb-3">
-                            <Badge variant="secondary" className="smooth-hover">{game.genre}</Badge>
-                            <div className="flex items-center gap-1">
-                              <Star className="h-4 w-4 fill-primary text-primary" />
-                              <span className="text-sm text-foreground">{game.rating}</span>
-                              {game.reviewCount && (
-                                <span className="text-xs text-muted-foreground ml-1">
-                                  ({formatReviewCount(game.reviewCount)})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            {game.discount ? (
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm line-through text-muted-foreground price-shake">{game.price}</span>
-                                <span className="text-lg font-bold text-green-500 price-slide-in price-glow">
-                                  ${(parseFloat(game.price.slice(1)) * (1 - game.discount / 100)).toFixed(2)}
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="text-lg font-bold text-foreground">
-                                {game.price === "$0.00" ? "Free" : game.price}
-                              </span>
-                            )}
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="btn-ripple glow-gradient-hover"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  const basePrice = parseFloat(game.price.slice(1));
-                                  const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
-                                  addItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image });
-                                }}
-                              >
-                                <ShoppingCart className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="btn-ripple"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  const basePrice = parseFloat(game.price.slice(1));
-                                  const effective = game.discount ? basePrice * (1 - game.discount / 100) : basePrice;
-                                  addWishlistItem({ id: game.id, title: game.title, price: Number(effective.toFixed(2)), image: game.image as any });
-
-                                  // Store SVG reference before setTimeout
-                                  const svg = e.currentTarget.querySelector('svg');
-                                  if (svg) {
-                                    svg.classList.add('animate-heart-pop');
-                                    setTimeout(() => {
-                                      svg.classList.remove('animate-heart-pop');
-                                    }, 300);
-                                  }
-                                }}
-                                aria-label="Add to wishlist"
-                              >
-                                <Heart className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </Link>
-                  </Card3D>
+                  <GameCardWithMagic
+                    key={game.id}
+                    game={game}
+                    handleGameClick={handleGameClick}
+                    addItem={addItem}
+                    addWishlistItem={addWishlistItem}
+                    formatReviewCount={formatReviewCount}
+                    getPlatformIcon={getPlatformIcon}
+                  />
                 )))}
             </motion.div>
 
@@ -1570,110 +1735,10 @@ export default function Home() {
           >
             <h2 className="text-3xl font-bold mb-8 text-foreground text-center">Our Community Highlights</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0, duration: 0.5 }}
-                whileHover={{ y: -5 }}
-              >
-                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
-                  <CardContent className="p-8 flex flex-col items-center text-center relative">
-                    {/* Animated background gradient on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <div className="relative z-10 w-full">
-                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
-                        <Users className="h-10 w-10 text-primary" />
-                      </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                        2.5M+
-                      </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
-                        Active Players
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1, duration: 0.5 }}
-                whileHover={{ y: -5 }}
-              >
-                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
-                  <CardContent className="p-8 flex flex-col items-center text-center relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <div className="relative z-10 w-full">
-                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
-                        <Gamepad2 className="h-10 w-10 text-primary" />
-                      </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                        8,500+
-                      </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
-                        Games Available
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                whileHover={{ y: -5 }}
-              >
-                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
-                  <CardContent className="p-8 flex flex-col items-center text-center relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <div className="relative z-10 w-full">
-                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
-                        <Star className="h-10 w-10 text-primary" />
-                      </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                        1.2M+
-                      </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
-                        User Reviews
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                whileHover={{ y: -5 }}
-              >
-                <Card className="h-full bg-card rounded-xl border border-border/50 hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 cursor-pointer overflow-hidden group">
-                  <CardContent className="p-8 flex flex-col items-center text-center relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <div className="relative z-10 w-full">
-                      <div className="w-20 h-20 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center mb-5 mx-auto transition-all duration-300 group-hover:scale-110">
-                        <Shield className="h-10 w-10 text-primary" />
-                      </div>
-                      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                        100%
-                      </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
-                        Secure Checkout
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <CommunityHighlightCard icon={Users} value="2.5M+" label="Active Players" delay={0} />
+              <CommunityHighlightCard icon={Gamepad2} value="8,500+" label="Games Available" delay={0.1} />
+              <CommunityHighlightCard icon={Star} value="1.2M+" label="User Reviews" delay={0.2} />
+              <CommunityHighlightCard icon={Shield} value="100%" label="Secure Checkout" delay={0.3} />
             </div>
           </motion.div>
         </section>
@@ -1690,17 +1755,20 @@ export default function Home() {
                 <p className="text-muted-foreground mb-4">
                   Your ultimate destination for PC gaming.
                 </p>
-                {/* Social Media Links */}
-                <div className="flex items-center gap-3">
-                  <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Discord">
-                    <Gamepad2 className="h-5 w-5" />
-                  </a>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
-                    <Twitter className="h-5 w-5" />
-                  </a>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="YouTube">
-                    <Youtube className="h-5 w-5" />
-                  </a>
+                {/* Animated Logo Loop */}
+                <div className="mt-6" style={{ height: '60px', position: 'relative', overflow: 'hidden' }}>
+                  <LogoLoop
+                    logos={platformLogos}
+                    speed={60}
+                    direction="left"
+                    logoHeight={32}
+                    gap={24}
+                    hoverSpeed={0}
+                    scaleOnHover
+                    fadeOut
+                    fadeOutColor="#000000"
+                    ariaLabel="Gaming platforms and social media"
+                  />
                 </div>
               </div>
               <div>

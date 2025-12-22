@@ -1,6 +1,8 @@
 import type { AppProps } from 'next/app'
 import '../styles/globals.css';
 import '../styles/signin.css';
+import '../components/LogoLoop.css';
+import '../components/SpotlightCard.css';
 import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
 import { CartProvider } from "@/context/CartContext";
@@ -11,6 +13,8 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { CommunityProvider } from "@/context/CommunityContext";
 import { FriendsProvider } from "@/context/FriendsContext";
 import { NotificationsProvider } from "@/context/NotificationsContext";
+
+import ClickSpark from '@/components/ClickSpark';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -42,10 +46,18 @@ export default function App({ Component, pageProps }: AppProps) {
               <CommunityProvider>
                 <FriendsProvider>
                   <NotificationsProvider>
-                    <div className="min-h-screen">
-                      <Component {...pageProps} />
-                      <Toaster />
-                    </div>
+                    <ClickSpark
+                      sparkColor='#fff'
+                      sparkSize={10}
+                      sparkRadius={15}
+                      sparkCount={8}
+                      duration={400}
+                    >
+                      <div className="min-h-screen">
+                        <Component {...pageProps} />
+                        <Toaster />
+                      </div>
+                    </ClickSpark>
                   </NotificationsProvider>
                 </FriendsProvider>
               </CommunityProvider>

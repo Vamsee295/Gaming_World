@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Users, Activity, Calendar, UserSearch, ArrowRight } from "lucide-react";
 import CommunityNav from "@/components/community/CommunityNav";
+import SpotlightCard from "@/components/SpotlightCard";
 
 const communityFeatures = [
   {
@@ -86,23 +87,25 @@ export default function CommunityPage() {
                   whileHover={{ y: -5 }}
                 >
                   <Link href={feature.href}>
-                    <Card className="h-full hover:border-primary transition-all duration-300 cursor-pointer">
-                      <CardHeader>
-                        <div className="flex items-center gap-4 mb-2">
-                          <div className={`p-3 rounded-lg bg-primary/10 ${feature.color}`}>
-                            <Icon className="h-6 w-6" />
+                    <SpotlightCard>
+                      <Card className="h-full hover:border-primary transition-all duration-300 cursor-pointer">
+                        <CardHeader>
+                          <div className="flex items-center gap-4 mb-2">
+                            <div className={`p-3 rounded-lg bg-primary/10 ${feature.color}`}>
+                              <Icon className="h-6 w-6" />
+                            </div>
+                            <CardTitle className="text-xl">{feature.title}</CardTitle>
                           </div>
-                          <CardTitle className="text-xl">{feature.title}</CardTitle>
-                        </div>
-                        <CardDescription>{feature.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <Button variant="ghost" className="w-full justify-between group">
-                          Explore
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </CardContent>
-                    </Card>
+                          <CardDescription>{feature.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Button variant="ghost" className="w-full justify-between group">
+                            Explore
+                            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </SpotlightCard>
                   </Link>
                 </motion.div>
               );
