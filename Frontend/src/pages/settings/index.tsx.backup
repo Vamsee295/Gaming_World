@@ -24,7 +24,7 @@ import { useTheme } from "@/context/ThemeContext";
 
 export default function SettingsPage() {
   const { user } = useUser();
-  const { theme, setTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   // Account & Security
   const [username, setUsername] = useState(user?.name || "");
@@ -134,40 +134,6 @@ export default function SettingsPage() {
 
   // Data download
   const [isDownloadingData, setIsDownloadingData] = useState(false);
-
-  // ========== PHASE 2: NEW STATE VARIABLES ==========
-
-  // Last login display
-  const [lastLoginDate, setLastLoginDate] = useState("2025-12-23 10:30 AM");
-  const [lastLoginDevice, setLastLoginDevice] = useState("Windows PC");
-
-  // Storage usage
-  const [storageUsage] = useState({
-    total: 500, // GB
-    used: 348,
-    games: [
-      { name: "Cyberpunk 2077", size: 70 },
-      { name: "Red Dead Redemption 2", size: 150 },
-      { name: "Call of Duty: Warzone", size: 85 },
-      { name: "GTA V", size: 72 },
-      { name: "Final Fantasy XVI", size: 55 }
-    ]
-  });
-
-  // Overlay customization
-  const [overlayPosition, setOverlayPosition] = useState("top-right");
-  const [overlayOpacity, setOverlayOpacity] = useState(90);
-  const [overlaySize, setOverlaySize] = useState("medium");
-  const [showFPS, setShowFPS] = useState(false);
-  const [showNetworkMonitor, setShowNetworkMonitor] = useState(false);
-
-  // Notification frequency
-  const [emailFrequency, setEmailFrequency] = useState("weekly");
-
-  // Do Not Disturb
-  const [dndEnabled, setDndEnabled] = useState(false);
-  const [dndStartTime, setDndStartTime] = useState("22:00");
-  const [dndEndTime, setDndEndTime] = useState("08:00");
 
   const handleSaveChanges = (section: string) => {
     setSuccessMessage(`${section} settings saved successfully!`);
@@ -469,130 +435,36 @@ export default function SettingsPage() {
                       <CardDescription>Keep your account secure</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Current Password with show/hide toggle */}
                       <div className="space-y-2">
                         <Label htmlFor="old-password">Current Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="old-password"
-                            type={showOldPassword ? "text" : "password"}
-                            value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            placeholder="Enter current password"
-                            className="pr-10"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                            onClick={() => setShowOldPassword(!showOldPassword)}
-                          >
-                            {showOldPassword ? (
-                              <EyeOff className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </Button>
-                        </div>
+                        <Input
+                          id="old-password"
+                          type="password"
+                          value={oldPassword}
+                          onChange={(e) => setOldPassword(e.target.value)}
+                          placeholder="Enter current password"
+                        />
                       </div>
-
-                      {/* New Password with show/hide toggle and strength indicator */}
                       <div className="space-y-2">
                         <Label htmlFor="new-password">New Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="new-password"
-                            type={showNewPassword ? "text" : "password"}
-                            value={newPassword}
-                            onChange={(e) => {
-                              setNewPassword(e.target.value);
-                              calculatePasswordStrength(e.target.value);
-                            }}
-                            placeholder="Enter new password"
-                            className="pr-10"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                            onClick={() => setShowNewPassword(!showNewPassword)}
-                          >
-                            {showNewPassword ? (
-                              <EyeOff className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </Button>
-                        </div>
-
-                        {/* Password Strength Indicator */}
-                        {newPassword && (
-                          <div className="space-y-2 mt-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs text-muted-foreground">Password Strength:</span>
-                              <span className={`text-xs font-semibold ${passwordStrength < 40 ? 'text-red-500' :
-                                passwordStrength < 70 ? 'text-yellow-500' : 'text-green-500'
-                                }`}>
-                                {passwordStrengthText}
-                              </span>
-                            </div>
-                            <Progress
-                              value={passwordStrength}
-                              className={`h-2 ${passwordStrength < 40 ? '[&>*]:bg-red-500' :
-                                passwordStrength < 70 ? '[&>*]:bg-yellow-500' : '[&>*]:bg-green-500'
-                                }`}
-                            />
-                            <div className="text-xs space-y-1 mt-2">
-                              <p className={newPassword.length >= 8 ? 'text-green-500' : 'text-muted-foreground'}>
-                                • At least 8 characters
-                              </p>
-                              <p className={/[A-Z]/.test(newPassword) ? 'text-green-500' : 'text-muted-foreground'}>
-                                • One uppercase letter
-                              </p>
-                              <p className={/[a-z]/.test(newPassword) ? 'text-green-500' : 'text-muted-foreground'}>
-                                • One lowercase letter
-                              </p>
-                              <p className={/[0-9]/.test(newPassword) ? 'text-green-500' : 'text-muted-foreground'}>
-                                • One number
-                              </p>
-                              <p className={/[^a-zA-Z0-9]/.test(newPassword) ? 'text-green-500' : 'text-muted-foreground'}>
-                                • One special character
-                              </p>
-                            </div>
-                          </div>
-                        )}
+                        <Input
+                          id="new-password"
+                          type="password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="Enter new password"
+                        />
                       </div>
-
-                      {/* Confirm Password with show/hide toggle */}
                       <div className="space-y-2">
                         <Label htmlFor="confirm-password">Confirm New Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="confirm-password"
-                            type={showConfirmPassword ? "text" : "password"}
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            placeholder="Confirm new password"
-                            className="pr-10"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </Button>
-                        </div>
+                        <Input
+                          id="confirm-password"
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Confirm new password"
+                        />
                       </div>
-
                       <Button onClick={handlePasswordUpdate}>
                         Update Password
                       </Button>
@@ -620,161 +492,6 @@ export default function SettingsPage() {
                           onCheckedChange={setLoginAlerts}
                         />
                       </div>
-
-                      <Separator />
-
-                      {/* Last Login Display - Phase 2 */}
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-muted">
-                        <div className="flex items-center gap-3">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                          <div>
-                            <p className="text-sm font-medium">Last Login</p>
-                            <p className="text-xs text-muted-foreground">
-                              {lastLoginDate} • {lastLoginDevice}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Two-Factor Authentication */}
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-0.5">
-                            <Label htmlFor="2fa" className="flex items-center gap-2">
-                              <KeyRound className="h-4 w-4" />
-                              Two-Factor Authentication (2FA)
-                            </Label>
-                            <p className="text-sm text-muted-foreground">
-                              Add an extra layer of security to your account
-                            </p>
-                          </div>
-                          <Switch
-                            id="2fa"
-                            checked={twoFactorEnabled}
-                            onCheckedChange={(checked) => {
-                              setTwoFactorEnabled(checked);
-                              if (checked) setShow2FASetup(true);
-                            }}
-                          />
-                        </div>
-
-                        {twoFactorEnabled && show2FASetup && (
-                          <div className="p-4 rounded-lg bg-muted space-y-4">
-                            <div className="text-sm">
-                              <p className="font-semibold mb-2">Setup 2FA</p>
-                              <p className="text-muted-foreground mb-4">
-                                Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)
-                              </p>
-                              <div className="flex justify-center p-6 bg-white rounded-lg">
-                                <div className="w-48 h-48 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400">
-                                  QR Code Placeholder
-                                </div>
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-4">
-                                Manual key: ABCD-EFGH-IJKL-MNOP
-                              </p>
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setShow2FASetup(false);
-                                  handleSaveChanges("Two-Factor Authentication");
-                                }}
-                              >
-                                Complete Setup
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  setShow2FASetup(false);
-                                  setTwoFactorEnabled(false);
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-
-                        {twoFactorEnabled && !show2FASetup && (
-                          <div className="flex items-center gap-2 text-sm text-green-600">
-                            <CheckCircle2 className="h-4 w-4" />
-                            <span>2FA is enabled and protecting your account</span>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Active Sessions */}
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="flex items-center gap-2">
-                            <Monitor className="h-5 w-5" />
-                            Active Sessions
-                          </CardTitle>
-                          <CardDescription>Manage devices logged into your account</CardDescription>
-                        </div>
-                        {activeSessions.filter(s => !s.isCurrent).length > 0 && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleLogoutAllOthers}
-                          >
-                            <LogOut className="h-4 w-4 mr-2" />
-                            Logout All Others
-                          </Button>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {activeSessions.map((session) => {
-                        const Icon = session.icon === "monitor" ? Monitor :
-                          session.icon === "smartphone" ? Smartphone : Tablet;
-                        return (
-                          <div
-                            key={session.id}
-                            className="flex items-center justify-between p-3 rounded-lg bg-muted"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 rounded-full bg-primary/10">
-                                <Icon className="h-5 w-5 text-primary" />
-                              </div>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <p className="font-medium text-sm">{session.device}</p>
-                                  {session.isCurrent && (
-                                    <Badge variant="secondary" className="text-xs">Current</Badge>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                  <MapPin className="h-3 w-3" />
-                                  <span>{session.location}</span>
-                                  <span>•</span>
-                                  <Clock className="h-3 w-3" />
-                                  <span>{session.lastActive}</span>
-                                </div>
-                              </div>
-                            </div>
-                            {!session.isCurrent && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleLogoutSession(session.id)}
-                              >
-                                <LogOut className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        );
-                      })}
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -940,39 +657,6 @@ export default function SettingsPage() {
                         />
                       </div>
 
-                      <Separator />
-
-                      {/* Spending Limits */}
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="spending-limit">Monthly Spending Limit (₹)</Label>
-                          <Input
-                            id="spending-limit"
-                            type="number"
-                            value={spendingLimit}
-                            onChange={(e) => setSpendingLimit(e.target.value)}
-                            placeholder="5000"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Set a maximum amount you can spend per month
-                          </p>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="password-threshold">Require Password for Purchases Above (₹)</Label>
-                          <Input
-                            id="password-threshold"
-                            type="number"
-                            value={requirePasswordAbove}
-                            onChange={(e) => setRequirePasswordAbove(e.target.value)}
-                            placeholder="2000"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Additional verification for high-value purchases
-                          </p>
-                        </div>
-                      </div>
-
                       <Button onClick={() => handleSaveChanges("Store")}>
                         <Save className="h-4 w-4 mr-2" />
                         Save Store Settings
@@ -1070,41 +754,6 @@ export default function SettingsPage() {
                       </Button>
                     </CardContent>
                   </Card>
-
-                  {/* Storage Usage Card - Phase 2 */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Download className="h-5 w-5" />
-                        Storage Usage
-                      </CardTitle>
-                      <CardDescription>Manage your disk space</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Used Space</span>
-                          <span className="font-medium">{storageUsage.used} GB / {storageUsage.total} GB</span>
-                        </div>
-                        <Progress value={(storageUsage.used / storageUsage.total) * 100} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          {Math.round((storageUsage.used / storageUsage.total) * 100)}% used • {storageUsage.total - storageUsage.used} GB available
-                        </p>
-                      </div>
-
-                      <Separator />
-
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-medium">Largest Games</h4>
-                        {storageUsage.games.map((game, index) => (
-                          <div key={index} className="flex items-center justify-between text-sm p-2 rounded bg-muted">
-                            <span className="text-muted-foreground">{game.name}</span>
-                            <span className="font-medium">{game.size} GB</span>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
                 </motion.div>
               </TabsContent>
 
@@ -1127,7 +776,7 @@ export default function SettingsPage() {
                     <CardContent className="space-y-6">
                       <div className="space-y-2">
                         <Label htmlFor="theme">Theme</Label>
-                        <Select value={theme} onValueChange={(value) => setTheme(value as "dark" | "light" | "system")}>
+                        <Select value={appTheme} onValueChange={(value) => { setAppTheme(value); toggleTheme(); }}>
                           <SelectTrigger id="theme">
                             <SelectValue />
                           </SelectTrigger>
@@ -1281,68 +930,6 @@ export default function SettingsPage() {
                         />
                       </div>
 
-                      <Separator />
-
-                      {/* Phase 2: Email Frequency */}
-                      <div className="space-y-2">
-                        <Label htmlFor="email-frequency">Email Digest Frequency</Label>
-                        <Select value={emailFrequency} onValueChange={setEmailFrequency}>
-                          <SelectTrigger id="email-frequency">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="daily">Daily Digest</SelectItem>
-                            <SelectItem value="weekly">Weekly Summary</SelectItem>
-                            <SelectItem value="monthly">Monthly Report</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground">
-                          How often to receive marketing and update emails
-                        </p>
-                      </div>
-
-                      <Separator />
-
-                      {/* Phase 2: Do Not Disturb */}
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-0.5">
-                            <Label htmlFor="dnd-enabled">Do Not Disturb</Label>
-                            <p className="text-sm text-muted-foreground">
-                              Silence notifications during specific hours
-                            </p>
-                          </div>
-                          <Switch
-                            id="dnd-enabled"
-                            checked={dndEnabled}
-                            onCheckedChange={setDndEnabled}
-                          />
-                        </div>
-
-                        {dndEnabled && (
-                          <div className="grid grid-cols-2 gap-4 pl-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="dnd-start">Start Time</Label>
-                              <Input
-                                id="dnd-start"
-                                type="time"
-                                value={dndStartTime}
-                                onChange={(e) => setDndStartTime(e.target.value)}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="dnd-end">End Time</Label>
-                              <Input
-                                id="dnd-end"
-                                type="time"
-                                value={dndEndTime}
-                                onChange={(e) => setDndEndTime(e.target.value)}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
                       <Button onClick={() => handleSaveChanges("Notifications")}>
                         <Save className="h-4 w-4 mr-2" />
                         Save Notification Settings
@@ -1387,109 +974,17 @@ export default function SettingsPage() {
                         <>
                           <div className="space-y-2">
                             <Label htmlFor="overlay-shortcut">Overlay Shortcut</Label>
-                            <div className="flex gap-2">
-                              <Input
-                                id="overlay-shortcut"
-                                value={overlayShortcut}
-                                onKeyDown={handleShortcutKeyPress}
-                                onFocus={() => setIsEditingShortcut(true)}
-                                onBlur={() => setIsEditingShortcut(false)}
-                                placeholder="Click and press keys"
-                                className={isEditingShortcut ? "border-primary" : ""}
-                              />
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setOverlayShortcut("Shift+Tab")}
-                              >
-                                Reset
-                              </Button>
-                            </div>
+                            <Input
+                              id="overlay-shortcut"
+                              value={overlayShortcut}
+                              onChange={(e) => setOverlayShortcut(e.target.value)}
+                              readOnly
+                              className="cursor-not-allowed"
+                            />
                             <p className="text-xs text-muted-foreground">
-                              {isEditingShortcut ? "Press any key combination (e.g., Ctrl+Shift+O)" : "Click to record a new shortcut"}
+                              Press this key combination to open the overlay
                             </p>
                           </div>
-
-                          <Separator />
-
-                          {/* Phase 2: Overlay Customization */}
-                          <div className="space-y-4">
-                            <h4 className="text-sm font-medium">Overlay Customization</h4>
-
-                            <div className="space-y-2">
-                              <Label htmlFor="overlay-position">Position</Label>
-                              <Select value={overlayPosition} onValueChange={setOverlayPosition}>
-                                <SelectTrigger id="overlay-position">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="top-left">Top Left</SelectItem>
-                                  <SelectItem value="top-right">Top Right</SelectItem>
-                                  <SelectItem value="bottom-left">Bottom Left</SelectItem>
-                                  <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <Label htmlFor="overlay-opacity">Opacity</Label>
-                                <span className="text-sm text-muted-foreground">{overlayOpacity}%</span>
-                              </div>
-                              <input
-                                type="range"
-                                id="overlay-opacity"
-                                min="0"
-                                max="100"
-                                value={overlayOpacity}
-                                onChange={(e) => setOverlayOpacity(Number(e.target.value))}
-                                className="w-full"
-                              />
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label>Size</Label>
-                              <div className="flex gap-2">
-                                {["small", "medium", "large"].map((size) => (
-                                  <Button
-                                    key={size}
-                                    variant={overlaySize === size ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => setOverlaySize(size)}
-                                    className="flex-1 capitalize"
-                                  >
-                                    {size}
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between">
-                              <div className="space-y-0.5">
-                                <Label htmlFor="show-fps">FPS Counter</Label>
-                                <p className="text-sm text-muted-foreground">Display frames per second</p>
-                              </div>
-                              <Switch
-                                id="show-fps"
-                                checked={showFPS}
-                                onCheckedChange={setShowFPS}
-                              />
-                            </div>
-
-                            <div className="flex items-center justify-between">
-                              <div className="space-y-0.5">
-                                <Label htmlFor="show-network">Network Monitor</Label>
-                                <p className="text-sm text-muted-foreground">Display ping and latency</p>
-                              </div>
-                              <Switch
-                                id="show-network"
-                                checked={showNetworkMonitor}
-                                onCheckedChange={setShowNetworkMonitor}
-                              />
-                            </div>
-                          </div>
-
-                          <Separator />
 
                           <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
@@ -1593,22 +1088,8 @@ export default function SettingsPage() {
                         <p className="text-sm text-muted-foreground mb-4">
                           Export a copy of your account information, game library, and activity
                         </p>
-                        <Button
-                          variant="outline"
-                          disabled={isDownloadingData}
-                          onClick={handleDownloadData}
-                        >
-                          {isDownloadingData ? (
-                            <>
-                              <Download className="h-4 w-4 mr-2 animate-spin" />
-                              Preparing Download...
-                            </>
-                          ) : (
-                            <>
-                              <Download className="h-4 w-4 mr-2" />
-                              Download Data
-                            </>
-                          )}
+                        <Button variant="outline" disabled>
+                          Coming Soon
                         </Button>
                       </div>
                     </CardContent>

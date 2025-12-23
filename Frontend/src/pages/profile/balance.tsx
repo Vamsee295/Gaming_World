@@ -90,6 +90,10 @@ export default function BalancePage() {
   const [viewMode, setViewMode] = useState<"addFunds" | "history">("addFunds");
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
 
+  // Custom amount state - Phase 1 Enhancement
+  const [customAmount, setCustomAmount] = useState<string>("");
+  const [customAmountError, setCustomAmountError] = useState<string>("");
+
   // Load data from localStorage on mount
   useEffect(() => {
     if (!user?.id) return;
@@ -236,8 +240,69 @@ export default function BalancePage() {
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground mb-6">
-          Select one of the preset amounts for a quick top-up.
+          Select one of the preset amounts for a quick top-up, or enter a custom amount below.
         </p>
+
+        {/* Custom Amount Input - Phase 1 Enhancement */}
+        <Card className="mb-6 bg-gradient-to-br from-primary/5 to-transparent border-primary/30">
+          <CardContent className="p-4">
+            <label htmlFor="custom-amount" className="block text-sm font-medium mb-2">
+              Or Enter Custom Amount
+            </label>
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
+                  <input
+                    id="custom-amount"
+                    type="number"
+                    value={customAmount}
+                    onChange={(e) => {
+                      setCustomAmount(e.target.value);
+                      const val = parseFloat(e.target.value);
+                      if (isNaN(val) || val < 100 || val > 50000) {
+                        setCustomAmountError("Amount must be between ₹100 and ₹50,000");
+                      } else {
+                        setCustomAmountError("");
+                      }
+                    }}
+                    placeholder="Enter amount"
+                    min="100"
+                    max="50000"
+                    className="w-full pl-8 pr-4 py-2 rounded-lg border border-border bg-background focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                {customAmountError && (
+                  <p className="text-xs text-destructive mt-1">{customAmountError}</p>
+                )}
+                <p className="text-xs text-muted-foreground mt-1">Min: ₹100 • Max: ₹50,000</p>
+              </div>
+              <Button
+                onClick={() => {
+                  const amount = parseFloat(customAmount);
+                  if (!isNaN(amount) && amount >= 100 && amount <= 50000) {
+                    handleSelectAmount(amount);
+                  }
+                }}
+                disabled={!!customAmountError || !customAmount || isProcessing}
+                className="px-6"
+              >
+                Add Funds
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setCustomAmount("");
+                  setCustomAmountError("");
+                }}
+                disabled={!customAmount}
+              >
+                Clear
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
           {presetAmounts.map(({ amount, description }) => (
             <Card

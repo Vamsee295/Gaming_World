@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Home, ArrowLeft } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Home, ArrowLeft, Filter, TrendingUp, Target } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -77,6 +78,25 @@ const mockData = {
 export default function AchievementsPage() {
   const { player, careerMilestones, gameProgress, unlockedBadges } = mockData;
   const xpProgress = Math.min((player.xp / player.nextLevelXp) * 100, 100);
+
+  // State for filters and sorting
+  const [filterGame, setFilterGame] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("progress");
+
+  // Calculate next milestone
+  const xpToNextLevel = player.nextLevelXp - player.xp;
+  const achievementsToNext100 = Math.ceil((100 - player.overallCompletion) / 100 * 10); // Mock calculation
+
+  // Filter and sort game progress
+  const filteredGames = gameProgress.filter(game =>
+    filterGame === "all" || game.title.toLowerCase().includes(filterGame.toLowerCase())
+  );
+
+  const sortedGames = [...filteredGames].sort((a, b) => {
+    if (sortBy === "progress") return b.progress - a.progress;
+    if (sortBy === "name") return a.title.localeCompare(b.title);
+    return 0;
+  });
 
   return (
     <>
@@ -196,6 +216,30 @@ export default function AchievementsPage() {
                   ))}
                 </CardContent>
               </Card>
+
+              {/* Next Milestone Card - Phase 1 Enhancement */}
+              <Card className="hover:border-primary transition-all duration-300 bg-gradient-to-br from-primary/5 to-transparent">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold border-b border-border pb-2 flex items-center gap-2">
+                    <Target className="h-5 w-5 text-primary" />
+                    Next Milestone
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="p-3 rounded-lg bg-secondary">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm text-muted-foreground">Level {player.level + 1}</span>
+                      <span className="text-sm font-bold text-primary">{xpToNextLevel.toLocaleString()} XP needed</span>
+                    </div>
+                    <Progress value={xpProgress} className="h-2" />
+                  </div>
+                  <div className="p-3 rounded-lg bg-secondary">
+                    <p className="text-xs text-muted-foreground mb-1">Upcoming Achievement</p>
+                    <p className="font-semibold text-foreground">🏅 Master Collector</p>
+                    <p className="text-xs text-muted-foreground mt-1">Unlock {achievementsToNext100} more achievements</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* COLUMN 2 & 3: Game Progress and Badges */}
@@ -203,12 +247,43 @@ export default function AchievementsPage() {
               {/* Game-wise Achievement Progress Bars */}
               <Card className="hover:border-primary transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold border-b border-border pb-2">
-                    Game Completion Progress
-                  </CardTitle>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <CardTitle className="text-xl font-bold border-b border-border pb-2">
+                      Game Completion Progress
+                    </CardTitle>
+                    {/* Filter and Sort Controls - Phase 1 Enhancement */}
+                    <div className="flex gap-2 items-center">
+                      <div className="flex items-center gap-2">
+                        <Filter className="h-4 w-4 text-muted-foreground" />
+                        <Select value={filterGame} onValueChange={setFilterGame}>
+                          <SelectTrigger className="w-[160px]">
+                            <SelectValue placeholder="Filter Game" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Games</SelectItem>
+                            <SelectItem value="cyberpunk">Cyberpunk 2077</SelectItem>
+                            <SelectItem value="spiderman">Spiderman</SelectItem>
+                            <SelectItem value="gta">GTA 6</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                        <Select value={sortBy} onValueChange={setSortBy}>
+                          <SelectTrigger className="w-[140px]">
+                            <SelectValue placeholder="Sort By" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="progress">By Progress</SelectItem>
+                            <SelectItem value="name">By Name</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {gameProgress.map((game, index) => (
+                  {sortedGames.map((game, index) => (
                     <Card key={index} className="bg-secondary border-border">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">

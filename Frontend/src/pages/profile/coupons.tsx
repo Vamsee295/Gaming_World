@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +13,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { CheckCircle2, Home, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Home, ArrowLeft, Clock, Filter, Star } from "lucide-react";
 
 interface CouponHistoryItem {
   game: string;
@@ -28,6 +29,8 @@ interface Coupon {
   conditions: string;
   status: "Active" | "Expired" | "Upcoming";
   history: CouponHistoryItem[];
+  category?: "Games" | "Store" | "DLC"; // Phase 2 Enhancement
+  discountValue?: number; // Phase 2 Enhancement for sorting
 }
 
 const initialCoupons: Coupon[] = [
@@ -39,6 +42,8 @@ const initialCoupons: Coupon[] = [
     conditions: "Valid for orders above ₹500.",
     status: "Active",
     history: [],
+    category: "Store",
+    discountValue: 15,
   },
   {
     id: 2,
@@ -48,6 +53,8 @@ const initialCoupons: Coupon[] = [
     conditions: "Exclusive for Stream VIP members.",
     status: "Active",
     history: [{ game: "Battlefield 2042", date: "2025-05-10", saved: 999 }],
+    category: "DLC",
+    discountValue: 0,
   },
   {
     id: 3,
@@ -60,6 +67,8 @@ const initialCoupons: Coupon[] = [
       { game: "The Witcher 3", date: "2024-08-10", saved: 150 },
       { game: "Cyberpunk 2077", date: "2024-08-01", saved: 50 },
     ],
+    category: "Games",
+    discountValue: 10,
   },
   {
     id: 4,
@@ -69,6 +78,8 @@ const initialCoupons: Coupon[] = [
     conditions: "Available on Q4 2026.",
     status: "Upcoming",
     history: [],
+    category: "Games",
+    discountValue: 25,
   },
   {
     id: 5,
@@ -78,6 +89,8 @@ const initialCoupons: Coupon[] = [
     conditions: "First-time users only.",
     status: "Active",
     history: [],
+    category: "Store",
+    discountValue: 0,
   },
   {
     id: 6,
@@ -87,6 +100,8 @@ const initialCoupons: Coupon[] = [
     conditions: "Thanks for being with us for 5+ years!",
     status: "Active",
     history: [],
+    category: "Games",
+    discountValue: 500,
   },
 ];
 
@@ -119,14 +134,44 @@ function getStatusInfo(status: Coupon["status"]) {
   }
 }
 
+// Phase 2: Calculate countdown from expiry date
+function useCountdown(expiryDate: string) {
+  const [countdown, setCountdown] = useState("");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const target = new Date(expiryDate).getTime();
+      const distance = target - now;
+
+      if (distance < 0) {
+        setCountdown("Expired");
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+      setCountdown(`${days}d ${hours}h ${minutes}m`);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [expiryDate]);
+
+  return countdown;
+}
+
 interface CouponCardProps {
   coupon: Coupon;
   onRedeem: (coupon: Coupon) => void;
+  isBestDeal?: boolean; // Phase 2 Enhancement
 }
 
-function CouponCard({ coupon, onRedeem }: CouponCardProps) {
+function CouponCard({ coupon, onRedeem, isBestDeal }: CouponCardProps) {
   const statusInfo = getStatusInfo(coupon.status);
   const isRedeemable = coupon.status === "Active";
+  const countdown = useCountdown(coupon.expiry); // Phase 2 Enhancement
 
   return (
     <Card className="flex flex-col justify-between hover:shadow-lg transition-all duration-300 border-border">
@@ -136,6 +181,13 @@ function CouponCard({ coupon, onRedeem }: CouponCardProps) {
           {statusInfo.icon} {statusInfo.text}
         </Badge>
 
+        {/* Phase 2: Best Deal Badge */}
+        {isBestDeal && (
+          <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white mb-3 text-xs font-bold ml-2">
+            <Star className="h-3 w-3 mr-1" /> BEST DEAL
+          </Badge>
+        )}
+
         {/* Coupon Code */}
         <h2 className="text-3xl font-mono tracking-wider text-primary bg-secondary p-3 rounded-lg mb-4 select-all">
           {coupon.code}
@@ -143,6 +195,16 @@ function CouponCard({ coupon, onRedeem }: CouponCardProps) {
 
         {/* Discount Details */}
         <p className="text-xl font-bold mb-2">{coupon.discount}</p>
+
+        {/* Phase 2: Countdown Timer */}
+        {isRedeemable && countdown !== "Expired" && (
+          <div className="flex items-center gap-2 mb-2 bg-primary/10 p-2 rounded">
+            <Clock className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-primary">
+              Expires in: {countdown}
+            </span>
+          </div>
+        )}
 
         {/* Expiry Date */}
         <p className="text-sm text-muted-foreground">
@@ -207,6 +269,10 @@ export default function CouponsPage() {
     gameApplied: string;
   } | null>(null);
 
+  // Phase 2: Filter and sort states
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("expiry");
+
   const activeCoupons = useMemo(
     () => coupons.filter((c) => c.status === "Active"),
     [coupons]
@@ -219,6 +285,37 @@ export default function CouponsPage() {
     () => coupons.filter((c) => c.status === "Upcoming"),
     [coupons]
   );
+
+  // Phase 2: Filter and sort active coupons
+  const filteredAndSortedActiveCoupons = useMemo(() => {
+    let filtered = activeCoupons;
+
+    // Filter by category
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter(c => c.category?.toLowerCase() === categoryFilter.toLowerCase());
+    }
+
+    // Sort
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortBy === "expiry") {
+        return new Date(a.expiry).getTime() - new Date(b.expiry).getTime();
+      } else if (sortBy === "discount") {
+        return (b.discountValue || 0) - (a.discountValue || 0);
+      }
+      return 0;
+    });
+
+    return sorted;
+  }, [activeCoupons, categoryFilter, sortBy]);
+
+  // Phase 2: Find best deal
+  const bestDealId = useMemo(() => {
+    if (filteredAndSortedActiveCoupons.length === 0) return null;
+    const best = [...filteredAndSortedActiveCoupons].sort(
+      (a, b) => (b.discountValue || 0) - (a.discountValue || 0)
+    )[0];
+    return best?.id;
+  }, [filteredAndSortedActiveCoupons]);
 
   const handleRedeem = (coupon: Coupon) => {
     // Mock successful application
@@ -277,6 +374,36 @@ export default function CouponsPage() {
           Coupons & Offers
         </h1>
 
+        {/* Phase 2: Filter and Sort Controls */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8 items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="games">Games Only</SelectItem>
+                <SelectItem value="store">Store Offers</SelectItem>
+                <SelectItem value="dlc">DLC Deals</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Sort by:</span>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="expiry">Expiry Date</SelectItem>
+                <SelectItem value="discount">Best Discount</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {/* Tabs */}
         <Tabs defaultValue="Active" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
@@ -300,8 +427,13 @@ export default function CouponsPage() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {activeCoupons.map((coupon) => (
-                  <CouponCard key={coupon.id} coupon={coupon} onRedeem={handleRedeem} />
+                {filteredAndSortedActiveCoupons.map((coupon) => (
+                  <CouponCard
+                    key={coupon.id}
+                    coupon={coupon}
+                    onRedeem={handleRedeem}
+                    isBestDeal={coupon.id === bestDealId}
+                  />
                 ))}
               </div>
             )}

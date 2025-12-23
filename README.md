@@ -17,54 +17,6 @@ Gaming_World is a full-stack web application that creates a premium gaming platf
 
 ---
 
-## 🏗️ Project Structure
-
-```
-Gaming_World/
-├── Frontend/                           # Next.js Frontend Application
-│   ├── src/
-│   │   ├── components/                # Reusable components
-│   │   │   ├── ui/                   # UI components
-│   │   │   ├── effects/              # Visual effects
-│   │   │   ├── friends/              # Friend features
-│   │   │   └── Images/               # Image assets
-│   │   ├── context/                  # React contexts
-│   │   ├── hooks/                    # Custom hooks
-│   │   ├── pages/                    # Next.js pages
-│   │   │   ├── index.tsx            # Home/Store page
-│   │   │   ├── game/[id].tsx        # Game details
-│   │   │   ├── library/
-│   │   │   ├── store/               # Cart, transaction, wishlist
-│   │   │   ├── community/
-│   │   │   ├── profile/
-│   │   │   ├── settings/
-│   │   │   └── support/
-│   │   └── styles/
-│   │       └── globals.css          # Global styles
-│   ├── public/                       # Static assets
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── tailwind.config.js
-│   └── next.config.js
-│
-├── Backend/                           # Spring Boot Backend
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/Gaming/Backend/
-│   │       │   ├── controller/      # REST controllers
-│   │       │   ├── service/         # Business logic
-│   │       │   ├── repository/      # Data access
-│   │       │   └── entity/          # Database entities
-│   │       └── resources/
-│   │           └── application.properties
-│   ├── pom.xml
-│   └── Dockerfile
-│
-└── README.md                          # This file
-```
-
----
-
 ## 🛠️ Technology Stack
 
 ### Frontend
@@ -72,28 +24,55 @@ Gaming_World/
 - **React 18** - UI library
 - **TypeScript 5+** - Type safety
 - **Tailwind CSS 3** - Utility-first styling
+- **Radix UI** - Accessible component primitives
+- **Framer Motion, GSAP** - Advanced animations
+- **React Three Fiber** - 3D graphics
 
 ### Backend
-- **Spring Boot** - Java framework
-- **Spring Security** - Authentication
+- **Spring Boot 3.4** - Java framework
+- **Spring Security** - Authentication & authorization
 - **Spring Data JPA** - Database ORM
-- **MySQL** - Database
+- **MySQL** - Relational database
+- **JWT** - Token-based authentication
 
 ---
 
-## 🚀 Getting Started
+## 🎨 Interactive UI Components
+
+### Core Components
+- **Navigation** - Navigation Menu, Dropdown Menu, Context Menu, Menubar
+- **Dialogs & Overlays** - Dialog, Alert Dialog, Popover, Hover Card, Tooltip
+- **Forms** - Checkbox, Radio Group, Select, Slider, Switch, Label
+- **Notifications** - Toast, Progress, Alert
+- **Layout** - Accordion, Tabs, Collapsible, Scroll Area, Separator, Aspect Ratio
+
+### Visual Effects
+- **3D Effects** - Card hover transformations, Three.js animations
+- **Animations** - Framer Motion transitions, GSAP timelines, Spotlight effects  
+- **Dynamic UI** - Parallax scrolling, Floating particles, Glassmorphism, Cinematic backgrounds
+
+### Custom Features
+- Interactive game cards with hover effects
+- Live search with quick results
+- Real-time notifications
+- Video trailer modal player
+- Friend request system
+- Sticky navigation with scroll effects
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
-Before running the application, ensure you have the following installed:
 
 - **Node.js** 16+ and npm
 - **Java** 17+
 - **Maven** 3.8+
 - **MySQL** 8+
 
-### Frontend Setup
+### Setup & Run
 
+**Frontend:**
 ```bash
 cd Frontend
 npm install
@@ -101,26 +80,78 @@ npm run dev
 # Open http://localhost:3000
 ```
 
-### Backend Setup
+**Backend:**
+```bash
+# 1. Configure database in Backend/src/main/resources/application.properties
+# spring.datasource.url=jdbc:mysql://localhost:3306/gaming_world
+# spring.datasource.username=root
+# spring.datasource.password=your_password
 
-1. **Configure MySQL Database**
-   
-   Create a database and update `Backend/src/main/resources/application.properties`:
-   
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/gaming_world
-   spring.datasource.username=root
-   spring.datasource.password=your_password
-   spring.jpa.hibernate.ddl-auto=update
-   ```
+# 2. Run backend
+cd Backend
+mvn clean install
+mvn spring-boot:run
+```
 
-2. **Run Backend**
-   
-   ```bash
-   cd Backend
-   mvn clean install
-   mvn spring-boot:run
-   ```
+---
+
+## 📦 Commands Reference
+
+### Frontend Commands
+
+```bash
+npm install              # Install dependencies
+npm run dev              # Start development server (port 3000)
+npm run build            # Build for production
+npm start                # Start production server
+npm run lint             # Check code quality
+```
+
+### Backend Commands
+
+```bash
+mvn clean install        # Clean & install dependencies
+mvn spring-boot:run      # Run application
+mvn compile              # Compile project
+mvn test                 # Run tests
+mvn package              # Create JAR file
+mvn clean install -DskipTests  # Build without tests
+```
+
+### Database Commands
+
+```bash
+mysql -u root -p         # Login to MySQL
+CREATE DATABASE gaming_world;  # Create database
+USE gaming_world;        # Use database
+SHOW TABLES;             # List all tables
+```
+
+---
+
+## 🏗️ Project Structure
+
+```
+Gaming_World/
+├── Frontend/                    # Next.js Frontend
+│   ├── src/
+│   │   ├── components/         # Reusable components
+│   │   ├── context/            # React contexts
+│   │   ├── hooks/              # Custom hooks
+│   │   ├── pages/              # Next.js pages
+│   │   └── styles/             # Global styles
+│   └── package.json
+│
+├── Backend/                     # Spring Boot Backend
+│   ├── src/main/java/com/Gaming/Backend/
+│   │   ├── controller/         # REST controllers
+│   │   ├── service/            # Business logic
+│   │   ├── repository/         # Data access
+│   │   └── entity/             # Database entities
+│   └── pom.xml
+│
+└── README.md
+```
 
 ---
 

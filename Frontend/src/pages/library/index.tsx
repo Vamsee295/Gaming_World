@@ -235,31 +235,7 @@ export default function LibraryPage() {
                 <div className="hidden md:flex items-center gap-6">
                   <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Store</Link>
                   <Link href="/library" className="text-foreground font-semibold">Library</Link>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-                      Community
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem asChild>
-                        <Link href="/community">Community Home</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/community/forums">Forums & Discussions</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/community/groups">Groups & Communities</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/community/activity">Activity Feed</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/community/events">Events & Tournaments</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/community/friends">Find Friends</Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Link href="/community" className="text-muted-foreground hover:text-foreground transition-colors">Community</Link>
                 </div>
               </div>
               <div className="flex items-center gap-4">
