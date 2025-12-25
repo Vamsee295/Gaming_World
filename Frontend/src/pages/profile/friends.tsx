@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -172,13 +173,7 @@ export default function FriendsPage() {
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           {/* Navigation Button */}
           <div className="mb-6">
-            <Link href="/">
-              <Button variant="outline" className="gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                <Home className="h-4 w-4" />
-                Back to Home
-              </Button>
-            </Link>
+            <BackButton />
           </div>
 
           {/* Header */}

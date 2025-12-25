@@ -11,6 +11,7 @@ import { useCommunity } from "@/context/CommunityContext";
 import { useUser } from "@/context/UserContext";
 import Link from "next/link";
 import CommunityNav from "@/components/community/CommunityNav";
+import { BackButton } from "@/components/ui/BackButton";
 
 const activityIcons = {
   achievement: Trophy,
@@ -27,7 +28,7 @@ export default function ActivityFeedPage() {
   const [typeFilter, setTypeFilter] = useState<string>("all");
 
   const filteredActivities = activities.filter(activity => {
-    const matchesFilter = filter === "all" || 
+    const matchesFilter = filter === "all" ||
       (filter === "friends" && user?.id) ||
       (filter === "global" && true);
     const matchesType = typeFilter === "all" || activity.type === typeFilter;
@@ -42,6 +43,12 @@ export default function ActivityFeedPage() {
 
       <div className="min-h-screen bg-background">
         <CommunityNav />
+
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="mb-8">

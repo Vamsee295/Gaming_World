@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BackButton } from "@/components/ui/BackButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -487,9 +488,8 @@ export default function AccountPage() {
             {paymentMethods.map((method) => (
               <div
                 key={method.id}
-                className={`flex items-center justify-between p-4 bg-secondary rounded-lg ${
-                  method.isDefault ? "border border-yellow-500/50" : ""
-                }`}
+                className={`flex items-center justify-between p-4 bg-secondary rounded-lg ${method.isDefault ? "border border-yellow-500/50" : ""
+                  }`}
               >
                 <div className="flex items-center space-x-3">
                   {method.icon}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
+import { BackButton } from "@/components/ui/BackButton";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -149,12 +150,7 @@ export default function ContactUs() {
                 {/* Header */}
                 <div className="bg-gradient-to-r from-primary/20 to-accent/20 border-b border-border">
                     <div className="container mx-auto px-4 py-8">
-                        <Link href="/">
-                            <Button variant="ghost" className="gap-2 mb-4">
-                                <ArrowLeft className="h-4 w-4" />
-                                Back to Home
-                            </Button>
-                        </Link>
+                        <BackButton className="mb-4" />
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}

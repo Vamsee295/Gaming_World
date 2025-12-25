@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { BackButton } from "@/components/ui/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Home, ArrowLeft, Filter, TrendingUp, Target } from "lucide-react";
+import { Filter, TrendingUp, Target } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -107,13 +106,7 @@ export default function AchievementsPage() {
         <div className="max-w-7xl mx-auto">
           {/* Navigation Button */}
           <div className="mb-6">
-            <Link href="/">
-              <Button variant="outline" className="gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                <Home className="h-4 w-4" />
-                Back to Home
-              </Button>
-            </Link>
+            <BackButton />
           </div>
 
           {/* Header Styling (Clean and Professional) */}

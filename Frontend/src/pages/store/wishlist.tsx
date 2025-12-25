@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, TrendingDown, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,11 @@ export default function WishlistPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      {/* Back Button */}
+      <div className="mb-6">
+        <BackButton />
+      </div>
+
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">My Wishlist</h1>
         <div className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5">

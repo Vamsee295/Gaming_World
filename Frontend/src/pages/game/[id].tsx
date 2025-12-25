@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Star, ShoppingCart, Play, Heart, Share2, Download, Users, Calendar, Gamepad2, ArrowLeft, Copy, Check, Globe, Zap, Target, Sparkles, Trophy, Map, Swords, Cpu, Car, Shield, ChevronDown, MessageSquarePlus, ThumbsUp, MessageCircle } from "lucide-react";
 import Header from "@/components/Header";
+import { BackButton } from "@/components/ui/BackButton";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/components/ui/use-toast";
 import { useWishlist } from "@/context/WishlistContext";
@@ -884,6 +885,11 @@ export default function GameDetailPage() {
       </Head>
 
       <div className="min-h-screen bg-background">
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         <Header />
         {/* Breadcrumb */}
         <div className="container mx-auto px-4 py-4">

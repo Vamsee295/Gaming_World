@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/components/ui/use-toast";
+import { BackButton } from "@/components/ui/BackButton";
 import {
   Wallet,
   DollarSign,
@@ -510,6 +511,11 @@ export default function BalancePage() {
         <title>Wallet Balance - Gaming World</title>
       </Head>
       <div className="min-h-screen bg-background text-foreground font-sans p-4 sm:p-8">
+        {/* Back Button */}
+        <div className="max-w-7xl mx-auto mb-4">
+          <BackButton />
+        </div>
+
         {/* User ID Display */}
         {user && (
           <div className="text-muted-foreground text-sm mb-4 border-b border-border pb-2">

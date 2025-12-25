@@ -15,6 +15,7 @@ import { useCommunity } from "@/context/CommunityContext";
 import { useUser } from "@/context/UserContext";
 import Image from "next/image";
 import CommunityNav from "@/components/community/CommunityNav";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function GroupsPage() {
   const { groups, addGroup, joinGroup, leaveGroup } = useCommunity();
@@ -60,6 +61,12 @@ export default function GroupsPage() {
 
       <div className="min-h-screen bg-background">
         <CommunityNav />
+
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">

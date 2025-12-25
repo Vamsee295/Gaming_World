@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
@@ -266,12 +267,7 @@ export default function TransactionPage() {
             <div className="min-h-screen bg-black py-8 px-4">
                 {/* Back Button */}
                 <div className="container mx-auto max-w-6xl mb-4">
-                    <Link href="/">
-                        <Button variant="ghost" className="gap-2">
-                            <ChevronLeft className="h-4 w-4" />
-                            Back
-                        </Button>
-                    </Link>
+                    <BackButton />
                 </div>
 
                 <div className="container mx-auto max-w-6xl">

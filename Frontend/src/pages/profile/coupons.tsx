@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -360,13 +361,7 @@ export default function CouponsPage() {
       <div className="max-w-6xl mx-auto border-2 border-border rounded-xl p-4 md:p-10 bg-card">
         {/* Navigation Button */}
         <div className="mb-6">
-          <Link href="/">
-            <Button variant="outline" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              <Home className="h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
+          <BackButton />
         </div>
 
         {/* Header */}

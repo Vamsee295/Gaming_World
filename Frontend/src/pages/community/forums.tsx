@@ -13,6 +13,7 @@ import { MessageSquare, Plus, ThumbsUp, Eye, Pin, Lock, Search, X } from "lucide
 import { useCommunity } from "@/context/CommunityContext";
 import { useUser } from "@/context/UserContext";
 import CommunityNav from "@/components/community/CommunityNav";
+import { BackButton } from "@/components/ui/BackButton";
 import { useToast } from "@/components/ui/use-toast";
 // Date formatting helper
 const formatTimeAgo = (dateString: string) => {
@@ -115,6 +116,12 @@ export default function ForumsPage() {
 
       <div className="min-h-screen bg-background">
         <CommunityNav />
+
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">

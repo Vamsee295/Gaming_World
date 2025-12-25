@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Search, Star, BadgeCheck, Bell } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { BackButton } from "@/components/ui/BackButton";
 
 interface Publisher {
   id: number;
@@ -290,6 +291,11 @@ export default function PublishersPage() {
   return (
     <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton />
+        </div>
+
         {/* Header */}
         <header className="mb-10 text-center sm:text-left">
           <h1 className="text-4xl sm:text-5xl font-extrabold mb-2 tracking-tight">

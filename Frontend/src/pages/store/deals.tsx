@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Search } from "lucide-react";
+import { BackButton } from "@/components/ui/BackButton";
 
 // Images reused from the store with descriptive names
 import cyberpunk2077 from "@/components/Images/Store Images/cyberpunk-2077.jpg";
@@ -87,6 +88,11 @@ export default function DealsPage() {
         <title>Specials - Deals</title>
       </Head>
       <div className="min-h-screen bg-background">
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         {/* Header bar with search */}
         <div className="border-b border-border bg-secondary/30">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4 flex-wrap">

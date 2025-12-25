@@ -1,4 +1,5 @@
 import React from "react";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
@@ -24,13 +25,7 @@ export default function PrivacyPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Navigation Button */}
         <div className="mb-6">
-          <Link href="/">
-            <Button variant="outline" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              <Home className="h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
+          <BackButton />
         </div>
 
         {/* Privacy Policy Title Card */}

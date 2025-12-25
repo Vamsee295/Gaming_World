@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -155,13 +156,7 @@ export default function RewardsPage() {
       <div className="max-w-7xl mx-auto">
         {/* Navigation Button */}
         <div className="mb-6">
-          <Link href="/">
-            <Button variant="outline" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              <Home className="h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
+          <BackButton />
         </div>
 
         {/* Header */}

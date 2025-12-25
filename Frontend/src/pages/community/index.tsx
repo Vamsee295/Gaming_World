@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Users, Activity, Calendar, UserSearch, ArrowRight } from "lucide-react";
+import { BackButton } from "@/components/ui/BackButton";
 import CommunityNav from "@/components/community/CommunityNav";
 import SpotlightCard from "@/components/SpotlightCard";
 
@@ -59,6 +60,11 @@ export default function CommunityPage() {
         {/* Hero Section */}
         <section className="border-b border-border bg-gradient-to-b from-primary/10 to-background">
           <div className="container mx-auto px-4 py-16">
+            {/* Back Button */}
+            <div className="mb-6">
+              <BackButton />
+            </div>
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

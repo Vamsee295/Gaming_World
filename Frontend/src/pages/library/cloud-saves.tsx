@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -63,12 +64,7 @@ export default function CloudSavesPage() {
             <div className="min-h-screen bg-background">
                 <div className="border-b border-border bg-secondary/50">
                     <div className="container mx-auto px-4 py-4">
-                        <Link href="/library">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <ArrowLeft className="h-4 w-4" />
-                                Back to Library
-                            </Button>
-                        </Link>
+                        <BackButton />
                     </div>
                 </div>
 

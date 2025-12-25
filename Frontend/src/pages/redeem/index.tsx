@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { BackButton } from "@/components/ui/BackButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -236,6 +237,11 @@ export default function RedeemCodePage() {
 
   return (
     <div className="min-h-screen flex items-start justify-center p-4 sm:p-8">
+      {/* Back Button */}
+      <div className="w-full max-w-2xl mb-4">
+        <BackButton />
+      </div>
+
       <div className="w-full max-w-2xl">
         <Card className="border-primary/50">
           <CardContent className="p-6 sm:p-10">

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 
 export default function TermsPage() {
@@ -31,6 +32,11 @@ export default function TermsPage() {
 
   return (
     <div className="min-h-screen p-4 md:p-8">
+      {/* Back Button */}
+      <div className="max-w-4xl mx-auto mb-6">
+        <BackButton />
+      </div>
+
       {/* Header Section */}
       <header className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-primary">Terms and Conditions</h1>

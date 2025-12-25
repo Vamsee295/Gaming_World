@@ -10,12 +10,13 @@ import { useCommunity } from "@/context/CommunityContext";
 import { useUser } from "@/context/UserContext";
 import Image from "next/image";
 import CommunityNav from "@/components/community/CommunityNav";
+import { BackButton } from "@/components/ui/BackButton";
 // Date formatting helper
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { 
-    month: "short", 
-    day: "numeric", 
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit"
@@ -35,14 +36,14 @@ export default function EventsPage() {
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("all");
 
-  const filteredEvents = events.filter(event => 
+  const filteredEvents = events.filter(event =>
     filter === "all" || event.type === filter
   );
 
   const selectedEventData = events.find(e => e.id === selectedEvent);
   const isRSVPed = selectedEventData && user ? selectedEventData.participants.includes(user.id || "") : false;
-  const isFull = selectedEventData && selectedEventData.maxParticipants 
-    ? selectedEventData.participants.length >= selectedEventData.maxParticipants 
+  const isFull = selectedEventData && selectedEventData.maxParticipants
+    ? selectedEventData.participants.length >= selectedEventData.maxParticipants
     : false;
 
   return (
@@ -53,6 +54,12 @@ export default function EventsPage() {
 
       <div className="min-h-screen bg-background">
         <CommunityNav />
+
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="mb-8">

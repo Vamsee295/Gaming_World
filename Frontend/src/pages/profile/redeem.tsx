@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,8 +24,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {
-    Home,
-    ArrowLeft,
     Gift,
     CheckCircle2,
     AlertCircle,
@@ -150,13 +149,7 @@ export default function RedeemCodePage() {
                 <div className="max-w-5xl mx-auto">
                     {/* Navigation */}
                     <div className="mb-6">
-                        <Link href="/">
-                            <Button variant="outline" className="gap-2">
-                                <ArrowLeft className="h-4 w-4" />
-                                <Home className="h-4 w-4" />
-                                Back to Home
-                            </Button>
-                        </Link>
+                        <BackButton />
                     </div>
 
                     {/* Header */}

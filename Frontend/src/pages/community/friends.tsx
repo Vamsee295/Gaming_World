@@ -10,6 +10,7 @@ import { UserSearch, Search, UserPlus, Trophy, Gamepad2, MapPin, CheckCircle2, C
 import { useUser } from "@/context/UserContext";
 import Link from "next/link";
 import CommunityNav from "@/components/community/CommunityNav";
+import { BackButton } from "@/components/ui/BackButton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 interface UserProfile {
@@ -100,6 +101,12 @@ export default function FindFriendsPage() {
 
       <div className="min-h-screen bg-background">
         <CommunityNav />
+
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <BackButton />
+        </div>
+
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="mb-8">

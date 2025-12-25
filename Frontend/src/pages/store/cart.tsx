@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/button";
 import { Trash2, ShoppingCart, Coins, Info, Plus, Minus } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
@@ -12,6 +13,11 @@ export default function CartPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      {/* Back Button */}
+      <div className="mb-6">
+        <BackButton />
+      </div>
+
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">My Cart</h1>

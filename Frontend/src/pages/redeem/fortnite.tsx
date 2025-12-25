@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/BackButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -245,6 +246,11 @@ export default function RedeemFortnitePage() {
         <title>Redeem Fortnite Gift Card - Gaming World</title>
       </Head>
       <div className="min-h-screen bg-background text-foreground font-sans flex items-center justify-center p-4">
+        {/* Back Button */}
+        <div className="absolute top-4 left-4">
+          <BackButton />
+        </div>
+
         <Card className="w-full max-w-lg border-primary/50 hover:border-primary transition-all duration-500 shadow-2xl">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-center tracking-wider">

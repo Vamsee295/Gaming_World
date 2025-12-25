@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { BackButton } from "@/components/ui/BackButton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -226,6 +227,11 @@ export default function LibraryPage() {
           className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur"
         >
           <div className="container mx-auto px-4 py-4">
+            {/* Back Button */}
+            <div className="mb-4">
+              <BackButton />
+            </div>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-8">
                 <Link href="/" className="flex items-center gap-2">
