@@ -32,11 +32,6 @@ export default function TermsPage() {
 
   return (
     <div className="min-h-screen p-4 md:p-8">
-      {/* Back Button */}
-      <div className="max-w-4xl mx-auto mb-6">
-        <BackButton />
-      </div>
-
       {/* Header Section */}
       <header className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-primary">Terms and Conditions</h1>

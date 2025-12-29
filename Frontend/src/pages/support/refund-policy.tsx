@@ -46,7 +46,13 @@ export default function RefundPolicyPage() {
       <div className="w-full max-w-5xl">
         {/* Navigation Button */}
         <div className="mb-6">
-          <BackButton />
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              <Home className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
         </div>
 
         <Card className="border-border shadow-2xl">
