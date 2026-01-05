@@ -1,6 +1,6 @@
 import { SignupRequest, LoginRequest, AuthResponse, ApiErrorResponse } from '@/types/auth.types';
 
-const API_BASE_URL = 'http://localhost:8081/api';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 // Token management
 const TOKEN_KEY = 'gw_auth_token';
@@ -42,19 +42,39 @@ async function apiCall<T>(
             headers,
         });
 
-        const data = await response.json();
-
+        // Handle network errors
         if (!response.ok) {
-            // Handle error responses
-            const error = data as ApiErrorResponse;
-            throw new Error(error.message || 'An error occurred');
+            let errorMessage = 'An error occurred';
+
+            try {
+                const data = await response.json();
+                const error = data as ApiErrorResponse;
+                errorMessage = error.message || errorMessage;
+            } catch {
+                // If JSON parsing fails, use status text
+                if (response.status === 401) {
+                    errorMessage = 'Invalid credentials. Please check your email and password.';
+                } else if (response.status === 404) {
+                    errorMessage = 'User not found. Please sign up first.';
+                } else {
+                    errorMessage = `Error: ${response.statusText}`;
+                }
+            }
+
+            throw new Error(errorMessage);
         }
 
-        return data as T;
+        return await response.json() as T;
     } catch (error) {
+        // Check for network errors (backend not running)
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+            throw new Error('Cannot connect to server. Please make sure the backend is running on http://localhost:8081');
+        }
+
         if (error instanceof Error) {
             throw error;
         }
+
         throw new Error('Network error occurred');
     }
 }

@@ -289,3 +289,46 @@
   transform: translateX(200%);
 }
 
+/* Error message styling */
+.signin-container .error-message {
+  background-color: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 8px;
+  color: #fca5a5;
+  padding: 10px 15px;
+  margin: 10px 0;
+  font-size: 13px;
+  width: 100%;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Button disabled state styling */
+.signin-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: hsl(217, 91%, 50%);
+}
+
+.signin-container button:disabled:hover {
+  background-color: hsl(217, 91%, 50%);
+}
+
+/* Input disabled state styling */
+.signin-container input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: hsl(217, 33%, 15%);
+}
+
+/* Slide in animation for error messages */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

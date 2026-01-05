@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useUser } from '@/context/UserContext';
+import { authService } from '@/services/authService';
+import { useAuth } from '@/context/AuthContext';
 
 interface SignInProps {
   isOpen: boolean;
@@ -9,55 +10,116 @@ interface SignInProps {
 const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
   const [isActive, setIsActive] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const { signIn } = useUser();
+  const { login: setAuthUser } = useAuth();
+
+  // Form fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [country, setCountry] = useState("US");
+
+  // Error and loading states
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
   const handleRegisterClick = () => {
     setIsActive(true);
     setShowForgotPassword(false);
-    console.log('Sign Up clicked, isActive:', true);
+    setError("");
   };
 
   const handleLoginClick = () => {
     setIsActive(false);
     setShowForgotPassword(false);
+    setError("");
   };
 
   const handleForgotPasswordClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setShowForgotPassword(true);
+    setError("");
   };
 
   const handleBackToLoginClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setShowForgotPassword(false);
+    setError("");
   };
 
-  const handleSignUpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle sign up logic here
-    signIn({ name: name || 'Player', email: email || 'player@example.com' });
-    onClose();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await authService.signup({
+        username: name,
+        email: email,
+        password: signupPassword,
+        country: country
+      });
+
+      // Set authenticated user
+      setAuthUser({
+        userId: response.userId,
+        username: response.username,
+        email: response.email,
+        role: response.role
+      });
+
+      // Clear form
+      setName("");
+      setEmail("");
+      setSignupPassword("");
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Signup failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSignInSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signIn({ name: name || 'Player', email: email || 'player@example.com' });
-    onClose();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await authService.login({
+        usernameOrEmail: email,
+        password: password
+      });
+
+      // Set authenticated user
+      setAuthUser({
+        userId: response.userId,
+        username: response.username,
+        email: response.email,
+        role: response.role
+      });
+
+      // Clear form
+      setEmail("");
+      setPassword("");
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleForgotPasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle forgot password logic here
-    console.log('Forgot Password submitted');
+    setError("Password reset functionality coming soon!");
   };
 
   return (
     <div className="signin-overlay" onClick={onClose}>
-      <div 
+      <div
         className={`signin-container ${isActive ? 'active' : ''}`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -71,10 +133,11 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
               <a href="#" className="icon" onClick={(e) => e.preventDefault()}><i className="fa-brands fa-linkedin-in"></i></a>
             </div>
             <span>or use your email for registeration</span>
-            <input type="text" placeholder="Name" required value={name} onChange={(e)=>setName(e.target.value)} />
-            <input type="email" placeholder="Email" required value={email} onChange={(e)=>setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" required />
-            <button type="submit">Sign Up</button>
+            {error && isActive && <div className="error-message">{error}</div>}
+            <input type="text" placeholder="Username" required value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
+            <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
+            <input type="password" placeholder="Password" required value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} disabled={loading} />
+            <button type="submit" disabled={loading}>{loading ? 'Creating Account...' : 'Sign Up'}</button>
           </form>
         </div>
 
@@ -88,21 +151,23 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
               <a href="#" className="icon" onClick={(e) => e.preventDefault()}><i className="fa-brands fa-linkedin-in"></i></a>
             </div>
             <span>or use your email password</span>
-            <input type="email" placeholder="Email" required value={email} onChange={(e)=>setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" required />
+            {error && !isActive && !showForgotPassword && <div className="error-message">{error}</div>}
+            <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
+            <input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
             <a href="#" id="forgot-password-link" onClick={handleForgotPasswordClick}>
               Forget Your Password?
             </a>
-            <button type="submit">Sign In</button>
+            <button type="submit" disabled={loading}>{loading ? 'Signing In...' : 'Sign In'}</button>
           </form>
 
-          <form 
-            id="forgot-password-form" 
+          <form
+            id="forgot-password-form"
             style={{ display: showForgotPassword ? 'flex' : 'none' }}
             onSubmit={handleForgotPasswordSubmit}
           >
             <h1 style={{ marginBottom: '20px' }}>Forgot Password</h1>
             <span>Please enter your email to reset</span>
+            {error && showForgotPassword && <div className="error-message">{error}</div>}
             <input type="email" placeholder="Email" required />
             <button type="submit" style={{ marginTop: '20px' }}>Send Reset Link</button>
             <a href="#" id="back-to-login-link" style={{ marginTop: '15px' }} onClick={handleBackToLoginClick}>

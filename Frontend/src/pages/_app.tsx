@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { useEffect, useState } from 'react';
 import { CartProvider } from "@/context/CartContext";
 import { UserProvider } from "@/context/UserContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { RewardsProvider } from "@/context/RewardsContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -39,32 +40,34 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider>
-      <UserProvider>
-        <WishlistProvider>
-          <CartProvider>
-            <RewardsProvider>
-              <CommunityProvider>
-                <FriendsProvider>
-                  <NotificationsProvider>
-                    <ClickSpark
-                      sparkColor='#fff'
-                      sparkSize={10}
-                      sparkRadius={15}
-                      sparkCount={8}
-                      duration={400}
-                    >
-                      <div className="min-h-screen">
-                        <Component {...pageProps} />
-                        <Toaster />
-                      </div>
-                    </ClickSpark>
-                  </NotificationsProvider>
-                </FriendsProvider>
-              </CommunityProvider>
-            </RewardsProvider>
-          </CartProvider>
-        </WishlistProvider>
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <RewardsProvider>
+                <CommunityProvider>
+                  <FriendsProvider>
+                    <NotificationsProvider>
+                      <ClickSpark
+                        sparkColor='#fff'
+                        sparkSize={10}
+                        sparkRadius={15}
+                        sparkCount={8}
+                        duration={400}
+                      >
+                        <div className="min-h-screen">
+                          <Component {...pageProps} />
+                          <Toaster />
+                        </div>
+                      </ClickSpark>
+                    </NotificationsProvider>
+                  </FriendsProvider>
+                </CommunityProvider>
+              </RewardsProvider>
+            </CartProvider>
+          </WishlistProvider>
+        </UserProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

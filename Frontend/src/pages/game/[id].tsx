@@ -646,7 +646,49 @@ const extendedGameData: Record<number, any> = {
     ],
     ratingBreakdown: { 5: 10, 4: 4, 3: 1, 2: 0, 1: 0 },
     editions: [
-      { name: "Standard Edition", price: "$33.74", features: ["Base game", "Digital art book"], isPopular: true },
+      {
+        name: "STANDARD EDITION",
+        price: "$29.99",
+        originalPrice: "$39.99",
+        features: [
+          "Full base game",
+          "Digital art book",
+          "Access to all game modes"
+        ],
+        isPopular: false,
+        tier: 'essential',
+        description: "Perfect for players who want the complete story experience"
+      },
+      {
+        name: "DELUXE EDITION",
+        price: "$39.99",
+        originalPrice: "$59.99",
+        features: [
+          "Everything in Standard Edition",
+          "Digital soundtrack (30+ tracks)",
+          "Exclusive character skins pack",
+          "Behind-the-scenes documentary",
+          "Concept art gallery (100+ images)"
+        ],
+        isPopular: true,
+        tier: 'elite',
+        description: "For fans who want to dive deeper into the world of Detroit"
+      },
+      {
+        name: "ULTIMATE EDITION",
+        price: "$49.99",
+        originalPrice: "$79.99",
+        features: [
+          "Everything in Deluxe Edition",
+          "Season Pass (future DLC included)",
+          "Exclusive in-game currency ($20 value)",
+          "Priority customer support",
+          "Limited edition digital wallpapers"
+        ],
+        isPopular: false,
+        tier: 'ultimate',
+        description: "The complete experience for the ultimate Detroit: Become Human fan"
+      },
     ],
     relatedGames: [5, 7, 8],
   },
@@ -912,7 +954,7 @@ export default function GameDetailPage() {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
           </div>
           <div className="relative container mx-auto px-4 h-full flex items-end pb-12">
             <div className="max-w-4xl">
@@ -1191,9 +1233,12 @@ export default function GameDetailPage() {
                   key={index}
                   name={edition.name}
                   price={edition.price}
+                  originalPrice={edition.originalPrice}
                   features={edition.features}
                   isPopular={edition.isPopular}
                   gameId={game.id}
+                  description={edition.description}
+                  tier={edition.tier}
                 />
               ))}
             </div>

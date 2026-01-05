@@ -15,7 +15,7 @@ import dynamic from "next/dynamic";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal, Monitor, Youtube, Twitter, Shield, Eye, Facebook, Instagram, Twitch } from "lucide-react";
+import { Gamepad2, Star, ShoppingCart, TrendingUp, Zap, Clock, Search, X, Heart, Sun, Moon, Bell, Users, ChevronLeft, ChevronRight, ArrowUp, Play, ExternalLink, SlidersHorizontal, Monitor, Youtube, Twitter, Shield, Eye, Facebook, Instagram, Twitch, Sparkles } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -409,8 +409,10 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<string>("popular");
   const [countdownTime, setCountdownTime] = useState("");
   const gamesPerPage = 8;
-  const featuredGames = games.filter(g => g.featured || g.discount).slice(0, 3);
-  const featuredGame = featuredGames[currentCarouselIndex] || games[0];
+  // Use all 8 games for the carousel
+  const carouselGames = games; // All 8 games
+  const gamesPerSlide = 4; // Show 4 games per slide
+  const totalSlides = Math.ceil(carouselGames.length / gamesPerSlide);
   const { totalItems, addItem } = useCart();
   const { user, isAuthenticated, signOut, updateAvatar } = useUser();
   const { totalItems: wishlistCount, addItem: addWishlistItem } = useWishlist();
@@ -721,15 +723,15 @@ export default function Home() {
     }
   };
 
-  // Auto-rotate carousel
+  // Auto-rotate carousel through all slides
   useEffect(() => {
-    if (featuredGames.length > 1) {
+    if (totalSlides > 1) {
       const interval = setInterval(() => {
-        setCurrentCarouselIndex((prev) => (prev + 1) % featuredGames.length);
+        setCurrentCarouselIndex((prev) => (prev + 1) % totalSlides);
       }, 5000);
       return () => clearInterval(interval);
     }
-  }, [featuredGames.length]);
+  }, [totalSlides]);
 
   // Countdown timer for Weekend Sale
   useEffect(() => {
@@ -979,217 +981,170 @@ export default function Home() {
           </div>
         </motion.nav>
 
-        {/* Hero Carousel Section - Hidden when searching */}
-        {!searchQuery && featuredGames.length > 0 && (
+        {/* Hero Section - Hidden when searching */}
+        {!searchQuery && carouselGames.length > 0 && (
           <motion.section
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative h-[600px] overflow-hidden"
-            style={{ perspective: '1000px' }}
+            className="relative overflow-hidden bg-background"
           >
-            <div className="absolute inset-0">
-              <Image
-                src={featuredGame.image as any}
-                alt={featuredGame.title}
-                fill
-                className="object-cover transition-opacity duration-500"
-                priority
-                key={currentCarouselIndex}
-              />
-              {/* Dark gradient overlay - consistent in both themes to preserve image saturation */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+            {/* Text Heading Section */}
+            <div className="relative py-16 md:py-24">
+              <div className="container mx-auto px-4 text-center">
+                {/* Small branding badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-secondary border border-border"
+                >
+                  <Gamepad2 className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium text-muted-foreground">GameVerse Presents</span>
+                </motion.div>
+
+                {/* Main heading with mixed styling */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="mb-6"
+                >
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
+                    <span className="text-muted-foreground italic font-light">not just a</span>
+                  </h1>
+                  <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600">
+                      Gaming World
+                    </span>
+                  </h2>
+                </motion.div>
+
+                {/* Tagline/description */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto"
+                >
+                  The ultimate platform for discovering, playing, and experiencing the best games
+                </motion.p>
+              </div>
             </div>
 
-            {/* Carousel Navigation */}
-            {featuredGames.length > 1 && (
-              <>
-                <button
-                  onClick={() => setCurrentCarouselIndex((prev) => (prev - 1 + featuredGames.length) % featuredGames.length)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-background/80 hover:bg-background border border-border flex items-center justify-center transition-all"
-                  aria-label="Previous game"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={() => setCurrentCarouselIndex((prev) => (prev + 1) % featuredGames.length)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-background/80 hover:bg-background border border-border flex items-center justify-center transition-all"
-                  aria-label="Next game"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
+            {/* Horizontal Carousel Section */}
+            <div className="relative pb-16">
+              <div className="container mx-auto px-4">
+                <div className="relative">
 
-                {/* Carousel Indicators */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-3">
-                  {featuredGames.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentCarouselIndex(index)}
-                      className={`rounded-full transition-all hover:scale-110 ${index === currentCarouselIndex
-                        ? 'h-3 w-10 bg-primary shadow-lg shadow-primary/50'
-                        : 'h-3 w-3 bg-muted-foreground/50 hover:bg-muted-foreground'
-                        }`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
+                  {/* Carousel Container - Continuous Scroll */}
+                  <div className="relative overflow-hidden">
+                    {/* Continuous scrolling animation */}
+                    <motion.div
+                      className="flex gap-4"
+                      animate={{
+                        x: [0, `-${carouselGames.length * 20}%`],
+                      }}
+                      transition={{
+                        x: {
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          duration: 20, // Adjust speed here (higher = slower)
+                          ease: "linear",
+                        },
+                      }}
+                      style={{ width: `${carouselGames.length * 20}%` }}
+                    >
+                      {/* Render games twice for seamless loop */}
+                      {[...carouselGames, ...carouselGames].map((game, index) => (
+                        <motion.div
+                          key={`${game.id}-${index}`}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: (index % carouselGames.length) * 0.1, duration: 0.5 }}
+                          className="group relative overflow-hidden rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 flex-shrink-0"
+                          style={{ width: 'calc(20% - 16px)' }}
+                        >
+                          <Link href={`/game/${game.id}`}>
+                            <div className="relative aspect-[16/10] overflow-hidden">
+                              <Image
+                                src={game.image as any}
+                                alt={game.title}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 
-            <div className="relative container mx-auto px-4 h-full flex items-end pb-20">
-              <motion.div
-                key={currentCarouselIndex}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="max-w-2xl"
-              >
-                <Badge className="mb-4 bg-primary text-primary-foreground">Featured Game</Badge>
-                <h1 className="text-6xl font-bold mb-4 text-white">{featuredGame.title}</h1>
-                <p className="text-xl text-gray-200 mb-6">
-                  Experience the next generation of gaming with stunning visuals and immersive gameplay.
-                </p>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="flex items-center gap-1">
-                    <Star className="h-5 w-5 fill-primary text-primary" />
-                    <span className="text-white font-semibold">{featuredGame.rating}</span>
+                              {/* Discount Badge */}
+                              {game.discount && (
+                                <div className="absolute top-3 right-3">
+                                  <Badge className="bg-green-600 text-white">-{game.discount}%</Badge>
+                                </div>
+                              )}
+
+                              {/* Play Icon Overlay */}
+                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="h-16 w-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                                  <Play className="h-8 w-8 text-white" />
+                                </div>
+                              </div>
+
+                              {/* Bottom Info */}
+                              <div className="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 className="text-white font-bold text-lg mb-1 line-clamp-1">{game.title}</h3>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-1">
+                                    <Star className="h-4 w-4 fill-primary text-primary" />
+                                    <span className="text-white text-sm font-semibold">{game.rating}</span>
+                                  </div>
+                                  <Badge variant="secondary" className="text-xs">{game.genre}</Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </motion.div>
                   </div>
-                  <Badge variant="secondary">{featuredGame.genre}</Badge>
-                  {featuredGame.discount && (
-                    <Badge className="bg-green-600 text-white">-{featuredGame.discount}% OFF</Badge>
-                  )}
                 </div>
-                <div className="flex items-center gap-4">
-                  <Link href={`/game/${featuredGame.id}`}>
-                    <Button size="lg" className="gap-2 glow-gradient">
-                      <Play className="h-5 w-5" />
-                      Purchase
-                    </Button>
-                  </Link>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="gap-2 btn-ripple"
-                    onClick={() => {
-                      const basePrice = parseFloat(featuredGame.price.slice(1));
-                      const effective = featuredGame.discount ? basePrice * (1 - featuredGame.discount / 100) : basePrice;
-                      addItem({ id: featuredGame.id, title: featuredGame.title, price: Number(effective.toFixed(2)), image: featuredGame.image });
-                    }}
-                  >
-                    <ShoppingCart className="h-5 w-5" />
-                    {featuredGame.discount ? (
-                      <>
-                        <span className="line-through text-gray-300">{featuredGame.price}</span>
-                        <span className="text-green-400">
-                          ${(parseFloat(featuredGame.price.slice(1)) * (1 - featuredGame.discount / 100)).toFixed(2)}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-white">{featuredGame.price}</span>
-                    )}
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="gap-2 btn-ripple"
-                    onClick={() => {
-                      const basePrice = parseFloat(featuredGame.price.slice(1));
-                      const effective = featuredGame.discount ? basePrice * (1 - featuredGame.discount / 100) : basePrice;
-                      addWishlistItem({ id: featuredGame.id, title: featuredGame.title, price: Number(effective.toFixed(2)), image: featuredGame.image as any });
-                    }}
-                    aria-label="Add to wishlist"
-                  >
-                    <Heart className="h-5 w-5" />
-                    Wishlist
-                  </Button>
-                </div>
-              </motion.div>
+              </div>
             </div>
-
           </motion.section>
         )}
 
+
+
         {/* Loading State for Recommendations */}
-        {isLoadingRecommendations && (
-          <section className="container mx-auto px-4 py-8">
-            <div className="space-y-8">
-              <div className="skeleton h-8 w-64 rounded"></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="skeleton h-64 rounded-lg"></div>
-                ))}
+        {
+          isLoadingRecommendations && (
+            <section className="container mx-auto px-4 py-8">
+              <div className="space-y-8">
+                <div className="skeleton h-8 w-64 rounded"></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="skeleton h-64 rounded-lg"></div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )
+        }
 
         {/* Personalized Recommendation Sections */}
 
         {/* 1. Continue Where You Left Off (Only show if user has history) */}
-        {isAuthenticated && continuePlayingGames.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl font-bold mb-6 text-foreground">Continue Where You Left Off</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {continuePlayingGames.map((game) => (
-                  <Card3D key={game.id} className="group cursor-pointer" intensity={10}>
-                    <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
-                      <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                        <div className="aspect-[16/9] overflow-hidden relative">
-                          <img
-                            src={game.imageUrl || '/placeholder-game.jpg'}
-                            alt={game.title}
-                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                          />
-                        </div>
-                        <div className="p-4">
-                          <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
-                            {game.title}
-                          </h3>
-                          <div className="flex items-center justify-between mb-3">
-                            <Badge variant="secondary">{game.genre}</Badge>
-                            <div className="flex items-center gap-1">
-                              <Star className="h-4 w-4 fill-primary text-primary" />
-                              <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
-                            </div>
-                          </div>
-                          {game.lastPlayedTime && (
-                            <p className="text-xs text-muted-foreground mb-2">{game.lastPlayedTime}</p>
-                          )}
-                          <Button size="sm" className="w-full gap-2">
-                            <Play className="h-4 w-4" />
-                            Continue Playing
-                          </Button>
-                        </div>
-                      </div>
-                    </Link>
-                  </Card3D>
-                ))}
-              </div>
-            </motion.div>
-          </section>
-        )}
-
-        {/* 2. Recommended For You ⭐ (MOST IMPORTANT) */}
-        {isAuthenticated && recommendedGames.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <h2 className="text-3xl font-bold text-foreground">Recommended For You</h2>
-                <Badge className="bg-primary">Personalized</Badge>
-              </div>
-              <div className="overflow-x-auto pb-4">
-                <div className="flex gap-6" style={{ width: 'max-content' }}>
-                  {recommendedGames.map((game) => (
-                    <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
+        {
+          isAuthenticated && continuePlayingGames.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-3xl font-bold mb-6 text-foreground">Continue Where You Left Off</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {continuePlayingGames.map((game) => (
+                    <Card3D key={game.id} className="group cursor-pointer" intensity={10}>
                       <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
                         <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
                           <div className="aspect-[16/9] overflow-hidden relative">
@@ -1198,14 +1153,9 @@ export default function Home() {
                               alt={game.title}
                               className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                             />
-                            {game.discount && game.discount > 0 && (
-                              <div className="absolute top-3 right-3">
-                                <Badge className="bg-green-600 text-white">-{game.discount}%</Badge>
-                              </div>
-                            )}
                           </div>
                           <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
                               {game.title}
                             </h3>
                             <div className="flex items-center justify-between mb-3">
@@ -1215,183 +1165,200 @@ export default function Home() {
                                 <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              {game.discount && game.discount > 0 ? (
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm line-through text-muted-foreground">${game.price}</span>
-                                  <span className="text-lg font-bold text-green-500">${game.effectivePrice?.toFixed(2)}</span>
+                            {game.lastPlayedTime && (
+                              <p className="text-xs text-muted-foreground mb-2">{game.lastPlayedTime}</p>
+                            )}
+                            <Button size="sm" className="w-full gap-2">
+                              <Play className="h-4 w-4" />
+                              Continue Playing
+                            </Button>
+                          </div>
+                        </div>
+                      </Link>
+                    </Card3D>
+                  ))}
+                </div>
+              </motion.div>
+            </section>
+          )
+        }
+
+        {/* 2. Recommended For You ⭐ (MOST IMPORTANT) */}
+        {
+          isAuthenticated && recommendedGames.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <h2 className="text-3xl font-bold text-foreground">Recommended For You</h2>
+                  <Badge className="bg-primary">Personalized</Badge>
+                </div>
+                <div className="overflow-x-auto pb-4">
+                  <div className="flex gap-6" style={{ width: 'max-content' }}>
+                    {recommendedGames.map((game) => (
+                      <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
+                        <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
+                          <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                            <div className="aspect-[16/9] overflow-hidden relative">
+                              <img
+                                src={game.imageUrl || '/placeholder-game.jpg'}
+                                alt={game.title}
+                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                              />
+                              {game.discount && game.discount > 0 && (
+                                <div className="absolute top-3 right-3">
+                                  <Badge className="bg-green-600 text-white">-{game.discount}%</Badge>
                                 </div>
-                              ) : (
-                                <span className="text-lg font-bold text-foreground">
-                                  {game.isFreeToPlay ? 'Free' : `$${game.price}`}
-                                </span>
                               )}
                             </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </Card3D>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </section>
-        )}
-
-        {/* 3. Trending This Week */}
-        {trendingGames.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <h2 className="text-3xl font-bold text-foreground">Trending This Week</h2>
-                <TrendingUp className="h-6 w-6 text-primary" />
-              </div>
-              <div className="overflow-x-auto pb-4">
-                <div className="flex gap-6" style={{ width: 'max-content' }}>
-                  {trendingGames.slice(0, 10).map((game) => (
-                    <Card3D key={game.id} className="group cursor-pointer w-56 flex-shrink-0" intensity={8}>
-                      <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
-                        <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                          <div className="aspect-[3/4] overflow-hidden relative">
-                            <img
-                              src={game.imageUrl || '/placeholder-game.jpg'}
-                              alt={game.title}
-                              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                            />
-                          </div>
-                          <div className="p-3">
-                            <h3 className="text-md font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
-                              {game.title}
-                            </h3>
-                            <div className="flex items-center gap-1">
-                              <Star className="h-3 w-3 fill-primary text-primary" />
-                              <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </Card3D>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </section>
-        )}
-
-        {/* 4. Deals Just For You */}
-        {isAuthenticated && personalizedDeals.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl font-bold mb-6 text-foreground">Deals Just For You 🔥</h2>
-              <div className="overflow-x-auto pb-4">
-                <div className="flex gap-6" style={{ width: 'max-content' }}>
-                  {personalizedDeals.map((game) => (
-                    <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
-                      <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
-                        <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                          <div className="aspect-[16/9] overflow-hidden relative">
-                            <img
-                              src={game.imageUrl || '/placeholder-game.jpg'}
-                              alt={game.title}
-                              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                            />
-                            <div className="absolute top-3 right-3">
-                              <Badge className="bg-red-600 text-white animate-pulse">-{game.discount}% OFF</Badge>
-                            </div>
-                          </div>
-                          <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                              {game.title}
-                            </h3>
-                            <div className="flex items-center justify-between">
+                            <div className="p-4">
+                              <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                {game.title}
+                              </h3>
+                              <div className="flex items-center justify-between mb-3">
+                                <Badge variant="secondary">{game.genre}</Badge>
+                                <div className="flex items-center gap-1">
+                                  <Star className="h-4 w-4 fill-primary text-primary" />
+                                  <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
+                                </div>
+                              </div>
                               <div className="flex items-center gap-2">
-                                <span className="text-sm line-through text-muted-foreground">${game.price}</span>
-                                <span className="text-xl font-bold text-green-500">${game.effectivePrice?.toFixed(2)}</span>
+                                {game.discount && game.discount > 0 ? (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm line-through text-muted-foreground">${game.price}</span>
+                                    <span className="text-lg font-bold text-green-500">${game.effectivePrice?.toFixed(2)}</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-lg font-bold text-foreground">
+                                    {game.isFreeToPlay ? 'Free' : `$${game.price}`}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </Link>
-                    </Card3D>
-                  ))}
+                        </Link>
+                      </Card3D>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </section>
-        )}
+              </motion.div>
+            </section>
+          )
+        }
+
+        {/* 3. Trending This Week */}
+        {
+          trendingGames.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <h2 className="text-3xl font-bold text-foreground">Trending This Week</h2>
+                  <TrendingUp className="h-6 w-6 text-primary" />
+                </div>
+                <div className="overflow-x-auto pb-4">
+                  <div className="flex gap-6" style={{ width: 'max-content' }}>
+                    {trendingGames.slice(0, 10).map((game) => (
+                      <Card3D key={game.id} className="group cursor-pointer w-56 flex-shrink-0" intensity={8}>
+                        <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
+                          <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                            <div className="aspect-[3/4] overflow-hidden relative">
+                              <img
+                                src={game.imageUrl || '/placeholder-game.jpg'}
+                                alt={game.title}
+                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <h3 className="text-md font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                                {game.title}
+                              </h3>
+                              <div className="flex items-center gap-1">
+                                <Star className="h-3 w-3 fill-primary text-primary" />
+                                <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </Card3D>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </section>
+          )
+        }
+
+        {/* 4. Deals Just For You */}
+        {
+          isAuthenticated && personalizedDeals.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-3xl font-bold mb-6 text-foreground">Deals Just For You 🔥</h2>
+                <div className="overflow-x-auto pb-4">
+                  <div className="flex gap-6" style={{ width: 'max-content' }}>
+                    {personalizedDeals.map((game) => (
+                      <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
+                        <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
+                          <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                            <div className="aspect-[16/9] overflow-hidden relative">
+                              <img
+                                src={game.imageUrl || '/placeholder-game.jpg'}
+                                alt={game.title}
+                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                              />
+                              <div className="absolute top-3 right-3">
+                                <Badge className="bg-red-600 text-white animate-pulse">-{game.discount}% OFF</Badge>
+                              </div>
+                            </div>
+                            <div className="p-4">
+                              <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                {game.title}
+                              </h3>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm line-through text-muted-foreground">${game.price}</span>
+                                  <span className="text-xl font-bold text-green-500">${game.effectivePrice?.toFixed(2)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </Card3D>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </section>
+          )
+        }
 
         {/* 5. Editor's Choice */}
-        {editorChoiceGames.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <h2 className="text-3xl font-bold text-foreground">Editor's Choice</h2>
-                <Badge variant="outline">Curated</Badge>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {editorChoiceGames.slice(0, 6).map((game) => (
-                  <Card3D key={game.id} className="group cursor-pointer" intensity={10}>
-                    <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
-                      <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                        <div className="aspect-[16/9] overflow-hidden relative">
-                          <img
-                            src={game.imageUrl || '/placeholder-game.jpg'}
-                            alt={game.title}
-                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                          />
-                          <div className="absolute top-3 left-3">
-                            <Badge className="bg-purple-600 text-white">Editor's Pick</Badge>
-                          </div>
-                        </div>
-                        <div className="p-4">
-                          <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
-                            {game.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{game.description}</p>
-                          <div className="flex items-center justify-between">
-                            <Badge variant="secondary">{game.genre}</Badge>
-                            <span className="text-lg font-bold text-foreground">
-                              {game.isFreeToPlay ? 'Free' : `$${game.price}`}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </Card3D>
-                ))}
-              </div>
-            </motion.div>
-          </section>
-        )}
-
-        {/* 6. Recently Released */}
-        {recentlyReleasedGames.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <h2 className="text-3xl font-bold text-foreground">Recently Released</h2>
-                <Badge className="bg-blue-600">New</Badge>
-              </div>
-              <div className="overflow-x-auto pb-4">
-                <div className="flex gap-6" style={{ width: 'max-content' }}>
-                  {recentlyReleasedGames.map((game) => (
-                    <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
+        {
+          editorChoiceGames.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <h2 className="text-3xl font-bold text-foreground">Editor's Choice</h2>
+                  <Badge variant="outline">Curated</Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {editorChoiceGames.slice(0, 6).map((game) => (
+                    <Card3D key={game.id} className="group cursor-pointer" intensity={10}>
                       <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
                         <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
                           <div className="aspect-[16/9] overflow-hidden relative">
@@ -1401,85 +1368,139 @@ export default function Home() {
                               className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                             />
                             <div className="absolute top-3 left-3">
-                              <Badge className="bg-blue-600 text-white">NEW</Badge>
+                              <Badge className="bg-purple-600 text-white">Editor's Pick</Badge>
                             </div>
                           </div>
                           <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
                               {game.title}
                             </h3>
-                            <div className="flex items-center justify-between mb-2">
+                            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{game.description}</p>
+                            <div className="flex items-center justify-between">
                               <Badge variant="secondary">{game.genre}</Badge>
-                              <div className="flex items-center gap-1">
-                                <Star className="h-4 w-4 fill-primary text-primary" />
-                                <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
-                              </div>
+                              <span className="text-lg font-bold text-foreground">
+                                {game.isFreeToPlay ? 'Free' : `$${game.price}`}
+                              </span>
                             </div>
-                            <span className="text-lg font-bold text-foreground">
-                              {game.isFreeToPlay ? 'Free' : `$${game.price}`}
-                            </span>
                           </div>
                         </div>
                       </Link>
                     </Card3D>
                   ))}
                 </div>
-              </div>
-            </motion.div>
-          </section>
-        )}
+              </motion.div>
+            </section>
+          )
+        }
+
+        {/* 6. Recently Released */}
+        {
+          recentlyReleasedGames.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <h2 className="text-3xl font-bold text-foreground">Recently Released</h2>
+                  <Badge className="bg-blue-600">New</Badge>
+                </div>
+                <div className="overflow-x-auto pb-4">
+                  <div className="flex gap-6" style={{ width: 'max-content' }}>
+                    {recentlyReleasedGames.map((game) => (
+                      <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
+                        <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
+                          <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                            <div className="aspect-[16/9] overflow-hidden relative">
+                              <img
+                                src={game.imageUrl || '/placeholder-game.jpg'}
+                                alt={game.title}
+                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                              />
+                              <div className="absolute top-3 left-3">
+                                <Badge className="bg-blue-600 text-white">NEW</Badge>
+                              </div>
+                            </div>
+                            <div className="p-4">
+                              <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                {game.title}
+                              </h3>
+                              <div className="flex items-center justify-between mb-2">
+                                <Badge variant="secondary">{game.genre}</Badge>
+                                <div className="flex items-center gap-1">
+                                  <Star className="h-4 w-4 fill-primary text-primary" />
+                                  <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
+                                </div>
+                              </div>
+                              <span className="text-lg font-bold text-foreground">
+                                {game.isFreeToPlay ? 'Free' : `$${game.price}`}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      </Card3D>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </section>
+          )
+        }
 
         {/* 7. Free to Play / Under $20 */}
-        {budgetGames.length > 0 && (
-          <section className="container mx-auto px-4 py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl font-bold mb-6 text-foreground">Free to Play & Under $20</h2>
-              <div className="overflow-x-auto pb-4">
-                <div className="flex gap-6" style={{ width: 'max-content' }}>
-                  {budgetGames.map((game) => (
-                    <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
-                      <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
-                        <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
-                          <div className="aspect-[16/9] overflow-hidden relative">
-                            <img
-                              src={game.imageUrl || '/placeholder-game.jpg'}
-                              alt={game.title}
-                              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                            />
-                            {game.isFreeToPlay && (
-                              <div className="absolute top-3 left-3">
-                                <Badge className="bg-green-600 text-white">FREE</Badge>
-                              </div>
-                            )}
-                          </div>
-                          <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                              {game.title}
-                            </h3>
-                            <div className="flex items-center justify-between mb-2">
-                              <Badge variant="secondary">{game.genre}</Badge>
-                              <div className="flex items-center gap-1">
-                                <Star className="h-4 w-4 fill-primary text-primary" />
-                                <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
-                              </div>
+        {
+          budgetGames.length > 0 && (
+            <section className="container mx-auto px-4 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-3xl font-bold mb-6 text-foreground">Free to Play & Under $20</h2>
+                <div className="overflow-x-auto pb-4">
+                  <div className="flex gap-6" style={{ width: 'max-content' }}>
+                    {budgetGames.map((game) => (
+                      <Card3D key={game.id} className="group cursor-pointer w-64 flex-shrink-0" intensity={10}>
+                        <Link href={`/game/${game.id}`} onClick={() => handleGameClick(game.id)}>
+                          <div className="relative overflow-hidden rounded-lg border border-border bg-secondary">
+                            <div className="aspect-[16/9] overflow-hidden relative">
+                              <img
+                                src={game.imageUrl || '/placeholder-game.jpg'}
+                                alt={game.title}
+                                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                              />
+                              {game.isFreeToPlay && (
+                                <div className="absolute top-3 left-3">
+                                  <Badge className="bg-green-600 text-white">FREE</Badge>
+                                </div>
+                              )}
                             </div>
-                            <span className="text-xl font-bold text-green-600">
-                              {game.isFreeToPlay ? 'Free to Play' : `$${game.price}`}
-                            </span>
+                            <div className="p-4">
+                              <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                {game.title}
+                              </h3>
+                              <div className="flex items-center justify-between mb-2">
+                                <Badge variant="secondary">{game.genre}</Badge>
+                                <div className="flex items-center gap-1">
+                                  <Star className="h-4 w-4 fill-primary text-primary" />
+                                  <span className="text-sm text-foreground">{game.rating?.toFixed(1)}</span>
+                                </div>
+                              </div>
+                              <span className="text-xl font-bold text-green-600">
+                                {game.isFreeToPlay ? 'Free to Play' : `$${game.price}`}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    </Card3D>
-                  ))}
+                        </Link>
+                      </Card3D>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </section>
-        )}
+              </motion.div>
+            </section>
+          )
+        }
 
         {/* Categories */}
         <section className="container mx-auto px-4 py-12">
@@ -1666,6 +1687,212 @@ export default function Home() {
           </motion.div>
         </section>
 
+        {/* Our Community Highlights - Platform Features */}
+        <section className="container mx-auto px-4 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-foreground">
+              Our Community Highlights
+            </h2>
+
+            <div className="space-y-6">
+              {/* Large Featured Card - Game Store */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+                className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card/95 to-card/90 p-8 md:p-12 hover:border-primary/50 transition-all duration-300 group"
+              >
+                {/* Background texture */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                  {/* Left side - Main content */}
+                  <div>
+                    <div className="text-[120px] md:text-[180px] font-bold text-muted-foreground/10 leading-none mb-4">
+                      1
+                    </div>
+                    <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                      Game Store
+                    </h3>
+                    <p className="text-muted-foreground text-lg mb-6">
+                      Discover, buy, and download your favorite games.
+                    </p>
+                    <Link href="/store">
+                      <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg rounded-full font-semibold transition-all duration-300 hover:scale-105">
+                        Explore games
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Right side - Feature list */}
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3 text-muted-foreground">
+                      <span className="text-xl font-bold mt-1">+</span>
+                      <span className="text-base">Massive library of PC games</span>
+                    </div>
+                    <div className="flex items-start gap-3 text-muted-foreground">
+                      <span className="text-xl font-bold mt-1">+</span>
+                      <span className="text-base">Smart recommendations based on your playstyle</span>
+                    </div>
+                    <div className="flex items-start gap-3 text-muted-foreground">
+                      <span className="text-xl font-bold mt-1">+</span>
+                      <span className="text-base">Secure payments & instant downloads</span>
+                    </div>
+                    <div className="flex items-start gap-3 text-muted-foreground">
+                      <span className="text-xl font-bold mt-1">+</span>
+                      <span className="text-base">Seasonal sales & exclusive discounts</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Three Smaller Cards Row */}
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Card 2 - Community & Social */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                  className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card/95 to-card/90 p-8 hover:border-primary/50 transition-all duration-300 group"
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10">
+                    <div className="text-[100px] font-bold text-muted-foreground/10 leading-none mb-4">
+                      2
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-3">
+                      Community & Social
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-6">
+                      Connect with gamers worldwide.
+                    </p>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Friends list & chat</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Game communities & discussion boards</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>User reviews & ratings</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Workshop mods & fan content</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Card 3 - Library & Cloud */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                  className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card/95 to-card/90 p-8 hover:border-primary/50 transition-all duration-300 group"
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10">
+                    <div className="text-[100px] font-bold text-muted-foreground/10 leading-none mb-4">
+                      3
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-3">
+                      Library & Cloud
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-6">
+                      All your games, one place.
+                    </p>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Centralized game library</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Cloud saves across devices</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Automatic updates</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Offline play support</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Card 4 - Developer Hub */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                  className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card/95 to-card/90 p-8 hover:border-primary/50 transition-all duration-300 group"
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  {/* New Badge */}
+                  <div className="absolute top-4 right-4 z-20">
+                    <div className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                      <Sparkles className="h-4 w-4" />
+                      New
+                    </div>
+                  </div>
+
+                  <div className="relative z-10">
+                    <div className="text-[100px] font-bold text-muted-foreground/10 leading-none mb-4">
+                      4
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-3">
+                      Developer Hub
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-6">
+                      Publish and manage your games.
+                    </p>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Upload & distribute games</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Sales analytics & insights</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Community feedback tools</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="text-lg font-bold">+</span>
+                        <span>Patch & update management</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+
         {/* Special Offers */}
         <section className="container mx-auto px-4 py-12 relative">
           <motion.div
@@ -1701,23 +1928,6 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* Community Stats - Square Cards */}
-        <section className="container mx-auto px-4 py-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-bold mb-8 text-foreground text-center">Our Community Highlights</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <CommunityHighlightCard icon={Users} value="2.5M+" label="Active Players" delay={0} />
-              <CommunityHighlightCard icon={Gamepad2} value="8,500+" label="Games Available" delay={0.1} />
-              <CommunityHighlightCard icon={Star} value="1.2M+" label="User Reviews" delay={0.2} />
-              <CommunityHighlightCard icon={Shield} value="100%" label="Secure Checkout" delay={0.3} />
-            </div>
-          </motion.div>
-        </section>
 
         {/* Footer */}
         <footer className="border-t border-border mt-20">
@@ -1782,19 +1992,21 @@ export default function Home() {
         </footer>
 
         {/* Back to Top Button */}
-        {showBackToTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 z-50 h-12 w-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
-            aria-label="Back to top"
-          >
-            <ArrowUp className="h-5 w-5" />
-          </motion.button>
-        )}
-      </div>
+        {
+          showBackToTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+              onClick={scrollToTop}
+              className="fixed bottom-8 right-8 z-50 h-12 w-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
+              aria-label="Back to top"
+            >
+              <ArrowUp className="h-5 w-5" />
+            </motion.button>
+          )
+        }
+      </div >
       <SignIn isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
       <ChangePhotoDialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen} />
       <Dialog
@@ -1873,20 +2085,24 @@ export default function Home() {
       </Dialog>
 
       {/* Notification Panel */}
-      {isAuthenticated && (
-        <NotificationPanel
-          isOpen={isNotificationPanelOpen}
-          onClose={() => setIsNotificationPanelOpen(false)}
-        />
-      )}
+      {
+        isAuthenticated && (
+          <NotificationPanel
+            isOpen={isNotificationPanelOpen}
+            onClose={() => setIsNotificationPanelOpen(false)}
+          />
+        )
+      }
 
       {/* Friends Sidebar */}
-      {isAuthenticated && (
-        <FriendsSidebar
-          isOpen={isFriendsSidebarOpen}
-          onClose={() => setIsFriendsSidebarOpen(false)}
-        />
-      )}
+      {
+        isAuthenticated && (
+          <FriendsSidebar
+            isOpen={isFriendsSidebarOpen}
+            onClose={() => setIsFriendsSidebarOpen(false)}
+          />
+        )
+      }
     </>
   );
 }
