@@ -159,8 +159,8 @@ public class DataInitializer implements CommandLineRunner {
 
     private void createGame(String title, String description, Double price, Double discount,
                             String genre, String[] tags, Publisher publisher, LocalDate releaseDate) {
-        if (gameRepository.findByActiveTrue(org.springframework.data.domain.PageRequest.of(0, 1))
-                .stream().anyMatch(g -> g.getTitle().equals(title))) {
+        // Check if game already exists by title
+        if (gameRepository.findAll().stream().anyMatch(g -> g.getTitle().equals(title))) {
             return; // Game already exists
         }
 

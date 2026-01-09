@@ -1,6 +1,6 @@
 import { SignupRequest, LoginRequest, AuthResponse, ApiErrorResponse } from '@/types/auth.types';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://localhost:8081/api';
 
 // Token management
 const TOKEN_KEY = 'gw_auth_token';

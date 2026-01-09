@@ -1011,7 +1011,6 @@ export default function Home() {
                   className="mb-6"
                 >
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2">
-                    <span className="text-muted-foreground italic font-light">not just a</span>
                   </h1>
                   <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight">
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600">

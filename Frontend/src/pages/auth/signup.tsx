@@ -67,8 +67,8 @@ export default function SignupPage() {
                 role: response.role,
             });
 
-            // Redirect to home after successful signup
-            router.push('/');
+            // Redirect to user's profile page after successful signup
+            router.push('/profile');
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Signup failed. Please try again.');
         } finally {

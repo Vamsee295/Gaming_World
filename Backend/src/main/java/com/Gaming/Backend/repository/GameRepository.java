@@ -20,18 +20,18 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     
     Page<Game> findByActiveTrueAndPublisher(Publisher publisher, Pageable pageable);
     
-    @Query("SELECT g FROM Game g WHERE g.active = true AND " +
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE AND " +
            "(LOWER(g.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(g.description) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<Game> searchGames(@Param("keyword") String keyword, Pageable pageable);
     
-    @Query("SELECT g FROM Game g WHERE g.active = true AND g.discount > 0 ORDER BY g.discount DESC")
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE AND g.discount > 0 ORDER BY g.discount DESC")
     List<Game> findGamesOnSale(Pageable pageable);
     
-    @Query("SELECT g FROM Game g WHERE g.active = true ORDER BY g.downloads DESC")
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE ORDER BY g.downloads DESC")
     List<Game> findFeaturedGames(Pageable pageable);
     
-    @Query("SELECT g FROM Game g WHERE g.active = true AND " +
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE AND " +
            "(:genre IS NULL OR g.genre = :genre) AND " +
            "(:minPrice IS NULL OR g.price >= :minPrice) AND " +
            "(:maxPrice IS NULL OR g.price <= :maxPrice)")
@@ -60,13 +60,13 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     /**
      * Find recently released games
      */
-    @Query("SELECT g FROM Game g WHERE g.active = true AND g.releaseDate >= :sinceDate ORDER BY g.releaseDate DESC")
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE AND g.releaseDate >= :sinceDate ORDER BY g.releaseDate DESC")
     List<Game> findRecentlyReleased(@Param("sinceDate") java.time.LocalDate sinceDate, Pageable pageable);
     
     /**
      * Find free to play games or games under a certain price
      */
-    @Query("SELECT g FROM Game g WHERE g.active = true AND (g.isFreeToPlay = true OR g.price <= :maxPrice)")
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE AND (g.isFreeToPlay IS TRUE OR g.price <= :maxPrice)")
     List<Game> findBudgetGames(@Param("maxPrice") Double maxPrice, Pageable pageable);
     
     /**
@@ -77,7 +77,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     /**
      * Find trending games (high rating + recent activity)
      */
-    @Query("SELECT g FROM Game g WHERE g.active = true ORDER BY g.averageRating DESC, g.downloads DESC")
+    @Query("SELECT g FROM Game g WHERE g.active IS TRUE ORDER BY g.averageRating DESC, g.downloads DESC")
     List<Game> findTrendingGames(Pageable pageable);
     
     /**

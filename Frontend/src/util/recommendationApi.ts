@@ -3,7 +3,7 @@
  * Connects frontend to Spring Boot backend recommendation endpoints
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
 
 /**
  * Get JWT token from storage/context

@@ -34,8 +34,8 @@ export default function LoginPage() {
                 role: response.role,
             });
 
-            // Redirect to home or previous page
-            const redirectUrl = (router.query.redirect as string) || '/';
+            // Redirect to user's library/portal after successful login
+            const redirectUrl = (router.query.redirect as string) || '/profile';
             router.push(redirectUrl);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Login failed. Please try again.');

@@ -20,7 +20,7 @@ public interface UserAchievementRepository extends JpaRepository<UserAchievement
     
     List<UserAchievement> findByUserIdAndUnlockedTrue(Long userId);
     
-    @Query("SELECT ua FROM UserAchievement ua WHERE ua.userId = :userId " +
+    @Query("SELECT ua FROM UserAchievement ua WHERE ua.user.id = :userId " +
            "AND ua.achievement.game.id = :gameId")
     List<UserAchievement> findByUserIdAndGameId(@Param("userId") Long userId, 
                                                   @Param("gameId") Long gameId);
