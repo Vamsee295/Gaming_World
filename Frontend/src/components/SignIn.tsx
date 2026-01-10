@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { authService } from '@/services/authService';
 import { useAuth } from '@/context/AuthContext';
+import { useUser } from '@/context/UserContext';
 
 interface SignInProps {
   isOpen: boolean;
@@ -11,12 +12,14 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
   const [isActive, setIsActive] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { login: setAuthUser } = useAuth();
+  const { signIn: setUserProfile } = useUser();
 
   // Form fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [country, setCountry] = useState("US");
 
   // Error and loading states
@@ -54,6 +57,13 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
     setError("");
     setLoading(true);
 
+    // Validate passwords match
+    if (signupPassword !== confirmPassword) {
+      setError("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await authService.signup({
         username: name,
@@ -62,7 +72,7 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
         country: country
       });
 
-      // Set authenticated user
+      // Set authenticated user in AuthContext
       setAuthUser({
         userId: response.userId,
         username: response.username,
@@ -70,11 +80,22 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
         role: response.role
       });
 
+      // ALSO set user in UserContext for profile icon
+      setUserProfile({
+        name: response.username,
+        email: response.email
+      });
+
       // Clear form
       setName("");
       setEmail("");
       setSignupPassword("");
+      setConfirmPassword("");
+      setCountry("US");
       onClose();
+
+      // Reload page to refresh authentication state
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Signup failed. Please try again.');
     } finally {
@@ -93,7 +114,7 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
         password: password
       });
 
-      // Set authenticated user
+      // Set authenticated user in AuthContext
       setAuthUser({
         userId: response.userId,
         username: response.username,
@@ -101,10 +122,19 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
         role: response.role
       });
 
+      // ALSO set user in UserContext for profile icon
+      setUserProfile({
+        name: response.username,
+        email: response.email
+      });
+
       // Clear form
       setEmail("");
       setPassword("");
       onClose();
+
+      // Reload page to refresh authentication state
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed. Please check your credentials.');
     } finally {
@@ -137,6 +167,31 @@ const SignIn: React.FC<SignInProps> = ({ isOpen, onClose }) => {
             <input type="text" placeholder="Username" required value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
             <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
             <input type="password" placeholder="Password" required value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} disabled={loading} />
+            <input type="password" placeholder="Re-enter Password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} disabled={loading} />
+            <select value={country} onChange={(e) => setCountry(e.target.value)} disabled={loading} required>
+              <option value="">Select Country</option>
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="CA">Canada</option>
+              <option value="AU">Australia</option>
+              <option value="IN">India</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="JP">Japan</option>
+              <option value="CN">China</option>
+              <option value="BR">Brazil</option>
+              <option value="MX">Mexico</option>
+              <option value="IT">Italy</option>
+              <option value="ES">Spain</option>
+              <option value="KR">South Korea</option>
+              <option value="NL">Netherlands</option>
+              <option value="SE">Sweden</option>
+              <option value="PL">Poland</option>
+              <option value="BE">Belgium</option>
+              <option value="CH">Switzerland</option>
+              <option value="AR">Argentina</option>
+              <option value="Other">Other</option>
+            </select>
             <button type="submit" disabled={loading}>{loading ? 'Creating Account...' : 'Sign Up'}</button>
           </form>
         </div>
