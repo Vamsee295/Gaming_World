@@ -14,6 +14,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { CommunityProvider } from "@/context/CommunityContext";
 import { FriendsProvider } from "@/context/FriendsContext";
 import { NotificationsProvider } from "@/context/NotificationsContext";
+import { ToastProvider } from "@/context/ToastContext";
 
 import ClickSpark from '@/components/ClickSpark';
 
@@ -48,18 +49,20 @@ export default function App({ Component, pageProps }: AppProps) {
                 <CommunityProvider>
                   <FriendsProvider>
                     <NotificationsProvider>
-                      <ClickSpark
-                        sparkColor='#fff'
-                        sparkSize={10}
-                        sparkRadius={15}
-                        sparkCount={8}
-                        duration={400}
-                      >
-                        <div className="min-h-screen">
-                          <Component {...pageProps} />
-                          <Toaster />
-                        </div>
-                      </ClickSpark>
+                      <ToastProvider>
+                        <ClickSpark
+                          sparkColor='#fff'
+                          sparkSize={10}
+                          sparkRadius={15}
+                          sparkCount={8}
+                          duration={400}
+                        >
+                          <div className="min-h-screen">
+                            <Component {...pageProps} />
+                            <Toaster />
+                          </div>
+                        </ClickSpark>
+                      </ToastProvider>
                     </NotificationsProvider>
                   </FriendsProvider>
                 </CommunityProvider>
