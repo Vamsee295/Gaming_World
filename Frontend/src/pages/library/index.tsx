@@ -218,7 +218,7 @@ export default function LibraryPage() {
       <Head>
         <title>GameVerse Library</title>
       </Head>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-transparent">
         {/* Top Navigation (keep profile access) */}
         <motion.nav
           initial={{ y: -100 }}

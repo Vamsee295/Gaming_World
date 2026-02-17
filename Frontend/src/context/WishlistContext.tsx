@@ -31,10 +31,10 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const addItem = useCallback((item: Omit<WishlistItem, "addedAt" | "originalPrice">) => {
     setItems(prev => {
       if (prev.some(i => i.id === item.id)) return prev;
-      return [...prev, { 
-        ...item, 
+      return [...prev, {
+        ...item,
         originalPrice: item.price,
-        addedAt: new Date().toISOString() 
+        addedAt: new Date().toISOString()
       }];
     });
   }, []);

@@ -17,6 +17,7 @@ import { NotificationsProvider } from "@/context/NotificationsContext";
 import { ToastProvider } from "@/context/ToastContext";
 
 import ClickSpark from '@/components/ClickSpark';
+import LightRays from '@/components/ui/LightRays';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -57,8 +58,28 @@ export default function App({ Component, pageProps }: AppProps) {
                           sparkCount={8}
                           duration={400}
                         >
-                          <div className="min-h-screen">
-                            <Component {...pageProps} />
+                          <div className="min-h-screen relative overflow-x-hidden bg-background">
+                            {/* Global LightRays Background Layer */}
+                            <div className="fixed inset-0 z-0 pointer-events-none opacity-60">
+                              <LightRays
+                                raysOrigin="top-center"
+                                raysColor="#ffffff"
+                                raysSpeed={1}
+                                lightSpread={0.5}
+                                rayLength={3}
+                                followMouse={true}
+                                mouseInfluence={0.1}
+                                noiseAmount={0}
+                                distortion={0}
+                                pulsating={false}
+                                fadeDistance={1}
+                                saturation={1}
+                              />
+                            </div>
+                            {/* Main Content Layer */}
+                            <div className="relative z-10 bg-transparent">
+                              <Component {...pageProps} />
+                            </div>
                             <Toaster />
                           </div>
                         </ClickSpark>

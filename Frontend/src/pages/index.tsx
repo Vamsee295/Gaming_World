@@ -807,7 +807,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="min-h-screen bg-background relative">
+      <div className="min-h-screen bg-transparent relative">
         {/* Ambient Particles Background */}
         {/* TODO: Uncomment after npm install completes */}
         {/* <AmbientParticles /> */}
@@ -987,7 +987,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative overflow-hidden bg-background"
+            className="relative overflow-hidden bg-transparent"
           >
             {/* Text Heading Section */}
             <div className="relative py-16 md:py-24">
@@ -1065,7 +1065,7 @@ export default function Home() {
                           style={{ width: 'calc(20% - 16px)' }}
                         >
                           <Link href={`/game/${game.id}`}>
-                            <div className="relative aspect-[16/10] overflow-hidden">
+                            <div className="relative aspect-[16/9] overflow-hidden">
                               <Image
                                 src={game.image as any}
                                 alt={game.title}

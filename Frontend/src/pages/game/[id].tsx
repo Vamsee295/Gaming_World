@@ -926,7 +926,7 @@ export default function GameDetailPage() {
         <meta name="description" content={game.description} />
       </Head>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-transparent">
         {/* Back Button */}
         <div className="container mx-auto px-4 pt-4">
           <BackButton />

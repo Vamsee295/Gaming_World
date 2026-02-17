@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/components/ui/use-toast";
+import walletApi from "@/util/walletApi";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   Wallet,
@@ -95,30 +96,59 @@ export default function BalancePage() {
   const [customAmount, setCustomAmount] = useState<string>("");
   const [customAmountError, setCustomAmountError] = useState<string>("");
 
-  // Load data from localStorage on mount
+  // Load data from backend on mount
   useEffect(() => {
     if (!user?.id) return;
 
-    try {
-      const storedBalance = localStorage.getItem(`${STORAGE_KEY_BALANCE}_${user.id}`);
-      const storedTransactions = localStorage.getItem(`${STORAGE_KEY_TRANSACTIONS}_${user.id}`);
+    const fetchWalletData = async () => {
+      try {
+        // Fetch balance from backend
+        const walletData = await walletApi.getBalance();
+        setBalance(walletData.balance);
+        setLastUpdated(new Date().toLocaleString());
 
-      if (storedBalance) {
-        setBalance(parseFloat(storedBalance));
-      }
+        // Fetch transactions from backend
+        const transactionsData = await walletApi.getTransactions();
+        const mappedTransactions = transactionsData.map((tx) => ({
+          id: tx.id.toString(),
+          date: new Date(tx.createdAt),
+          description: tx.description,
+          method: tx.type,
+          amount: tx.amount,
+          status: "Completed" as const,
+        }));
+        setTransactions(mappedTransactions);
 
-      if (storedTransactions) {
-        const parsed = JSON.parse(storedTransactions);
-        setTransactions(
-          parsed.map((tx: any) => ({
-            ...tx,
-            date: new Date(tx.date),
-          }))
-        );
+        // Also cache in localStorage as backup
+        localStorage.setItem(`${STORAGE_KEY_BALANCE}_${user.id}`, walletData.balance.toString());
+        localStorage.setItem(`${STORAGE_KEY_TRANSACTIONS}_${user.id}`, JSON.stringify(mappedTransactions));
+      } catch (error) {
+        console.error("Error loading wallet data from backend:", error);
+        // Fallback to localStorage if backend fails
+        try {
+          const storedBalance = localStorage.getItem(`${STORAGE_KEY_BALANCE}_${user.id}`);
+          const storedTransactions = localStorage.getItem(`${STORAGE_KEY_TRANSACTIONS}_${user.id}`);
+
+          if (storedBalance) {
+            setBalance(parseFloat(storedBalance));
+          }
+
+          if (storedTransactions) {
+            const parsed = JSON.parse(storedTransactions);
+            setTransactions(
+              parsed.map((tx: any) => ({
+                ...tx,
+                date: new Date(tx.date),
+              }))
+            );
+          }
+        } catch (localError) {
+          console.error("Error loading wallet data from localStorage:", localError);
+        }
       }
-    } catch (error) {
-      console.error("Error loading wallet data:", error);
-    }
+    };
+
+    fetchWalletData();
   }, [user?.id]);
 
   // Persist balance to localStorage
@@ -177,19 +207,37 @@ export default function BalancePage() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     try {
-      const newTransaction: Transaction = {
-        id: crypto.randomUUID(),
-        date: new Date(),
-        description: `Added Funds - ₹${selectedAmount.toLocaleString("en-IN")} via ${paymentOptions.find((p) => p.key === paymentMethod)?.name || paymentMethod}`,
-        method: paymentMethod,
+      // Call backend API to add funds
+      const walletData = await walletApi.addFunds({
         amount: selectedAmount,
-        status: "Completed",
-      };
+        description: `Added Funds - ₹${selectedAmount.toLocaleString("en-IN")} via ${paymentOptions.find((p) => p.key === paymentMethod)?.name || paymentMethod}`,
+        paymentMethod: paymentMethod,
+        referenceId: crypto.randomUUID(),
+      });
 
-      setBalance((prev) => prev + selectedAmount);
-      setTransactions((prev) => [newTransaction, ...prev]);
-      setLastTransaction(newTransaction);
+      // Update local state with backend response
+      setBalance(walletData.balance);
       setLastUpdated(new Date().toLocaleString());
+
+      // Fetch updated transactions
+      const transactionsData = await walletApi.getTransactions();
+      const mappedTransactions = transactionsData.map((tx) => ({
+        id: tx.id.toString(),
+        date: new Date(tx.createdAt),
+        description: tx.description,
+        method: tx.type,
+        amount: tx.amount,
+        status: "Completed" as const,
+      }));
+      setTransactions(mappedTransactions);
+      setLastTransaction(mappedTransactions[0] || null);
+
+      // Cache in localStorage as backup
+      if (user?.id) {
+        localStorage.setItem(`${STORAGE_KEY_BALANCE}_${user.id}`, walletData.balance.toString());
+        localStorage.setItem(`${STORAGE_KEY_TRANSACTIONS}_${user.id}`, JSON.stringify(mappedTransactions));
+      }
+
       setIsSuccessDialogOpen(true);
 
       toast({
@@ -200,7 +248,7 @@ export default function BalancePage() {
       console.error("Failed to process payment:", error);
       toast({
         title: "Payment Failed",
-        description: "There was an error processing your payment. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error processing your payment. Please try again.",
         variant: "destructive",
       });
     } finally {

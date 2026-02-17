@@ -33,7 +33,7 @@ export const RelatedGameCard: React.FC<RelatedGameCardProps> = ({
             <Card className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group cursor-pointer">
                 <CardContent className="p-0">
                     {/* Image */}
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative aspect-[16/9] overflow-hidden">
                         <Image
                             src={image}
                             alt={title}
